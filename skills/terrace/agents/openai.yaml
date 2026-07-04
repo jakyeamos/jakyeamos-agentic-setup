@@ -1,0 +1,4 @@
+interface:
+  display_name: "Terrace"
+  short_description: "Route Terrace workflow commands"
+  default_prompt: "Use $terrace to route this workflow request through the Terrace CLI and respect its blockers."

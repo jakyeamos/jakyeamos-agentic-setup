@@ -1,0 +1,13 @@
+.DS_Store
+.env
+.env.*
+node_modules/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+.venv/
+dist/
+build/
+.pre-cr/
+.tmcp/
+.aios/

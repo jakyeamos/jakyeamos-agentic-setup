@@ -1,0 +1,4 @@
+interface:
+  display_name: "Research Domain Writing"
+  short_description: "Grounded domain writing pipeline"
+  default_prompt: "Use $research-domain-writing to produce accurate domain-specific copy from research, QA, and style stages."
