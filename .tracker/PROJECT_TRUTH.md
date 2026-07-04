@@ -78,3 +78,7 @@ TMCP is intentionally excluded because the user is actively preparing TMCP separ
 
 1. Decide whether to keep this repo as a copyable skill pack or add a formal installer/manifest after the TMCP release model settles.
 2. Decide whether TMCP should join this package after its portability pass.
+
+## QR Remediation Planning
+
+- 2026-07-04: Added GSD Phase 1 for QR remediation from qr-low-risk-post-branch-fix-20260704-jakyeamos-agent-skills; 1 plan(s) created from jakyeamos-agent-skills.md. Execution has not started.
