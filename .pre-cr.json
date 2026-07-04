@@ -8,7 +8,8 @@
   "threshold": 0,
   "surfaces": {
     "covered": [
-      "scripts/validate_skills.py"
+      "scripts/validate_skills.py",
+      ".tracker/**"
     ],
     "ignored": [
       ".gitignore",
