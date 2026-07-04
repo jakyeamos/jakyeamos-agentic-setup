@@ -4,7 +4,7 @@ projectName: jakyeamos-agent-skills
 summary: Portable public skill package containing Research Domain Writing and Terrace skills, with TMCP intentionally excluded for separate release work.
 healthScore: 90
 statusLabel: ready
-nextStep: Create the GitHub remote, push `main`, and decide whether TMCP should join this package after its portability pass.
+nextStep: Decide whether to keep this repo as a copyable skill pack or add a formal installer/manifest after the TMCP release model settles.
 blockers: []
 lastUpdated: 2026-07-04
 tags: [agent-skills, codex, skills, writing, workflow-routing]
@@ -60,10 +60,10 @@ TMCP is intentionally excluded because the user is actively preparing TMCP separ
 - July 4: Created the initial repo and committed the package as `6ff572e` with Research Domain Writing and Terrace.
 - July 4: Removed AIOS-specific RDW release notes and ran a public-package scan for private paths, local tokens, and stale npm/npx/yarn references.
 - July 4: Added pre-CR configuration and trace-based LCOV generation for the skill validator so local commit hooks pass without bypassing gates.
+- July 4: Created the public GitHub remote at `jakyeamos/jakyeamos-agent-skills` and pushed `main`.
 
 ## Open Problems
 
-- No GitHub remote is configured yet.
 - No package manager metadata is present because this is a copyable skill package, not an npm/pnpm package.
 - No dedicated unit-test suite exists for `scripts/validate_skills.py`; current verification is script execution plus pre-CR changed-line coverage.
 
@@ -76,6 +76,5 @@ TMCP is intentionally excluded because the user is actively preparing TMCP separ
 
 ## Next Concrete Steps
 
-1. Create a GitHub repository and add it as `origin`.
-2. Push `main`.
-3. Decide whether to keep this repo as a copyable skill pack or add a formal installer/manifest after the TMCP release model settles.
+1. Decide whether to keep this repo as a copyable skill pack or add a formal installer/manifest after the TMCP release model settles.
+2. Decide whether TMCP should join this package after its portability pass.
