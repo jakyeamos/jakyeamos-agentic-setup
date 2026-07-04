@@ -11,3 +11,5 @@ build/
 .pre-cr/
 .tmcp/
 .aios/
+
+.quality-runner/
