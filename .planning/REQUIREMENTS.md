@@ -11,10 +11,10 @@
 
 ### Portable Agentic Workbench
 
-- [ ] **WB-CATALOG**: Maintain a versioned manifest with asset classes, provenance, license status, targets, entrypoints, dependencies, evidence, and install mode.
-- [ ] **WB-INSTALLER**: Provide deterministic list, search, show, validate, and dry-run-by-default install commands with explicit roots, no overwrites, dependency reporting, and manual adapter staging.
-- [ ] **WB-PUBLIC-SAFETY**: Reject private paths, credential material, environment files, raw authorization values, and unsafe artifacts in distributable surfaces.
-- [ ] **WB-NARRATIVE**: Document the hiring-manager narrative, agent mining workflow, evidence case studies, vendor adapters, external boundaries, and limitations without unsupported performance claims.
+- [x] **WB-CATALOG**: Maintain a versioned manifest with asset classes, provenance, license status, targets, entrypoints, dependencies, evidence, and install mode.
+- [x] **WB-INSTALLER**: Provide deterministic list, search, show, validate, and dry-run-by-default install commands with explicit roots, no overwrites, dependency reporting, and manual adapter staging.
+- [x] **WB-PUBLIC-SAFETY**: Reject private paths, credential material, environment files, raw authorization values, and unsafe artifacts in distributable surfaces.
+- [x] **WB-NARRATIVE**: Document the hiring-manager narrative, agent mining workflow, evidence case studies, vendor adapters, external boundaries, and limitations without unsupported performance claims.
 
 ## v2 Requirements
 
@@ -35,10 +35,10 @@
 | Requirement | Phase | Status |
 |-------------|-------|--------|
 | QR-JAKYEAMOS-AGENT-SKILLS | Phase 1 | Pending |
-| WB-CATALOG | Phase 2 | In progress |
-| WB-INSTALLER | Phase 2 | In progress |
-| WB-PUBLIC-SAFETY | Phase 2 | In progress |
-| WB-NARRATIVE | Phase 2 | In progress |
+| WB-CATALOG | Phase 2 | Complete |
+| WB-INSTALLER | Phase 2 | Complete |
+| WB-PUBLIC-SAFETY | Phase 2 | Complete |
+| WB-NARRATIVE | Phase 2 | Complete |
 
 **Coverage:**
 - v1 requirements: 5 total

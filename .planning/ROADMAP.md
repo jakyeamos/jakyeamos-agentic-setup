@@ -26,7 +26,7 @@ clean-room verification.
 
 Plans:
 
-- [ ] 02-01-PLAN.md - Catalog, installer, curated assets, narrative, and release gates
+- [x] 02-01-PLAN.md - Catalog, installer, curated assets, narrative, and release gates
 
 ---
 *Last updated: 2026-07-21 after Portable Agentic Workbench phase addition*

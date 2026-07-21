@@ -5,24 +5,26 @@
 See: `.planning/PROJECT.md` (updated 2026-07-21)
 
 **Core value:** Make recurring agent failure modes portable, explainable, and verifiable while preserving the separate QR track.
-**Current focus:** Portable Agentic Workbench packaging
+**Current focus:** Portable Agentic Workbench release review
 
 ## Milestone
 
 **Name:** Portable Agentic Workbench v0.2.0
-**Status:** In progress on feature branch
+**Status:** Ready for review
 **Started:** 2026-07-21
 
 ## Active Phase
 
 - **Phase:** 2
 - **Slug:** `portable-agentic-workbench`
-- **Status:** Implementing
+- **Status:** Complete
 - **Plan:** `02-01-PLAN.md`
 
 ## Completed Scope
 
 - GSD project bootstrap initialized from QR documentation.
+- Portable Agentic Workbench Phase 2 implemented, verified, and integrated into
+  `dev`; release tag and publish remain review-gated.
 
 ## Parallel Planning Track
 
@@ -44,5 +46,5 @@ See: `.planning/PROJECT.md` (updated 2026-07-21)
 ## Next Command
 
 ```bash
-/gsd-execute-phase 2
+/gsd-progress
 ```
