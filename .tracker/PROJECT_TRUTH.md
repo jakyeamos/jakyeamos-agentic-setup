@@ -77,6 +77,8 @@ rewrite the existing QR-remediation phase.
   adapter/reference tests as `8a8ad42`; Pre-CR and the focused suite remain green.
 - 2026-07-21: Final static checks reached Ruff PASS, basedpyright zero errors
   with JSON-typing warnings, and Vulture PASS.
+- 2026-07-21: Clean-room archive verification passed skill, catalog, safety,
+  focused tests, dry-run, apply, and no-overwrite checks without external CLIs.
 - 2026-07-21: Preserved the existing Research Domain Writing and Terrace skill
   locations and retained the existing skill validator.
 
@@ -96,6 +98,8 @@ rewrite the existing QR-remediation phase.
 - **Focused tests:** `python3 -m unittest discover -s tests -p 'test_*.py'` PASS.
 - **Pre-CR:** non-empty feature diff PASS with 67% aggregate changed-line
   coverage, threshold 0%, and anti-slop PASS.
+- **Clean-room:** standard-library checkout passed validation and disposable
+  target installation; a second apply was rejected without overwriting files.
 
 ## Next Concrete Steps
 
