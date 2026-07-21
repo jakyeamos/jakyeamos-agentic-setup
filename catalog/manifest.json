@@ -1,0 +1,539 @@
+{
+  "schema_version": 1,
+  "workbench": {
+    "id": "portable-agentic-workbench",
+    "name": "Portable Agentic Workbench",
+    "repository": "jakyeamos-agent-skills",
+    "version": "0.2.0",
+    "license": "MIT"
+  },
+  "asset_policy": {
+    "portable": "Safe to copy and reuse without the author's private runtime.",
+    "adapter": "Target-specific guidance staged for manual review; registration is never implicit.",
+    "case-study": "Evidence and design narrative only; not an installable runtime.",
+    "external": "Linked project or contract; no runtime is copied into this repository.",
+    "excluded": "Private, generated, vendor-owned, credential-bearing, or unsafe material."
+  },
+  "source_map": [
+    {
+      "source_id": "authored-workbench",
+      "class": "portable",
+      "treatment": "authored-or-sanitized-files-in-this-repository"
+    },
+    {
+      "source_id": "local-agent-workflows",
+      "class": "adapter",
+      "treatment": "behavioral-patterns-only; machine paths and registrations removed"
+    },
+    {
+      "source_id": "aios-runtime",
+      "class": "excluded",
+      "treatment": "link-and-case-study-only; runtime, logs, databases, and generated harvests are not copied"
+    },
+    {
+      "source_id": "tmcp-quality-runtime",
+      "class": "external",
+      "treatment": "link-and-contract-fixture-only; runtimes remain in their own projects"
+    },
+    {
+      "source_id": "vendor-managed-config",
+      "class": "excluded",
+      "treatment": "do not redistribute managed files, private sessions, credentials, or raw transcripts"
+    }
+  ],
+  "assets": [
+    {
+      "id": "adapter-claude",
+      "kind": "adapter",
+      "asset_class": "adapter",
+      "title": "Claude adapter",
+      "summary": "Manual-review mapping from the vendor-neutral workbench contracts to Claude project instructions and hooks.",
+      "maturity": "beta",
+      "capabilities": ["context-compaction", "workflow-routing", "manual-hook-staging", "safety"],
+      "supported_targets": ["claude"],
+      "entrypoints": ["adapters/claude/WORKBENCH.md"],
+      "files": ["adapters/claude/WORKBENCH.md"],
+      "dependencies": [],
+      "provenance": {
+        "status": "sanitized-derived",
+        "source": "behavioral-patterns-from-local-agent-workflows",
+        "license_status": "MIT",
+        "redistribution": "allowed"
+      },
+      "evidence": ["docs/case-studies/portable-skill-distribution.md"],
+      "install": {
+        "mode": "stage",
+        "destination": "workbench/adapters/claude",
+        "manual_review": "Review the staged mapping and register it through the host's documented project surface."
+      }
+    },
+    {
+      "id": "adapter-codex",
+      "kind": "adapter",
+      "asset_class": "adapter",
+      "title": "Codex adapter",
+      "summary": "Manual-review mapping from the vendor-neutral workbench contracts to Codex skills, compaction, and tool guards.",
+      "maturity": "beta",
+      "capabilities": ["context-compaction", "workflow-routing", "manual-hook-staging", "safety"],
+      "supported_targets": ["codex"],
+      "entrypoints": ["adapters/codex/WORKBENCH.md"],
+      "files": ["adapters/codex/WORKBENCH.md"],
+      "dependencies": [],
+      "provenance": {
+        "status": "sanitized-derived",
+        "source": "behavioral-patterns-from-local-agent-workflows",
+        "license_status": "MIT",
+        "redistribution": "allowed"
+      },
+      "evidence": ["docs/case-studies/context-compaction.md"],
+      "install": {
+        "mode": "stage",
+        "destination": "workbench/adapters/codex",
+        "manual_review": "Review the staged mapping before adding any host-specific hook or project instruction."
+      }
+    },
+    {
+      "id": "adapter-copilot",
+      "kind": "adapter",
+      "asset_class": "adapter",
+      "title": "Copilot adapter",
+      "summary": "Manual-review mapping from the vendor-neutral workbench contracts to Copilot repository instructions and guard surfaces.",
+      "maturity": "experimental",
+      "capabilities": ["workflow-routing", "manual-hook-staging", "safety"],
+      "supported_targets": ["copilot"],
+      "entrypoints": ["adapters/copilot/WORKBENCH.md"],
+      "files": ["adapters/copilot/WORKBENCH.md"],
+      "dependencies": [],
+      "provenance": {
+        "status": "sanitized-derived",
+        "source": "behavioral-patterns-from-local-agent-workflows",
+        "license_status": "MIT",
+        "redistribution": "allowed"
+      },
+      "evidence": ["docs/case-studies/safety-guards.md"],
+      "install": {
+        "mode": "stage",
+        "destination": "workbench/adapters/copilot",
+        "manual_review": "Review the staged mapping and use only the host's supported repository-level registration surface."
+      }
+    },
+    {
+      "id": "adapter-cursor",
+      "kind": "adapter",
+      "asset_class": "adapter",
+      "title": "Cursor adapter",
+      "summary": "Manual-review mapping from the vendor-neutral workbench contracts to Cursor project instructions and tool guards.",
+      "maturity": "experimental",
+      "capabilities": ["workflow-routing", "manual-hook-staging", "safety"],
+      "supported_targets": ["cursor"],
+      "entrypoints": ["adapters/cursor/WORKBENCH.md"],
+      "files": ["adapters/cursor/WORKBENCH.md"],
+      "dependencies": [],
+      "provenance": {
+        "status": "sanitized-derived",
+        "source": "behavioral-patterns-from-local-agent-workflows",
+        "license_status": "MIT",
+        "redistribution": "allowed"
+      },
+      "evidence": ["docs/case-studies/portable-skill-distribution.md"],
+      "install": {
+        "mode": "stage",
+        "destination": "workbench/adapters/cursor",
+        "manual_review": "Review the staged mapping before adding any host-specific hook or project instruction."
+      }
+    },
+    {
+      "id": "adapter-generic",
+      "kind": "adapter",
+      "asset_class": "adapter",
+      "title": "Generic agent adapter",
+      "summary": "Host-neutral manual-review checklist for mapping the workbench contracts into an agent that supports project instructions.",
+      "maturity": "stable",
+      "capabilities": ["context-compaction", "workflow-routing", "safety", "handoff"],
+      "supported_targets": ["generic"],
+      "entrypoints": ["adapters/generic/WORKBENCH.md"],
+      "files": ["adapters/generic/WORKBENCH.md"],
+      "dependencies": [],
+      "provenance": {
+        "status": "authored",
+        "source": "authored-in-this-repository",
+        "license_status": "MIT",
+        "redistribution": "allowed"
+      },
+      "evidence": ["docs/mining.md"],
+      "install": {
+        "mode": "stage",
+        "destination": "workbench/adapters/generic",
+        "manual_review": "Map the staged checklist to the host's documented instruction and hook surfaces."
+      }
+    },
+    {
+      "id": "context-budget-governor",
+      "kind": "workflow",
+      "asset_class": "portable",
+      "title": "Context budget governor",
+      "summary": "A vendor-neutral checkpoint policy that turns a token-budget threshold into a reviewable compaction handoff.",
+      "maturity": "beta",
+      "capabilities": ["long-context", "compaction", "checkpointing", "handoff"],
+      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "entrypoints": ["workflows/context-budget-governor/WORKFLOW.md"],
+      "files": [
+        "workflows/context-budget-governor/CHECKPOINT_TEMPLATE.md",
+        "workflows/context-budget-governor/WORKFLOW.md"
+      ],
+      "dependencies": [],
+      "provenance": {
+        "status": "authored",
+        "source": "authored-in-this-repository",
+        "license_status": "MIT",
+        "redistribution": "allowed"
+      },
+      "evidence": ["docs/case-studies/context-compaction.md"],
+      "install": {
+        "mode": "copy",
+        "destination": "workbench/workflows/context-budget-governor"
+      }
+    },
+    {
+      "id": "evaluation-evidence",
+      "kind": "workflow",
+      "asset_class": "portable",
+      "title": "Evaluation and evidence loop",
+      "summary": "A contract-oriented evidence workflow for separating observed results, hypotheses, limitations, and reproducible fixtures.",
+      "maturity": "beta",
+      "capabilities": ["evaluation", "evidence", "fixtures", "provenance"],
+      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "entrypoints": ["workflows/evaluation-evidence/WORKFLOW.md"],
+      "files": [
+        "fixtures/evaluation/contract-fixture.json",
+        "workflows/evaluation-evidence/WORKFLOW.md"
+      ],
+      "dependencies": [],
+      "provenance": {
+        "status": "sanitized-derived",
+        "source": "contract-shaped-evaluation-patterns; external runtimes remain linked",
+        "license_status": "MIT",
+        "redistribution": "allowed"
+      },
+      "evidence": ["docs/case-studies/governed-execution.md"],
+      "install": {
+        "mode": "copy",
+        "destination": "workbench/workflows/evaluation-evidence",
+        "path_map": {
+          "fixtures/evaluation/contract-fixture.json": "contract-fixture.json",
+          "workflows/evaluation-evidence/WORKFLOW.md": "WORKFLOW.md"
+        }
+      }
+    },
+    {
+      "id": "governed-work-loop",
+      "kind": "workflow",
+      "asset_class": "portable",
+      "title": "Governed work loop",
+      "summary": "A compact route -> context -> execute -> verify -> handoff operating loop for agentic work.",
+      "maturity": "stable",
+      "capabilities": ["routing", "execution", "verification", "handoff"],
+      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "entrypoints": ["workflows/governed-work-loop/WORKFLOW.md"],
+      "files": ["workflows/governed-work-loop/WORKFLOW.md"],
+      "dependencies": [],
+      "provenance": {
+        "status": "authored",
+        "source": "authored-in-this-repository",
+        "license_status": "MIT",
+        "redistribution": "allowed"
+      },
+      "evidence": ["docs/case-studies/governed-execution.md"],
+      "install": {
+        "mode": "copy",
+        "destination": "workbench/workflows/governed-work-loop"
+      }
+    },
+    {
+      "id": "research-domain-writing",
+      "kind": "skill",
+      "asset_class": "portable",
+      "title": "Research Domain Writing",
+      "summary": "Research -> packet -> draft -> QA -> style workflow for domain-specific writing.",
+      "maturity": "stable",
+      "capabilities": ["research", "grounding", "domain-writing", "qa"],
+      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "entrypoints": ["skills/research-domain-writing/SKILL.md"],
+      "files": [
+        "skills/research-domain-writing/SKILL.md",
+        "skills/research-domain-writing/agents/openai.yaml",
+        "skills/research-domain-writing/config/domains.yaml",
+        "skills/research-domain-writing/config/output-formats.yaml",
+        "skills/research-domain-writing/config/research-sources.yaml",
+        "skills/research-domain-writing/config/router-inference.yaml",
+        "skills/research-domain-writing/config/style-profile.yaml",
+        "skills/research-domain-writing/examples/batch-tasks.yaml",
+        "skills/research-domain-writing/prompts/batch-runner.md",
+        "skills/research-domain-writing/prompts/domain-copywriter.md",
+        "skills/research-domain-writing/prompts/domain-qa.md",
+        "skills/research-domain-writing/prompts/domain-router.md",
+        "skills/research-domain-writing/prompts/humanizer-blader.md",
+        "skills/research-domain-writing/prompts/knowledge-packet-builder.md",
+        "skills/research-domain-writing/prompts/pipeline-orchestrator.md",
+        "skills/research-domain-writing/prompts/research-planner.md",
+        "skills/research-domain-writing/prompts/researcher.md",
+        "skills/research-domain-writing/references/limitations.md"
+      ],
+      "dependencies": [
+        {
+          "name": "rdw",
+          "kind": "external-cli",
+          "required": false,
+          "command": "rdw"
+        }
+      ],
+      "provenance": {
+        "status": "authored",
+        "source": "research-domain-writing-public-project",
+        "license_status": "MIT",
+        "redistribution": "allowed"
+      },
+      "evidence": ["docs/case-studies/portable-skill-distribution.md"],
+      "install": {
+        "mode": "copy",
+        "destination": "skills/research-domain-writing"
+      }
+    },
+    {
+      "id": "repo-aware-context",
+      "kind": "workflow",
+      "asset_class": "portable",
+      "title": "Repo-aware context routing",
+      "summary": "A repository-first context selection discipline that keeps instructions, source maps, and live truth separate.",
+      "maturity": "beta",
+      "capabilities": ["repo-awareness", "routing", "context-selection", "scope-control"],
+      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "entrypoints": ["workflows/repo-aware-context/WORKFLOW.md"],
+      "files": ["workflows/repo-aware-context/WORKFLOW.md"],
+      "dependencies": [],
+      "provenance": {
+        "status": "sanitized-derived",
+        "source": "repository-aware-agent-workflow-patterns",
+        "license_status": "MIT",
+        "redistribution": "allowed"
+      },
+      "evidence": ["docs/case-studies/context-routing.md"],
+      "install": {
+        "mode": "copy",
+        "destination": "workbench/workflows/repo-aware-context"
+      }
+    },
+    {
+      "id": "reference-agent-eval-contract",
+      "kind": "reference",
+      "asset_class": "external",
+      "title": "Agent evaluation contract",
+      "summary": "External contract reference for structured evaluation payloads; its runtime is not copied here.",
+      "maturity": "reference",
+      "capabilities": ["evaluation", "contract", "evidence"],
+      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "entrypoints": [],
+      "files": [],
+      "dependencies": [],
+      "provenance": {
+        "status": "external-reference",
+        "source": "https://github.com/jakyeamos/agent-eval-contract",
+        "license_status": "reference-only",
+        "redistribution": "reference-only"
+      },
+      "external_links": ["https://github.com/jakyeamos/agent-eval-contract"],
+      "evidence": ["docs/case-studies/governed-execution.md"],
+      "install": {
+        "mode": "manual",
+        "manual_review": "Read the external contract and adapt only the fields required by the host workflow."
+      }
+    },
+    {
+      "id": "reference-aios",
+      "kind": "reference",
+      "asset_class": "external",
+      "title": "AIOS runtime reference",
+      "summary": "External local operating-system reference for context, routing, memory, and project health patterns.",
+      "maturity": "reference",
+      "capabilities": ["runtime", "context", "routing", "memory"],
+      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot", "gemini"],
+      "entrypoints": [],
+      "files": [],
+      "dependencies": [],
+      "provenance": {
+        "status": "external-reference",
+        "source": "https://github.com/jakyeamos/AIOS",
+        "license_status": "reference-only",
+        "redistribution": "reference-only"
+      },
+      "external_links": ["https://github.com/jakyeamos/AIOS"],
+      "evidence": ["docs/case-studies/context-routing.md"],
+      "install": {
+        "mode": "manual",
+        "manual_review": "Use this as a design reference only; do not copy runtime files, logs, databases, or generated harvests."
+      }
+    },
+    {
+      "id": "reference-context-compiler-contract",
+      "kind": "reference",
+      "asset_class": "external",
+      "title": "Context compiler contract",
+      "summary": "External contract reference for context packet boundaries and compiler-facing integration.",
+      "maturity": "reference",
+      "capabilities": ["context", "contract", "integration"],
+      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "entrypoints": [],
+      "files": [],
+      "dependencies": [],
+      "provenance": {
+        "status": "external-reference",
+        "source": "https://github.com/jakyeamos/context-compiler-contract",
+        "license_status": "reference-only",
+        "redistribution": "reference-only"
+      },
+      "external_links": ["https://github.com/jakyeamos/context-compiler-contract"],
+      "evidence": ["docs/case-studies/context-routing.md"],
+      "install": {
+        "mode": "manual",
+        "manual_review": "Read the contract before building an adapter; this repository does not vendor its implementation."
+      }
+    },
+    {
+      "id": "reference-gemini-surface",
+      "kind": "reference",
+      "asset_class": "external",
+      "title": "Gemini surface reference",
+      "summary": "Catalog-only reference for Gemini-related instruction and tool surfaces whose v1 install semantics are not stable here.",
+      "maturity": "reference",
+      "capabilities": ["reference", "portability", "surface-audit"],
+      "supported_targets": ["gemini"],
+      "entrypoints": [],
+      "files": [],
+      "dependencies": [],
+      "provenance": {
+        "status": "external-reference",
+        "source": "gemini-host-surface-not-packaged",
+        "license_status": "reference-only",
+        "redistribution": "reference-only"
+      },
+      "external_links": [],
+      "evidence": ["docs/mining.md"],
+      "install": {
+        "mode": "manual",
+        "manual_review": "Catalog only in v1; verify the host's current supported project surface before adapting."
+      }
+    },
+    {
+      "id": "reference-quality-runner",
+      "kind": "reference",
+      "asset_class": "external",
+      "title": "Quality Runner reference",
+      "summary": "External quality and evidence reference; runtime, caches, and artifacts remain outside this package.",
+      "maturity": "reference",
+      "capabilities": ["quality", "evidence", "release-readiness"],
+      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "entrypoints": [],
+      "files": [],
+      "dependencies": [],
+      "provenance": {
+        "status": "external-reference",
+        "source": "quality-runner-external-project",
+        "license_status": "reference-only",
+        "redistribution": "reference-only"
+      },
+      "external_links": [],
+      "evidence": ["docs/case-studies/governed-execution.md"],
+      "install": {
+        "mode": "manual",
+        "manual_review": "Use the external quality system when available; this package provides only portable evidence guidance."
+      }
+    },
+    {
+      "id": "reference-tmcp",
+      "kind": "reference",
+      "asset_class": "external",
+      "title": "TMCP reference",
+      "summary": "External workflow and skill-graph reference; TMCP runtime and generated harvest output are not copied.",
+      "maturity": "reference",
+      "capabilities": ["workflow", "skill-graph", "routing", "evidence"],
+      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "entrypoints": [],
+      "files": [],
+      "dependencies": [],
+      "provenance": {
+        "status": "external-reference",
+        "source": "https://github.com/jakyeamos/tmcp",
+        "license_status": "reference-only",
+        "redistribution": "reference-only"
+      },
+      "external_links": ["https://github.com/jakyeamos/tmcp"],
+      "evidence": ["docs/case-studies/portable-skill-distribution.md"],
+      "install": {
+        "mode": "manual",
+        "manual_review": "Use the external project for TMCP execution; this repository contains only portable boundary patterns."
+      }
+    },
+    {
+      "id": "safe-tool-guards",
+      "kind": "workflow",
+      "asset_class": "portable",
+      "title": "Safe shell and tool guards",
+      "summary": "A vendor-neutral contract for classifying, previewing, approving, and recording tool actions before execution.",
+      "maturity": "beta",
+      "capabilities": ["safety", "shell", "tool-guards", "dry-run", "audit"],
+      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "entrypoints": ["workflows/safe-tool-guards/WORKFLOW.md"],
+      "files": [
+        "workflows/safe-tool-guards/CONTRACT.md",
+        "workflows/safe-tool-guards/WORKFLOW.md"
+      ],
+      "dependencies": [],
+      "provenance": {
+        "status": "sanitized-derived",
+        "source": "cross-host-command-guard-patterns",
+        "license_status": "MIT",
+        "redistribution": "allowed"
+      },
+      "evidence": ["docs/case-studies/safety-guards.md"],
+      "install": {
+        "mode": "copy",
+        "destination": "workbench/workflows/safe-tool-guards"
+      }
+    },
+    {
+      "id": "terrace",
+      "kind": "skill",
+      "asset_class": "portable",
+      "title": "Terrace",
+      "summary": "Router skill for planning, execution, validation, review, and release-readiness work through Terrace.",
+      "maturity": "stable",
+      "capabilities": ["workflow-routing", "planning", "execution", "release-readiness"],
+      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "entrypoints": ["skills/terrace/SKILL.md"],
+      "files": [
+        "skills/terrace/SKILL.md",
+        "skills/terrace/agents/openai.yaml",
+        "skills/terrace/references/commands.md"
+      ],
+      "dependencies": [
+        {
+          "name": "terrace",
+          "kind": "external-cli",
+          "required": true,
+          "command": "terrace"
+        }
+      ],
+      "provenance": {
+        "status": "authored",
+        "source": "terrace-public-project",
+        "license_status": "MIT",
+        "redistribution": "allowed"
+      },
+      "evidence": ["docs/case-studies/portable-skill-distribution.md"],
+      "install": {
+        "mode": "copy",
+        "destination": "skills/terrace"
+      }
+    }
+  ]
+}
