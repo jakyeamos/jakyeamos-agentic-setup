@@ -9,6 +9,10 @@
   "surfaces": {
     "covered": [
       "scripts/validate_skills.py",
+      "scripts/catalog_validation.py",
+      "scripts/public_safety_check.py",
+      "scripts/validate_catalog.py",
+      "scripts/workbench.py",
       ".tracker/**"
     ],
     "ignored": [
@@ -19,7 +23,14 @@
       "README.md",
       "SECURITY.md",
       "scripts/pre_cr_coverage.py",
-      "skills/**"
+      "skills/**",
+      "tests/**",
+      "docs/**",
+      "workflows/**",
+      "adapters/**",
+      "fixtures/**",
+      "catalog/**",
+      ".planning/**"
     ],
     "unsupported": []
   },
