@@ -4,7 +4,7 @@ projectName: jakyeamos-agent-skills
 summary: Portable Agentic Workbench cataloging reusable context, routing, safety, evaluation, and handoff workflows while retaining the original two skills.
 healthScore: 92
 statusLabel: in-progress
-nextStep: Run the final clean-room install and non-empty-diff Pre-CR gates, then review integration into dev.
+nextStep: Review and approve the additive v0.2.0 release/tag; no publish or tag was performed by this implementation pass.
 blockers: []
 lastUpdated: 2026-07-21
 tags: [agent-skills, portable-workbench, context-management, workflow-routing, safety, evaluation]
@@ -18,7 +18,7 @@ repoType: portable-agent-workbench
 sourceOfTruth: catalog/manifest.json
 primaryLanguage: Python
 integrationBranch: dev
-activeBranch: codex/agentic-workbench-expansion
+activeBranch: dev
 lastCommitDate: "2026-07-21"
 quality:
   lint: pass
@@ -55,9 +55,9 @@ installation. The dependency-free Python CLI supports deterministic list,
 search, show, install, and validate commands. The original skill paths remain
 unchanged.
 
-The feature branch is `codex/agentic-workbench-expansion`; `dev` remains the
-integration branch. The current work is additive and does not execute or
-rewrite the existing QR-remediation phase.
+The verified feature branch `codex/agentic-workbench-expansion` was fast-forward
+integrated into `dev` at `c8fe9fe`. The current work is additive and does not
+execute or rewrite the existing QR-remediation phase.
 
 ## Recent Progress
 
@@ -80,13 +80,16 @@ rewrite the existing QR-remediation phase.
 - 2026-07-21: Clean-room archive verification passed skill, catalog, safety,
   focused tests, dry-run, apply, and no-overwrite checks without external CLIs.
 - 2026-07-21: Recorded the final verification evidence in `bc16385`.
+- 2026-07-21: Fast-forward integrated the verified feature branch into `dev` at
+  `c8fe9fe`; no release tag or publish was performed.
 - 2026-07-21: Preserved the existing Research Domain Writing and Terrace skill
   locations and retained the existing skill validator.
 
 ## Open Problems
 
-- Feature-branch pre-CR must be run against a non-empty diff; a clean tree is
-  known to produce no coverage result in the current pre-CR tool behavior.
+- The current clean tree produces no coverage result when pre-CR is run without
+  a changed diff; staged feature-branch commit gates already passed against
+  non-empty diffs.
 - Ruff, basedpyright, and Vulture are available for the dependency-free Python
   package; basedpyright reports only dynamic-JSON typing warnings.
 
@@ -104,10 +107,9 @@ rewrite the existing QR-remediation phase.
 
 ## Next Concrete Steps
 
-1. Run the full validation and clean-room apply/no-overwrite checks.
-2. Run pre-CR against the feature diff and inspect the structured result.
-3. Review the branch, update this truth snapshot, and integrate into `dev` only
-   after acceptance evidence is complete.
+1. Review the catalog and clean-room evidence for the additive v0.2.0 release.
+2. Decide whether to create the release tag and publish after review.
+3. Keep the QR-remediation phase on its separate execution track.
 
 ## QR Remediation Planning
 
