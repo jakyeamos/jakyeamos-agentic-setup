@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "task": {
+    "id": "portable-workflow-smoke",
+    "description": "Verify that an agent can inspect, stage, and hand off a catalog asset.",
+    "inputs": ["catalog/manifest.json"]
+  },
+  "expectations": [
+    "catalog metadata is deterministic JSON",
+    "dry-run performs no target-root mutation",
+    "apply mode does not overwrite an existing file",
+    "manual adapter registration is visible to the operator"
+  ],
+  "evidence": {
+    "observed": [],
+    "hypotheses": [],
+    "limitations": [
+      "This fixture does not measure model quality or context-window performance."
+    ]
+  }
+}
