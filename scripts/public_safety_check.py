@@ -20,21 +20,28 @@ IGNORED_DIRECTORIES = {
     "node_modules",
 }
 INTENTIONAL_RULE_FILES = {
+    "scripts/catalog_validation.py",
     "scripts/public_safety_check.py",
     "scripts/validate_skills.py",
 }
 PRIVATE_PATH_PATTERNS = (
-    re.compile(r"(?<![A-Za-z0-9_])/(?:Users|home|private/var|var/folders)/[^\s'\"`<>]+"),
-    re.compile(r"(?<![A-Za-z0-9_])~/(?:\.ssh|Library|\.config)/[^\s'\"`<>]+"),
+    re.compile(
+        r"(?<![A-Za-z0-9_])/(?:Users|home|private/var|var/folders)/[^\s'\"`<>]+"
+    ),
+    re.compile(r"(?<![A-Za-z0-9_])~/[^\s'\"`<>]+"),
 )
 AUTHORIZATION_PATTERN = re.compile(
     r"(?i)(?:authorization|proxy-authorization)\s*:\s*(?:bearer|basic)\s+[A-Za-z0-9._~+/=-]{8,}"
 )
 SECRET_ASSIGNMENT_PATTERN = re.compile(
-    r"(?i)\b(?:api[_-]?key|access[_-]?token|refresh[_-]?token|secret|password)\s*[=:]\s*[\"']?[A-Za-z0-9_./+=-]{12,}"
+    r"(?i)\b(?:api[_-]?key|access[_-]?token|refresh[_-]?token|secret|password|token)\s*[=:]\s*[\"']?[A-Za-z0-9_./+=-]{12,}"
 )
-KNOWN_TOKEN_PATTERN = re.compile(r"\b(?:sk-[A-Za-z0-9]{16,}|ghp_[A-Za-z0-9]{20,}|xox[baprs]-[A-Za-z0-9-]{16,}|AIza[A-Za-z0-9_-]{20,})\b")
-PRIVATE_DATABASE_PATTERN = re.compile(r"(?i)\b(?:session|transcript|credentials|auth)[-_][A-Za-z0-9.-]+\.(?:db|sqlite|log)\b")
+KNOWN_TOKEN_PATTERN = re.compile(
+    r"\b(?:sk-[A-Za-z0-9]{16,}|ghp_[A-Za-z0-9]{20,}|xox[baprs]-[A-Za-z0-9-]{16,}|AIza[A-Za-z0-9_-]{20,})\b"
+)
+PRIVATE_DATABASE_PATTERN = re.compile(
+    r"(?i)\b(?:session|transcript|credentials|auth)(?:[-_][A-Za-z0-9.-]+)?\.(?:db|sqlite|log)\b"
+)
 
 
 def _is_ignored(path: Path, root: Path) -> bool:
@@ -51,7 +58,7 @@ def public_files(root: Path) -> Iterable[Path]:
         relative = path.relative_to(root).as_posix()
         if relative in INTENTIONAL_RULE_FILES:
             continue
-        if path.name == ".env" or path.name.startswith(".env."):
+        if path.name == ".env" or path.name.startswith(".env"):
             yield path
             continue
         yield path
@@ -82,23 +89,28 @@ def scan_repository(root: Path) -> list[str]:
     findings: list[str] = []
     for path in public_files(root):
         relative = path.relative_to(root).as_posix()
-        if path.name == ".env" or path.name.startswith(".env."):
+        if path.name == ".env" or path.name.startswith(".env"):
             findings.append(f"{relative}: environment file is not distributable")
             continue
-        if path.suffix.lower() in {".pem", ".key"} or path.name in {"id_rsa", "credentials.json"}:
+        if path.suffix.lower() in {".pem", ".key"} or path.name in {
+            "id_rsa",
+            "credentials.json",
+        }:
             findings.append(f"{relative}: credential-bearing file is not distributable")
             continue
         try:
             text = path.read_text(encoding="utf-8")
         except UnicodeDecodeError:
             continue
-        findings.extend(scan_text(relative, text))
+        findings.extend(scan_text(Path(relative), text))
     return findings
 
 
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--root", type=Path, default=Path(__file__).resolve().parents[1])
+    parser.add_argument(
+        "--root", type=Path, default=Path(__file__).resolve().parents[1]
+    )
     parser.add_argument("--json", action="store_true", help="emit deterministic JSON")
     return parser
 
@@ -111,7 +123,11 @@ def main(argv: list[str] | None = None) -> int:
     if args.json:
         import json
 
-        print(json.dumps({"findings": findings, "ok": not findings}, indent=2, sort_keys=True))
+        print(
+            json.dumps(
+                {"findings": findings, "ok": not findings}, indent=2, sort_keys=True
+            )
+        )
     else:
         if findings:
             for finding in findings:

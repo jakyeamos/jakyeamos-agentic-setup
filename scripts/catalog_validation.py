@@ -16,7 +16,12 @@ ALLOWED_MATURITIES = {"experimental", "alpha", "beta", "stable", "reference"}
 ALLOWED_TARGETS = {"generic", "codex", "claude", "cursor", "copilot", "gemini"}
 ALLOWED_INSTALL_MODES = {"copy", "stage", "manual"}
 ALLOWED_PROVENANCE_STATUSES = {"authored", "external-reference", "sanitized-derived"}
-ALLOWED_LICENSE_STATUSES = {"MIT", "MIT-compatible", "not-redistributed", "reference-only"}
+ALLOWED_LICENSE_STATUSES = {
+    "MIT",
+    "MIT-compatible",
+    "not-redistributed",
+    "reference-only",
+}
 SOURCE_ID_PATTERN = re.compile(r"^[a-z0-9][a-z0-9-]+$")
 PRIVATE_REFERENCE_PATTERN = re.compile(
     r"(?:/(?:Users|home|private/var)/|~/(?:\.ssh|Library|\.config))"
@@ -101,7 +106,9 @@ def _validate_dependency(path_label: str, dependency: Any) -> list[str]:
     if command is not None and (
         not isinstance(command, str) or not re.fullmatch(r"[A-Za-z0-9_.-]+", command)
     ):
-        errors.append(f"{path_label}: dependency command must be a simple executable name")
+        errors.append(
+            f"{path_label}: dependency command must be a simple executable name"
+        )
     return errors
 
 
@@ -119,7 +126,21 @@ def _validate_asset(root: Path, asset: Any, seen_ids: set[str]) -> list[str]:
     else:
         seen_ids.add(asset_id)
 
-    for key in ("kind", "asset_class", "title", "summary", "maturity", "capabilities", "supported_targets", "entrypoints", "files", "dependencies", "provenance", "evidence", "install"):
+    for key in (
+        "kind",
+        "asset_class",
+        "title",
+        "summary",
+        "maturity",
+        "capabilities",
+        "supported_targets",
+        "entrypoints",
+        "files",
+        "dependencies",
+        "provenance",
+        "evidence",
+        "install",
+    ):
         if key not in asset:
             errors.append(f"{label}: missing {key}")
 
@@ -133,7 +154,14 @@ def _validate_asset(root: Path, asset: Any, seen_ids: set[str]) -> list[str]:
     if maturity not in ALLOWED_MATURITIES:
         errors.append(f"{label}: unsupported maturity {maturity!r}")
 
-    for key in ("capabilities", "supported_targets", "entrypoints", "files", "dependencies", "evidence"):
+    for key in (
+        "capabilities",
+        "supported_targets",
+        "entrypoints",
+        "files",
+        "dependencies",
+        "evidence",
+    ):
         if not isinstance(asset.get(key), list):
             errors.append(f"{label}: {key} must be a list")
 
@@ -161,12 +189,16 @@ def _validate_asset(root: Path, asset: Any, seen_ids: set[str]) -> list[str]:
     if isinstance(entrypoints, list):
         for entrypoint in entrypoints:
             if entrypoint not in files:
-                errors.append(f"{label}: entrypoint is not listed in files: {entrypoint}")
+                errors.append(
+                    f"{label}: entrypoint is not listed in files: {entrypoint}"
+                )
 
     dependencies = asset.get("dependencies", [])
     if isinstance(dependencies, list):
         for index, dependency in enumerate(dependencies):
-            errors.extend(_validate_dependency(f"{label} dependency {index}", dependency))
+            errors.extend(
+                _validate_dependency(f"{label} dependency {index}", dependency)
+            )
 
     provenance = asset.get("provenance")
     if not isinstance(provenance, dict):
@@ -181,7 +213,9 @@ def _validate_asset(root: Path, asset: Any, seen_ids: set[str]) -> list[str]:
             errors.append(f"{label}: invalid license status {license_status!r}")
         if redistribution not in {"allowed", "reference-only"}:
             errors.append(f"{label}: invalid redistribution status {redistribution!r}")
-        errors.extend(_validate_source_reference(f"{label} provenance", provenance.get("source")))
+        errors.extend(
+            _validate_source_reference(f"{label} provenance", provenance.get("source"))
+        )
         if asset_class == "external" and redistribution != "reference-only":
             errors.append(f"{label}: external assets must be reference-only")
         if asset_class != "external" and redistribution != "allowed":
@@ -192,7 +226,10 @@ def _validate_asset(root: Path, asset: Any, seen_ids: set[str]) -> list[str]:
         for evidence_ref in evidence:
             if not isinstance(evidence_ref, str) or not evidence_ref:
                 errors.append(f"{label}: evidence references must be strings")
-            elif not _is_url(evidence_ref) and not (root / evidence_ref.split("#", 1)[0]).is_file():
+            elif (
+                not _is_url(evidence_ref)
+                and not (root / evidence_ref.split("#", 1)[0]).is_file()
+            ):
                 errors.append(f"{label}: missing evidence reference {evidence_ref}")
 
     external_links = asset.get("external_links", [])
@@ -214,7 +251,9 @@ def _validate_asset(root: Path, asset: Any, seen_ids: set[str]) -> list[str]:
         destination = install.get("destination")
         if mode in {"copy", "stage"}:
             if not _is_relative_path(destination):
-                errors.append(f"{label}: {mode} install requires a relative destination")
+                errors.append(
+                    f"{label}: {mode} install requires a relative destination"
+                )
         if mode == "manual" and not isinstance(install.get("manual_review"), str):
             errors.append(f"{label}: manual install requires manual_review guidance")
         if asset_class == "adapter" and mode != "stage":
@@ -228,9 +267,13 @@ def _validate_asset(root: Path, asset: Any, seen_ids: set[str]) -> list[str]:
             else:
                 for source, target in path_map.items():
                     if source not in files:
-                        errors.append(f"{label}: path_map source is not listed in files: {source}")
+                        errors.append(
+                            f"{label}: path_map source is not listed in files: {source}"
+                        )
                     if not _is_relative_path(target):
-                        errors.append(f"{label}: path_map destination must be relative: {target!r}")
+                        errors.append(
+                            f"{label}: path_map destination must be relative: {target!r}"
+                        )
 
     return errors
 
@@ -258,7 +301,9 @@ def validate_manifest(root: Path) -> list[str]:
 
     policy = manifest.get("asset_policy")
     if not isinstance(policy, dict) or set(ALLOWED_ASSET_CLASSES) - set(policy):
-        errors.append("catalog/manifest.json: asset_policy must describe every public asset class")
+        errors.append(
+            "catalog/manifest.json: asset_policy must describe every public asset class"
+        )
 
     source_map = manifest.get("source_map")
     if not isinstance(source_map, list) or not source_map:
@@ -269,9 +314,19 @@ def validate_manifest(root: Path) -> list[str]:
                 errors.append(f"source_map[{index}]: must be an object")
                 continue
             if source.get("class") not in ALLOWED_ASSET_CLASSES:
-                errors.append(f"source_map[{index}]: invalid class {source.get('class')!r}")
-            errors.extend(_validate_source_reference(f"source_map[{index}]", source.get("source_id")))
-            errors.extend(_validate_source_reference(f"source_map[{index}]", source.get("treatment")))
+                errors.append(
+                    f"source_map[{index}]: invalid class {source.get('class')!r}"
+                )
+            errors.extend(
+                _validate_source_reference(
+                    f"source_map[{index}]", source.get("source_id")
+                )
+            )
+            errors.extend(
+                _validate_source_reference(
+                    f"source_map[{index}]", source.get("treatment")
+                )
+            )
 
     assets = manifest.get("assets")
     if not isinstance(assets, list) or not assets:
@@ -282,7 +337,11 @@ def validate_manifest(root: Path) -> list[str]:
             errors.extend(_validate_asset(root, asset, seen_ids))
 
     for path in sorted(root.rglob("*.md")):
-        if any(part in {".git", ".pre-cr", ".quality-runner", ".aios", ".tmcp", "__pycache__"} for part in path.parts):
+        if any(
+            part
+            in {".git", ".pre-cr", ".quality-runner", ".aios", ".tmcp", "__pycache__"}
+            for part in path.parts
+        ):
             continue
         errors.extend(_validate_markdown_links(root, path))
     return errors

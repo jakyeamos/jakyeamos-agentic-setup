@@ -9,6 +9,8 @@ import trace
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 VALIDATOR = ROOT / "scripts" / "validate_skills.py"
 COVERAGE_PATH = ROOT / ".pre-cr" / "coverage.lcov"
 COVERED_FILES = (
@@ -46,12 +48,7 @@ def _run_validator() -> None:
 def _run_workbench_smoke() -> None:
     """Exercise public command paths inside the trace process."""
 
-    try:
-        from . import public_safety_check, validate_catalog, workbench
-    except ImportError:
-        import public_safety_check
-        import validate_catalog
-        import workbench
+    from scripts import public_safety_check, validate_catalog, workbench
 
     output = io.StringIO()
     with contextlib.redirect_stdout(output), contextlib.redirect_stderr(output):

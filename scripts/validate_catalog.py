@@ -3,19 +3,21 @@
 
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 
-try:
-    from .catalog_validation import validate_manifest
-except ImportError:
-    from catalog_validation import validate_manifest
+ROOT = Path(__file__).resolve().parents[1]
+if not __package__:
+    sys.path.insert(0, str(ROOT))
+
+# Direct script execution bootstraps the repository root before this import.
+from scripts.catalog_validation import validate_manifest  # noqa: E402
 
 
 def main() -> int:
     """Validate the catalog in the current checkout."""
 
-    root = Path(__file__).resolve().parents[1]
-    errors = validate_manifest(root)
+    errors = validate_manifest(ROOT)
     if errors:
         for error in errors:
             print(error)
