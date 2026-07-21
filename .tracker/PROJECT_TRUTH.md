@@ -1,84 +1,106 @@
 ---
 schemaVersion: 1
 projectName: jakyeamos-agent-skills
-summary: Portable public skill package containing Research Domain Writing and Terrace skills, with TMCP intentionally excluded for separate release work.
-healthScore: 90
-statusLabel: ready
-nextStep: Decide whether to keep this repo as a copyable skill pack or add a formal installer/manifest after the TMCP release model settles.
+summary: Portable Agentic Workbench cataloging reusable context, routing, safety, evaluation, and handoff workflows while retaining the original two skills.
+healthScore: 88
+statusLabel: in-progress
+nextStep: Publish the documentation, adapter, and planning slice, then run the final clean-room and release gates.
 blockers: []
-lastUpdated: 2026-07-04
-tags: [agent-skills, codex, skills, writing, workflow-routing]
-areas: [skills, documentation, validation, packaging]
+lastUpdated: 2026-07-21
+tags: [agent-skills, portable-workbench, context-management, workflow-routing, safety, evaluation]
+areas: [catalog, installer, workflows, adapters, documentation, validation]
 goals:
-  - Keep native skills portable and release-ready
-  - Exclude borrowed, vendor-owned, or local-machine-only skills
-  - Keep validation simple enough to run without dependencies
-repoType: skill-package
-sourceOfTruth: mixed
+  - Keep native Research Domain Writing and Terrace skills portable and backward-compatible
+  - Make catalog provenance, evidence, targets, dependencies, and installation mode agent-minable
+  - Keep private runtime infrastructure, generated harvests, credentials, and managed vendor files outside the public boundary
+  - Keep validation simple enough to run without external dependencies
+repoType: portable-agent-workbench
+sourceOfTruth: catalog/manifest.json
 primaryLanguage: Python
-activeBranch: main
-lastCommitDate: "2026-07-04"
+integrationBranch: dev
+activeBranch: codex/agentic-workbench-expansion
+lastCommitDate: "2026-07-21"
 quality:
   lint: unknown
   types: unknown
   tests: pass
   coverage: pass
-  package: unknown
-  auditHigh: unknown
-  auditModerate: unknown
+  package: pass
+  auditHigh: pass
+  auditModerate: pass
   deadCode: unknown
   structure: pass
 canonicalCommands:
-  install: unknown
+  install: python3 scripts/workbench.py install <asset-id> --target <target> --root <explicit-root> --dry-run
   dev: unknown
-  lint: unknown
+  lint: python3 -m py_compile scripts/*.py tests/*.py
   typecheck: unknown
-  test: python3 scripts/validate_skills.py
+  test: python3 -m unittest discover -s tests -p 'test_*.py'
   coverage: python3 scripts/pre_cr_coverage.py
-  package: unknown
+  package: python3 scripts/workbench.py validate
   ci: pre-cr run --workspace .
-  audit: unknown
+  audit: python3 scripts/public_safety_check.py
   deadcode: unknown
 agentExpectationsVersion: 1
-lastVerifiedCommand: python3 scripts/validate_skills.py; python3 scripts/pre_cr_coverage.py; pre-cr run --workspace .
-lastVerifiedAt: "2026-07-04"
+lastVerifiedCommand: python3 scripts/validate_skills.py; python3 scripts/validate_catalog.py; python3 scripts/public_safety_check.py; python3 -m unittest discover -s tests -p 'test_*.py'; python3 scripts/pre_cr_coverage.py; pre-cr run --workspace .
+lastVerifiedAt: "2026-07-21"
 ---
 
 ## Current State
 
-The repository is initialized on `main` as a small skill package. It includes:
+The repository is being expanded from a two-skill public package into the
+Portable Agentic Workbench. `catalog/manifest.json` is the source of truth for
+portable workflows, staged adapters, external references, evidence, and safe
+installation. The dependency-free Python CLI supports deterministic list,
+search, show, install, and validate commands. The original skill paths remain
+unchanged.
 
-- `skills/research-domain-writing`: an agent-first grounded writing pipeline with copied portable config, prompts, batch example, Codex metadata, and limitations notes.
-- `skills/terrace`: one router skill for the Terrace CLI, with command details moved into `references/commands.md`.
-- Root release hygiene files: `README.md`, `SECURITY.md`, `ATTRIBUTION.md`, `LICENSE`, `.gitignore`, `.pre-cr.json`.
-- Validation support: `scripts/validate_skills.py` and `scripts/pre_cr_coverage.py`.
-
-TMCP is intentionally excluded because the user is actively preparing TMCP separately.
+The feature branch is `codex/agentic-workbench-expansion`; `dev` remains the
+integration branch. The current work is additive and does not execute or
+rewrite the existing QR-remediation phase.
 
 ## Recent Progress
 
-- July 4: Created the initial repo and committed the package as `6ff572e` with Research Domain Writing and Terrace.
-- July 4: Removed AIOS-specific RDW release notes and ran a public-package scan for private paths, local tokens, and stale npm/npx/yarn references.
-- July 4: Added pre-CR configuration and trace-based LCOV generation for the skill validator so local commit hooks pass without bypassing gates.
-- July 4: Created the public GitHub remote at `jakyeamos/jakyeamos-agent-skills` and pushed `main`.
+- 2026-07-21: Added the versioned catalog, source classes, portable workflows,
+  staged vendor adapters, external reference records, and case studies.
+- 2026-07-21: Added the standard-library catalog CLI, catalog validator, public
+  safety scanner, clean-room installer tests, and coverage adapter.
+- 2026-07-21: Committed the catalog and installer implementation as
+  `50f74ea` after a non-empty-diff Pre-CR PASS.
+- 2026-07-21: Extended the trace coverage adapter and changed-line surface as
+  `342f8b6` with another Pre-CR PASS.
+- 2026-07-21: Published the human mining guide, case studies, portable
+  workflows, staged adapters, and CI validation as `f210835`.
+- 2026-07-21: Preserved the existing Research Domain Writing and Terrace skill
+  locations and retained the existing skill validator.
 
 ## Open Problems
 
-- No package manager metadata is present because this is a copyable skill package, not an npm/pnpm package.
-- No dedicated unit-test suite exists for `scripts/validate_skills.py`; current verification is script execution plus pre-CR changed-line coverage.
+- Feature-branch pre-CR must be run against a non-empty diff; a clean tree is
+  known to produce no coverage result in the current pre-CR tool behavior.
+- Formatter, typecheck, and dead-code tools are not declared for this
+  dependency-free Python package; the final report must name the available
+  substitutes and any remaining unknowns.
 
 ## Quality Ladder Notes
 
 - **Skill validation:** `python3 scripts/validate_skills.py` PASS.
-- **Coverage adapter:** `python3 scripts/pre_cr_coverage.py` PASS and writes `.pre-cr/coverage.lcov`.
-- **Pre-CR:** `pre-cr run --workspace .` PASS, with 68.5% changed-line coverage against `scripts/validate_skills.py`, threshold 0%, one covered surface file, 28 ignored surface files, zero unsupported files, and anti-slop passing.
-- **Leak scan:** `rg -n "(/Users/|jakyeamos|AIOS|Vaults|Command-Center|OPENAI_API_KEY|FIRECRAWL|TOKEN|SECRET|PASSWORD|npm|npx|yarn)" ... --glob '!/.git/**'` returned no matches before the initial commit.
+- **Catalog validation:** `python3 scripts/validate_catalog.py` PASS.
+- **Public safety:** PASS after the truth-surface update; excluded QR planning
+  remains separate from the installable public asset set.
+- **Focused tests:** `python3 -m unittest discover -s tests -p 'test_*.py'` PASS.
+- **Pre-CR:** non-empty feature diff PASS with 67% aggregate changed-line
+  coverage, threshold 0%, and anti-slop PASS.
 
 ## Next Concrete Steps
 
-1. Decide whether to keep this repo as a copyable skill pack or add a formal installer/manifest after the TMCP release model settles.
-2. Decide whether TMCP should join this package after its portability pass.
+1. Run the full validation and clean-room apply/no-overwrite checks.
+2. Run pre-CR against the feature diff and inspect the structured result.
+3. Review the branch, update this truth snapshot, and integrate into `dev` only
+   after acceptance evidence is complete.
 
 ## QR Remediation Planning
 
-- 2026-07-04: Added GSD Phase 1 for QR remediation from qr-low-risk-post-branch-fix-20260704-jakyeamos-agent-skills; 1 plan(s) created from jakyeamos-agent-skills.md. Execution has not started.
+- The existing QR-remediation phase remains a separate planning track and is
+  not rewritten or folded into the Portable Agentic Workbench phase.
+- New packaging planning lives in `.planning/phases/02-portable-agentic-workbench/`.

@@ -2,27 +2,32 @@
 
 ## Project Reference
 
-See: `.planning/PROJECT.md` (updated 2026-07-04)
+See: `.planning/PROJECT.md` (updated 2026-07-21)
 
-**Core value:** Keep jakyeamos-agent-skills healthy by resolving Quality Runner findings with behavior-preserving, evidence-backed remediation.
-**Current focus:** QR remediation planning
+**Core value:** Make recurring agent failure modes portable, explainable, and verifiable while preserving the separate QR track.
+**Current focus:** Portable Agentic Workbench packaging
 
 ## Milestone
 
-**Name:** QR Remediation Baseline
-**Status:** Ready to execute
-**Started:** 2026-07-04
+**Name:** Portable Agentic Workbench v0.2.0
+**Status:** In progress on feature branch
+**Started:** 2026-07-21
 
 ## Active Phase
 
-- **Phase:** TBD
-- **Slug:** `qr-remediation-jakyeamos-agent-skills`
-- **Status:** Pending planning
-- **Plan:** TBD
+- **Phase:** 2
+- **Slug:** `portable-agentic-workbench`
+- **Status:** Implementing
+- **Plan:** `02-01-PLAN.md`
 
 ## Completed Scope
 
 - GSD project bootstrap initialized from QR documentation.
+
+## Parallel Planning Track
+
+- Phase 1 `qr-remediation-jakyeamos-agent-skills` remains separate and is not
+  rewritten by the packaging work.
 
 ## Workflow Notes
 
@@ -33,10 +38,11 @@ See: `.planning/PROJECT.md` (updated 2026-07-04)
 
 ### Roadmap Evolution
 - 2026-07-04: Phase 1 planned: QR remediation: jakyeamos-agent-skills from QR run qr-low-risk-post-branch-fix-20260704-jakyeamos-agent-skills.
-- 2026-07-04: Initialized GSD planning from QR summary /Users/jakyeamos/.local/state/quality-runner/fleet/per-repo-summaries-20260704/jakyeamos-agent-skills.md.
+- 2026-07-04: Initialized GSD planning from the external Quality Runner summary for this repository.
+- 2026-07-21: Added Phase 2 for the Portable Agentic Workbench catalog and installer; Phase 1 remains unchanged.
 
 ## Next Command
 
 ```bash
-/gsd-plan-phase 1 --skip-research --prd /Users/jakyeamos/.local/state/quality-runner/fleet/per-repo-summaries-20260704/jakyeamos-agent-skills.md
+/gsd-execute-phase 2
 ```

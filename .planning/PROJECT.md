@@ -6,7 +6,8 @@ jakyeamos-agent-skills is an existing local codebase in Jakye's QR remediation f
 
 ## Core Value
 
-Keep jakyeamos-agent-skills healthy by resolving Quality Runner findings with behavior-preserving, evidence-backed remediation.
+Make recurring agent failure modes portable, explainable, and verifiable while
+keeping the existing Quality Runner remediation track separate.
 
 ## Requirements
 
@@ -19,6 +20,7 @@ Keep jakyeamos-agent-skills healthy by resolving Quality Runner findings with be
 - [ ] Resolve QR findings from run qr-low-risk-post-branch-fix-20260704-jakyeamos-agent-skills using cluster-oriented remediation.
 - [ ] Verify remediation with focused repo checks and post-remediation QR comparison.
 - [ ] Keep QR advisory-only; source changes happen through GSD execution and git commits.
+- [ ] Package the Portable Agentic Workbench catalog, installer, adapters, case studies, and clean-room evidence.
 
 ### Out of Scope
 
@@ -28,16 +30,20 @@ Keep jakyeamos-agent-skills healthy by resolving Quality Runner findings with be
 
 ## Context
 
-- Repo path: `/Users/jakyeamos/projects/jakyeamos-agent-skills`
-- QR summary: `/Users/jakyeamos/.local/state/quality-runner/fleet/per-repo-summaries-20260704/jakyeamos-agent-skills.md`
-- QR run directory: `/Users/jakyeamos/projects/jakyeamos-agent-skills/.quality-runner/runs/qr-low-risk-post-branch-fix-20260704-jakyeamos-agent-skills`
-- Package or project files detected: none detected
+- Repo path: this repository checkout
+- QR summary: external Quality Runner per-repository summary for this package
+- QR run directory: local Quality Runner baseline artifact for the separate QR phase
+- Existing package: dependency-free Python skill package with Research Domain Writing and Terrace.
+- New packaging source of truth: `catalog/manifest.json`.
+- Public boundary: portable assets and sanitized adapters only; private runtime, generated harvests, and external runtimes remain excluded or linked.
 
 ## Constraints
 
 - **Git:** Commit in atomic units scoped to this repo and concern.
 - **Verification:** A cluster is complete only with focused checks plus QR comparison evidence.
 - **Package management:** Use pnpm for JavaScript package scripts.
+- **Packaging:** Keep the runtime dependency-free and require explicit installer target roots.
+- **Planning:** Add the workbench as Phase 2; do not rewrite the existing QR-remediation Phase 1.
 
 ## Key Decisions
 
