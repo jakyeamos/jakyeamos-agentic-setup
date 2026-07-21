@@ -82,6 +82,8 @@ execute or rewrite the existing QR-remediation phase.
 - 2026-07-21: Recorded the final verification evidence in `bc16385`.
 - 2026-07-21: Fast-forward integrated the verified feature branch into `dev` at
   `c8fe9fe`; no release tag or publish was performed.
+- 2026-07-21: Updated the live branch and release handoff state on `dev` in
+  `ad84351`.
 - 2026-07-21: Preserved the existing Research Domain Writing and Terrace skill
   locations and retained the existing skill validator.
 
