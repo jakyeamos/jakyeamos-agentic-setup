@@ -3,7 +3,7 @@ schemaVersion: 1
 projectName: jakyeamos-agent-skills
 summary: Portable Agentic Workbench cataloging reusable context, routing, safety, evaluation, and handoff workflows while retaining the original two skills.
 healthScore: 92
-statusLabel: in-progress
+statusLabel: ready
 nextStep: Review and approve the additive v0.2.0 release/tag; no publish or tag was performed by this implementation pass.
 blockers: []
 lastUpdated: 2026-07-21
@@ -106,6 +106,8 @@ execute or rewrite the existing QR-remediation phase.
   coverage, threshold 0%, and anti-slop PASS.
 - **Clean-room:** standard-library checkout passed validation and disposable
   target installation; a second apply was rejected without overwriting files.
+- **Clean-tree Pre-CR:** expected `no-changes` baseline returns no coverage
+  result; the staged non-empty feature diff passed the same gate during commit.
 
 ## Next Concrete Steps
 
