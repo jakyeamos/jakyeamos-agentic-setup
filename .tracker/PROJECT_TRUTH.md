@@ -2,9 +2,9 @@
 schemaVersion: 1
 projectName: jakyeamos-agent-skills
 summary: Portable Agentic Workbench cataloging reusable context, routing, safety, evaluation, and handoff workflows while retaining the original two skills.
-healthScore: 88
+healthScore: 92
 statusLabel: in-progress
-nextStep: Publish the documentation, adapter, and planning slice, then run the final clean-room and release gates.
+nextStep: Run the final clean-room install and non-empty-diff Pre-CR gates, then review integration into dev.
 blockers: []
 lastUpdated: 2026-07-21
 tags: [agent-skills, portable-workbench, context-management, workflow-routing, safety, evaluation]
@@ -21,28 +21,28 @@ integrationBranch: dev
 activeBranch: codex/agentic-workbench-expansion
 lastCommitDate: "2026-07-21"
 quality:
-  lint: unknown
-  types: unknown
+  lint: pass
+  types: warning
   tests: pass
   coverage: pass
   package: pass
   auditHigh: pass
   auditModerate: pass
-  deadCode: unknown
+  deadCode: pass
   structure: pass
 canonicalCommands:
   install: python3 scripts/workbench.py install <asset-id> --target <target> --root <explicit-root> --dry-run
   dev: unknown
-  lint: python3 -m py_compile scripts/*.py tests/*.py
-  typecheck: unknown
+  lint: ruff check scripts tests
+  typecheck: basedpyright scripts tests
   test: python3 -m unittest discover -s tests -p 'test_*.py'
   coverage: python3 scripts/pre_cr_coverage.py
   package: python3 scripts/workbench.py validate
   ci: pre-cr run --workspace .
   audit: python3 scripts/public_safety_check.py
-  deadcode: unknown
+  deadcode: vulture scripts tests --min-confidence 70
 agentExpectationsVersion: 1
-lastVerifiedCommand: python3 scripts/validate_skills.py; python3 scripts/validate_catalog.py; python3 scripts/public_safety_check.py; python3 -m unittest discover -s tests -p 'test_*.py'; python3 scripts/pre_cr_coverage.py; pre-cr run --workspace .
+lastVerifiedCommand: python3 scripts/validate_skills.py; python3 scripts/validate_catalog.py; python3 scripts/public_safety_check.py; python3 -m unittest discover -s tests -p 'test_*.py'; ruff check scripts tests; basedpyright scripts tests; vulture scripts tests --min-confidence 70; python3 scripts/pre_cr_coverage.py; pre-cr run --workspace .
 lastVerifiedAt: "2026-07-21"
 ---
 
@@ -71,6 +71,12 @@ rewrite the existing QR-remediation phase.
   `342f8b6` with another Pre-CR PASS.
 - 2026-07-21: Published the human mining guide, case studies, portable
   workflows, staged adapters, and CI validation as `f210835`.
+- 2026-07-21: Recorded the additive Phase 2 plan and live repository truth as
+  `d843b9a`; the QR Phase 1 files remain untouched.
+- 2026-07-21: Hardened direct-script imports, public artifact detection, and
+  adapter/reference tests as `8a8ad42`; Pre-CR and the focused suite remain green.
+- 2026-07-21: Final static checks reached Ruff PASS, basedpyright zero errors
+  with JSON-typing warnings, and Vulture PASS.
 - 2026-07-21: Preserved the existing Research Domain Writing and Terrace skill
   locations and retained the existing skill validator.
 
@@ -78,9 +84,8 @@ rewrite the existing QR-remediation phase.
 
 - Feature-branch pre-CR must be run against a non-empty diff; a clean tree is
   known to produce no coverage result in the current pre-CR tool behavior.
-- Formatter, typecheck, and dead-code tools are not declared for this
-  dependency-free Python package; the final report must name the available
-  substitutes and any remaining unknowns.
+- Ruff, basedpyright, and Vulture are available for the dependency-free Python
+  package; basedpyright reports only dynamic-JSON typing warnings.
 
 ## Quality Ladder Notes
 
