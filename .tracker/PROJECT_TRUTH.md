@@ -79,6 +79,7 @@ rewrite the existing QR-remediation phase.
   with JSON-typing warnings, and Vulture PASS.
 - 2026-07-21: Clean-room archive verification passed skill, catalog, safety,
   focused tests, dry-run, apply, and no-overwrite checks without external CLIs.
+- 2026-07-21: Recorded the final verification evidence in `bc16385`.
 - 2026-07-21: Preserved the existing Research Domain Writing and Terrace skill
   locations and retained the existing skill validator.
 
