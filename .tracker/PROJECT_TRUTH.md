@@ -4,7 +4,7 @@ projectName: jakyeamos-agentic-setup
 summary: Public Portable Agentic Workbench catalog with low-loaded routing, manifest-aware setup, fail-closed synchronization, sanitized runtime adapters, and reusable workflow skills.
 healthScore: 94
 statusLabel: ready
-nextStep: Publish the private companion deprecation pointer and archive its remote after final wrapper verification.
+nextStep: Keep the shared prevention pack and host adapters on weekly validation; activate only reviewed, manually approved installs and preserve private runtime boundaries.
 blockers: []
 lastUpdated: 2026-07-22
 tags: [agentic-setup, portable-workbench, low-loaded, manifest, workflow-routing, safety, evaluation]
@@ -66,6 +66,10 @@ minimum-context routing, disposable-baseline safety, approval and credential
 boundaries, and the explicit pass/fail/blocked/unavailable/timeout taxonomy.
 Its three portable workflows carry owner, executable validation, supported
 target, and removal-condition metadata, with manual review required at install.
+The environment-legibility workflow now documents the Pre-CR fast gate,
+Quality Runner evidence-owner boundary, and leverage deep-audit integration;
+the repository Pre-CR configuration runs prevention-pack validation as a
+required quality adapter.
 The public repository has been renamed from `jakyeamos-agent-skills`; its old
 GitHub URL redirects to the new slug, `dev` is published, and the default
 branch remains `main`.
@@ -121,6 +125,9 @@ no repair or regeneration was performed.
 - 2026-07-22: Hardened the shared prevention pack in `34e28d3`; prevention,
   catalog, safety, workbench, Python, Node, Pre-CR, Ruff, Vulture, and workflow
   dry-run gates pass.
+- 2026-07-22: Wired the shared environment-legibility workflow to the personal
+  Pre-CR and Quality Runner host contracts in `ad9f09d`; prevention-pack,
+  catalog, public-safety, and unit validation pass.
 
 ## Open Problems
 
