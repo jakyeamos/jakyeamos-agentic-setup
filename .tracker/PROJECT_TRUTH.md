@@ -116,6 +116,9 @@ no repair or regeneration was performed.
   runtime edges, symbolic-root schema, conflict-safe sync, and public mining
   record in `58cf4ac`; Node/Python catalog gates and Claude/Codex/Gemini smoke
   checks pass while Cursor and Antigravity remain unverified.
+- 2026-07-22: Added public attribution for the private-companion mining
+  boundary and extended manifest tests for schema/runtime coverage and
+  no-overwrite behavior in `fc820dc`.
 
 ## Open Problems
 
@@ -134,7 +137,7 @@ no repair or regeneration was performed.
 - **Public safety:** PASS after the truth-surface update; excluded QR planning
   remains separate from the installable public asset set.
 - **Focused tests:** `python3 -m unittest discover -s tests -p 'test_*.py'` PASS.
-- **Node engine:** `pnpm test` PASS with 13 manifest, routing, provenance, and
+- **Node engine:** `pnpm test` PASS with 14 manifest, routing, provenance, and
   safe-sync tests; public safety and `git diff --check` PASS.
 - **Runtime smoke:** Claude, Codex, and Gemini `--help` PASS; Cursor and
   Antigravity are explicitly `unverified`.
