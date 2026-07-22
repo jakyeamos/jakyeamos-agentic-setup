@@ -1,12 +1,12 @@
 ---
 schemaVersion: 1
 projectName: jakyeamos-agent-skills
-summary: Portable Agentic Workbench cataloging reusable context, routing, safety, evaluation, and handoff workflows while retaining the original two skills.
+summary: Portable Agentic Workbench cataloging reusable context, routing, safety, evaluation, handoff, and environment-legibility workflows while retaining the original two skills.
 healthScore: 92
 statusLabel: ready
-nextStep: Review and approve the additive v0.2.0 release/tag; no publish or tag was performed by this implementation pass.
+nextStep: Review and approve the additive v0.2.0 release/tag, including the offline bootstrap evidence contract; no publish or tag was performed by this implementation pass.
 blockers: []
-lastUpdated: 2026-07-21
+lastUpdated: 2026-07-22
 tags: [agent-skills, portable-workbench, context-management, workflow-routing, safety, evaluation]
 areas: [catalog, installer, workflows, adapters, documentation, validation]
 goals:
@@ -19,7 +19,7 @@ sourceOfTruth: catalog/manifest.json
 primaryLanguage: Python
 integrationBranch: dev
 activeBranch: dev
-lastCommitDate: "2026-07-21"
+lastCommitDate: "2026-07-22"
 quality:
   lint: pass
   types: warning
@@ -42,8 +42,8 @@ canonicalCommands:
   audit: python3 scripts/public_safety_check.py
   deadcode: vulture scripts tests --min-confidence 70
 agentExpectationsVersion: 1
-lastVerifiedCommand: python3 scripts/validate_skills.py; python3 scripts/validate_catalog.py; python3 scripts/public_safety_check.py; python3 -m unittest discover -s tests -p 'test_*.py'; ruff check scripts tests; basedpyright scripts tests; vulture scripts tests --min-confidence 70; python3 scripts/pre_cr_coverage.py; pre-cr run --workspace .
-lastVerifiedAt: "2026-07-21"
+lastVerifiedCommand: python3 scripts/validate_skills.py; python3 scripts/validate_catalog.py; python3 scripts/public_safety_check.py; python3 scripts/workbench.py validate; python3 -m unittest discover -s tests -p 'test_*.py'
+lastVerifiedAt: "2026-07-22"
 ---
 
 ## Current State
@@ -53,7 +53,8 @@ Portable Agentic Workbench. `catalog/manifest.json` is the source of truth for
 portable workflows, staged adapters, external references, evidence, and safe
 installation. The dependency-free Python CLI supports deterministic list,
 search, show, install, and validate commands. The original skill paths remain
-unchanged.
+unchanged. The environment-legibility workflow now documents and validates the
+offline bootstrap outcome taxonomy used by the leverage audit.
 
 The verified feature branch `codex/agentic-workbench-expansion` was fast-forward
 integrated into `dev` at `c8fe9fe`. The current work is additive and does not
@@ -86,6 +87,9 @@ execute or rewrite the existing QR-remediation phase.
   `ad84351`.
 - 2026-07-21: Preserved the existing Research Domain Writing and Terrace skill
   locations and retained the existing skill validator.
+- 2026-07-22: Added offline bootstrap classification to the environment-legibility
+  audit and safe-tool-guards contract; catalog, public-safety, workbench, and
+  focused tests pass in `1709a15`.
 
 ## Open Problems
 
