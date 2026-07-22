@@ -1,0 +1,68 @@
+{
+  "schema_version": "1.0",
+  "cases": [
+    {
+      "skill": "low-always-loaded-instruction-migration",
+      "trigger": "A startup instruction surface contains durable rules, duplicates, or conflicts that need a reviewed migration.",
+      "non_trigger": "A single local prompt needs an ordinary answer and no instruction surface is changing.",
+      "expected_trigger": "invoke-skill",
+      "expected_non_trigger": "do-not-invoke"
+    },
+    {
+      "skill": "skill-harvest-and-promotion",
+      "trigger": "Several authored workflows need to be reduced to a polished, portable public skill subset.",
+      "non_trigger": "A generated or credential-bearing runtime artifact is being copied for internal operation.",
+      "expected_trigger": "invoke-skill",
+      "expected_non_trigger": "do-not-invoke"
+    },
+    {
+      "skill": "repo-behavior-spec-loop",
+      "trigger": "A mature repository has an observable behavior that needs a cited ledger, fix loop, and regression proof.",
+      "non_trigger": "A repository is still exploratory and has no stable observable contract to verify.",
+      "expected_trigger": "invoke-skill",
+      "expected_non_trigger": "do-not-invoke"
+    },
+    {
+      "skill": "review-gated-verified-fix",
+      "trigger": "A bounded issue has a reproducible failure, allowed paths, and acceptance criteria but still needs human review.",
+      "non_trigger": "A request explicitly authorizes an unbounded cleanup or automatic publication.",
+      "expected_trigger": "invoke-skill",
+      "expected_non_trigger": "do-not-invoke"
+    },
+    {
+      "skill": "evidence-backed-change-surface-mapping",
+      "trigger": "A change may affect downstream consumers and the likely surfaces need bounded evidence and freshness labels.",
+      "non_trigger": "A confirmed single-file change has no consumers or downstream review scope to discover.",
+      "expected_trigger": "invoke-skill",
+      "expected_non_trigger": "do-not-invoke"
+    },
+    {
+      "skill": "agentized-task-packet",
+      "trigger": "An ambiguous multi-step request must be handed to an agent with explicit context, boundaries, and acceptance.",
+      "non_trigger": "A one-sentence single-file generation task already has complete inputs and verification.",
+      "expected_trigger": "invoke-skill",
+      "expected_non_trigger": "do-not-invoke"
+    },
+    {
+      "skill": "durable-agent-workflows",
+      "trigger": "A task must survive interruption, delegation, retries, or a later resume without losing its contract or artifacts.",
+      "non_trigger": "A short ephemeral action has no handoff, approval, or durable artifact requirement.",
+      "expected_trigger": "invoke-skill",
+      "expected_non_trigger": "do-not-invoke"
+    },
+    {
+      "skill": "divergent-strategy",
+      "trigger": "A strategic decision is uncertain and a bounded portfolio of materially different alternatives can produce evidence.",
+      "non_trigger": "The decision rule and evidence already select one reversible implementation with no meaningful uncertainty.",
+      "expected_trigger": "invoke-skill",
+      "expected_non_trigger": "do-not-invoke"
+    },
+    {
+      "skill": "operating-language",
+      "trigger": "A repeated term should change routing or verification and needs a compact trigger, boundary, and completion contract.",
+      "non_trigger": "A slogan or preference does not change what an agent should inspect, decide, execute, or verify.",
+      "expected_trigger": "invoke-skill",
+      "expected_non_trigger": "do-not-invoke"
+    }
+  ]
+}

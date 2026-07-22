@@ -1,0 +1,25 @@
+{
+  "schema_version": "1.0",
+  "scope": "example-repository",
+  "baseline": {
+    "revision": "record-before-test",
+    "working_tree": "clean-or-described"
+  },
+  "behaviors": [
+    {
+      "id": "behavior-001",
+      "source": "docs-or-issue-reference",
+      "action": "exact-user-or-operator-action",
+      "expected": "observable-result",
+      "observed": null,
+      "evidence": [],
+      "status": "planned",
+      "owner": "named-owner",
+      "last_verified": null
+    }
+  ],
+  "limits": {
+    "max_fix_iterations": 3,
+    "complexity_gate": "stop-and-report"
+  }
+}

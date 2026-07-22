@@ -4,7 +4,7 @@
     "id": "portable-agentic-workbench",
     "name": "Portable Agentic Workbench",
     "repository": "jakyeamos-agent-skills",
-    "version": "0.2.0",
+    "version": "0.3.0",
     "license": "MIT"
   },
   "asset_policy": {
@@ -39,6 +39,11 @@
       "source_id": "vendor-managed-config",
       "class": "excluded",
       "treatment": "do not redistribute managed files, private sessions, credentials, or raw transcripts"
+    },
+    {
+      "source_id": "first-party-authored-workflow-mining",
+      "class": "portable",
+      "treatment": "sanitized behavioral patterns from owned authored repositories and first-party skill sources; private source paths remain undistributed"
     }
   ],
   "assets": [
@@ -581,6 +586,308 @@
       "install": {
         "mode": "copy",
         "destination": "skills/terrace"
+      }
+    },
+    {
+      "id": "low-always-loaded-instruction-migration",
+      "kind": "skill",
+      "asset_class": "portable",
+      "title": "Low-always-loaded instruction migration",
+      "summary": "Inventory, reconcile, and safely migrate durable instructions out of crowded startup surfaces without overwriting unresolved behavior.",
+      "maturity": "beta",
+      "capabilities": ["instruction-routing", "migration", "conflict-detection", "safety", "verification"],
+      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "entrypoints": [
+        "skills/low-always-loaded-instruction-migration/SKILL.md",
+        "workflows/low-always-loaded-instruction-migration/WORKFLOW.md"
+      ],
+      "files": [
+        "skills/low-always-loaded-instruction-migration/SKILL.md",
+        "workflows/low-always-loaded-instruction-migration/WORKFLOW.md"
+      ],
+      "dependencies": [],
+      "provenance": {
+        "status": "sanitized-derived",
+        "source": "first-party-authored-workflow-mining",
+        "license_status": "MIT-compatible",
+        "redistribution": "allowed"
+      },
+      "evidence": ["docs/mining/2026-07-public-skill-mining.md"],
+      "install": {
+        "mode": "copy",
+        "destination": "skills/low-always-loaded-instruction-migration"
+      }
+    },
+    {
+      "id": "skill-harvest-and-promotion",
+      "kind": "skill",
+      "asset_class": "portable",
+      "title": "Skill harvest and promotion",
+      "summary": "Mine authored workflows into polished public skills using behavior extraction, deduplication, safety review, and forward tests.",
+      "maturity": "beta",
+      "capabilities": ["skill-authoring", "provenance", "redaction", "deduplication", "public-safety"],
+      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "entrypoints": [
+        "skills/skill-harvest-and-promotion/SKILL.md",
+        "workflows/skill-harvest-and-promotion/WORKFLOW.md"
+      ],
+      "files": [
+        "skills/skill-harvest-and-promotion/SKILL.md",
+        "workflows/skill-harvest-and-promotion/WORKFLOW.md"
+      ],
+      "dependencies": [],
+      "provenance": {
+        "status": "sanitized-derived",
+        "source": "first-party-authored-workflow-mining",
+        "license_status": "MIT-compatible",
+        "redistribution": "allowed"
+      },
+      "evidence": ["docs/mining/2026-07-public-skill-mining.md"],
+      "install": {
+        "mode": "copy",
+        "destination": "skills/skill-harvest-and-promotion"
+      }
+    },
+    {
+      "id": "repo-behavior-spec-loop",
+      "kind": "skill",
+      "asset_class": "portable",
+      "title": "Repository behavior specification loop",
+      "summary": "Turn expected repository behavior into a cited ledger, runnable verification loop, bounded fix cycle, and regression report.",
+      "maturity": "beta",
+      "capabilities": ["behavior-specification", "acceptance-testing", "evidence", "regression", "safety"],
+      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "entrypoints": [
+        "skills/repo-behavior-spec-loop/SKILL.md",
+        "workflows/repo-behavior-spec-loop/WORKFLOW.md"
+      ],
+      "files": [
+        "skills/repo-behavior-spec-loop/SKILL.md",
+        "workflows/repo-behavior-spec-loop/WORKFLOW.md",
+        "fixtures/behavior/behavior-spec-template.json"
+      ],
+      "dependencies": [],
+      "provenance": {
+        "status": "sanitized-derived",
+        "source": "first-party-authored-workflow-mining",
+        "license_status": "MIT-compatible",
+        "redistribution": "allowed"
+      },
+      "evidence": ["docs/mining/2026-07-public-skill-mining.md"],
+      "install": {
+        "mode": "copy",
+        "destination": "skills/repo-behavior-spec-loop",
+        "path_map": {
+          "fixtures/behavior/behavior-spec-template.json": "references/behavior-spec-template.json"
+        }
+      }
+    },
+    {
+      "id": "review-gated-verified-fix",
+      "kind": "skill",
+      "asset_class": "portable",
+      "title": "Review-gated verified fix",
+      "summary": "Execute bounded remediation in an isolated work area and hand off evidence for human acceptance without auto-merging.",
+      "maturity": "beta",
+      "capabilities": ["issue-admission", "isolated-execution", "verification", "review-packet", "no-auto-merge"],
+      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "entrypoints": [
+        "skills/review-gated-verified-fix/SKILL.md",
+        "workflows/review-gated-verified-fix/WORKFLOW.md"
+      ],
+      "files": [
+        "skills/review-gated-verified-fix/SKILL.md",
+        "workflows/review-gated-verified-fix/WORKFLOW.md",
+        "fixtures/review/verified-fix-contract.json"
+      ],
+      "dependencies": [],
+      "provenance": {
+        "status": "sanitized-derived",
+        "source": "first-party-authored-workflow-mining",
+        "license_status": "MIT-compatible",
+        "redistribution": "allowed"
+      },
+      "evidence": ["docs/mining/2026-07-public-skill-mining.md"],
+      "install": {
+        "mode": "copy",
+        "destination": "skills/review-gated-verified-fix",
+        "path_map": {
+          "fixtures/review/verified-fix-contract.json": "references/verified-fix-contract.json"
+        }
+      }
+    },
+    {
+      "id": "evidence-backed-change-surface-mapping",
+      "kind": "skill",
+      "asset_class": "portable",
+      "title": "Evidence-backed change surface mapping",
+      "summary": "Map likely downstream change surfaces with explicit identity, freshness, provenance, uncertainty, and inference caps.",
+      "maturity": "beta",
+      "capabilities": ["change-impact", "provenance", "freshness", "uncertainty", "bounded-inference"],
+      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "entrypoints": [
+        "skills/evidence-backed-change-surface-mapping/SKILL.md",
+        "workflows/evidence-backed-change-surface-mapping/WORKFLOW.md"
+      ],
+      "files": [
+        "skills/evidence-backed-change-surface-mapping/SKILL.md",
+        "workflows/evidence-backed-change-surface-mapping/WORKFLOW.md"
+      ],
+      "dependencies": [],
+      "provenance": {
+        "status": "sanitized-derived",
+        "source": "first-party-authored-workflow-mining",
+        "license_status": "MIT-compatible",
+        "redistribution": "allowed"
+      },
+      "evidence": ["docs/mining/2026-07-public-skill-mining.md"],
+      "install": {
+        "mode": "copy",
+        "destination": "skills/evidence-backed-change-surface-mapping"
+      }
+    },
+    {
+      "id": "agentized-task-packet",
+      "kind": "skill",
+      "asset_class": "portable",
+      "title": "Agentized task packet",
+      "summary": "Compile ambiguous requests into bounded task packets with targeted context, explicit roles, verification, acceptance, and handoff.",
+      "maturity": "beta",
+      "capabilities": ["task-decomposition", "context-selection", "routing", "verification", "handoff"],
+      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "entrypoints": [
+        "skills/agentized-task-packet/SKILL.md",
+        "workflows/agentized-task-packet/WORKFLOW.md"
+      ],
+      "files": [
+        "skills/agentized-task-packet/SKILL.md",
+        "workflows/agentized-task-packet/WORKFLOW.md"
+      ],
+      "dependencies": [],
+      "provenance": {
+        "status": "sanitized-derived",
+        "source": "first-party-authored-workflow-mining",
+        "license_status": "MIT-compatible",
+        "redistribution": "allowed"
+      },
+      "evidence": ["docs/mining/2026-07-public-skill-mining.md"],
+      "install": {
+        "mode": "copy",
+        "destination": "skills/agentized-task-packet"
+      }
+    },
+    {
+      "id": "durable-agent-workflows",
+      "kind": "skill",
+      "asset_class": "portable",
+      "title": "Durable agent workflows",
+      "summary": "Persist goals, artifacts, steering, queueing, approvals, and resume state so agent work survives interruption without losing its contract.",
+      "maturity": "beta",
+      "capabilities": ["durability", "goals", "artifacts", "queueing", "resumability", "safety"],
+      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "entrypoints": [
+        "skills/durable-agent-workflows/SKILL.md",
+        "workflows/durable-agent-workflows/WORKFLOW.md"
+      ],
+      "files": [
+        "skills/durable-agent-workflows/SKILL.md",
+        "workflows/durable-agent-workflows/WORKFLOW.md"
+      ],
+      "dependencies": [],
+      "provenance": {
+        "status": "sanitized-derived",
+        "source": "first-party-authored-workflow-mining",
+        "license_status": "MIT-compatible",
+        "redistribution": "allowed"
+      },
+      "evidence": ["docs/mining/2026-07-public-skill-mining.md"],
+      "install": {
+        "mode": "copy",
+        "destination": "skills/durable-agent-workflows"
+      }
+    },
+    {
+      "id": "divergent-strategy",
+      "kind": "skill",
+      "asset_class": "portable",
+      "title": "Divergent strategy",
+      "summary": "Explore a bounded portfolio of materially different strategies, judge them with explicit evidence, and promote only reviewed decisions.",
+      "maturity": "beta",
+      "capabilities": ["divergence", "strategy", "portfolio", "evaluation", "promotion"],
+      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "entrypoints": [
+        "skills/divergent-strategy/SKILL.md",
+        "workflows/divergent-strategy/WORKFLOW.md"
+      ],
+      "files": [
+        "skills/divergent-strategy/SKILL.md",
+        "workflows/divergent-strategy/WORKFLOW.md"
+      ],
+      "dependencies": [],
+      "provenance": {
+        "status": "sanitized-derived",
+        "source": "first-party-authored-workflow-mining",
+        "license_status": "MIT-compatible",
+        "redistribution": "allowed"
+      },
+      "evidence": ["docs/mining/2026-07-public-skill-mining.md"],
+      "install": {
+        "mode": "copy",
+        "destination": "skills/divergent-strategy"
+      }
+    },
+    {
+      "id": "operating-language",
+      "kind": "skill",
+      "asset_class": "portable",
+      "title": "Operating language",
+      "summary": "Turn repeated reasoning into compact, behavior-changing vocabulary with triggers, non-triggers, decisions, and completion evidence.",
+      "maturity": "beta",
+      "capabilities": ["vocabulary", "routing", "decision-quality", "operating-model", "migration"],
+      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "entrypoints": [
+        "skills/operating-language/SKILL.md",
+        "workflows/operating-language/WORKFLOW.md"
+      ],
+      "files": [
+        "skills/operating-language/SKILL.md",
+        "workflows/operating-language/WORKFLOW.md"
+      ],
+      "dependencies": [],
+      "provenance": {
+        "status": "sanitized-derived",
+        "source": "first-party-authored-workflow-mining",
+        "license_status": "MIT-compatible",
+        "redistribution": "allowed"
+      },
+      "evidence": ["docs/mining/2026-07-public-skill-mining.md"],
+      "install": {
+        "mode": "copy",
+        "destination": "skills/operating-language"
+      }
+    },
+    {
+      "id": "fixture-promoted-skill-forward-tests",
+      "kind": "fixture",
+      "asset_class": "portable",
+      "title": "Promoted skill forward-test cases",
+      "summary": "Trigger and non-trigger cases used to keep the additive skill set explicit and clean-room-testable.",
+      "maturity": "beta",
+      "capabilities": ["forward-testing", "skill-discovery", "clean-room"],
+      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "entrypoints": ["fixtures/forward-tests.json"],
+      "files": ["fixtures/forward-tests.json"],
+      "dependencies": [],
+      "provenance": {
+        "status": "authored",
+        "source": "authored-in-this-repository",
+        "license_status": "MIT",
+        "redistribution": "allowed"
+      },
+      "evidence": ["docs/mining/2026-07-public-skill-mining.md"],
+      "install": {
+        "mode": "copy",
+        "destination": "fixtures"
       }
     }
   ]

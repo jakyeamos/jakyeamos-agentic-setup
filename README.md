@@ -7,9 +7,10 @@ management, workflow routing, safety, evaluation, and durable handoffs.
 
 This repository is a curated, vendor-neutral workbench for agents and the
 people evaluating how I adapt AI systems to real work. It packages reusable
-workflow contracts and two backward-compatible skills while keeping private
-runtime infrastructure, managed vendor configuration, generated harvests,
-session stores, and credentials outside the distribution boundary.
+workflow contracts and a growing set of backward-compatible skills while
+keeping private runtime infrastructure, managed vendor configuration,
+generated harvests, session stores, and credentials outside the distribution
+boundary.
 
 ## Start here
 
@@ -41,6 +42,22 @@ Read [`AGENTS.md`](AGENTS.md) for the agent mining contract,
 - `research-domain-writing` - research -> packet -> draft -> QA -> style skill.
 - `terrace` - router skill for Terrace planning, execution, validation, review,
   and release-readiness work.
+- `low-always-loaded-instruction-migration` - instruction-layer inventory,
+  conflict ledger, and no-overwrite migration workflow.
+- `skill-harvest-and-promotion` - first-party source mining and public-safety
+  promotion gate.
+- `repo-behavior-spec-loop` - cited behavior ledger and bounded fix/retest loop.
+- `review-gated-verified-fix` - isolated, evidence-backed remediation handoff.
+- `evidence-backed-change-surface-mapping` - bounded downstream surface
+  discovery with explicit uncertainty.
+- `agentized-task-packet` - targeted context, boundaries, verification, and
+  handoff packet for delegated work.
+- `durable-agent-workflows` - resumable goals, artifacts, steering, and
+  approval-gated automation.
+- `divergent-strategy` - portfolio exploration with explicit judges and
+  promotion criteria.
+- `operating-language` - behavior-changing vocabulary with a Leading Word
+  Test and completion evidence.
 
 Codex, Claude, Cursor, Copilot, and generic adapters are available as staged
 manual-review mappings. Gemini is cataloged as a reference only in v1 because
@@ -74,6 +91,10 @@ cp -R skills/terrace "$AGENT_SKILL_ROOT/terrace"
 `research-domain-writing` may use the optional external `rdw` CLI, and
 `terrace` requires the external `terrace` CLI. The package never installs
 those dependencies for you.
+
+The additional skills are also plain `skills/<id>/SKILL.md` packages and are
+listed in `catalog/manifest.json`; use the catalog installer when you want the
+supporting workflow and fixture files staged together.
 
 ## Validation and clean-room check
 

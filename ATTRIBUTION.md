@@ -11,6 +11,10 @@ released under the MIT license in this repository.
   routes through the external `terrace` CLI.
 - The context, routing, safety, evaluation, and handoff workflows are authored
   or sanitized behavioral patterns in this repository.
+- The nine additive skills introduced in catalog `0.3.0` are sanitized,
+  first-party behavioral patterns mined from authored workflows and local skill
+  sources. Private source paths, generated harvests, and host registrations are
+  not redistributed.
 - Vendor adapters are behavioral mappings only. They do not redistribute
   managed host configuration, private hooks, session state, or binaries.
 
@@ -34,3 +38,7 @@ Every catalog record declares one of these classes:
 
 The manifest is the authoritative source map. Logical source names are used in
 place of personal machine paths and runtime snapshots.
+
+The macOS build/release donor material remains deferred from the public catalog
+until license and redistribution evidence is complete; no donor files are
+copied by this release.

@@ -1,0 +1,27 @@
+{
+  "schema_version": "1.0",
+  "task": {
+    "id": "issue-001",
+    "objective": "repair-one-observable-behavior",
+    "allowed_paths": ["src/allowed/file"],
+    "excluded_paths": ["data/private", "build/generated"],
+    "acceptance": ["targeted-check-passes"],
+    "risk": "bounded"
+  },
+  "baseline": {
+    "revision": "record-before-change",
+    "working_tree": "clean-or-described",
+    "isolation": "disposable-work-area"
+  },
+  "gates": [
+    {"name": "reproduction", "status": "not-run"},
+    {"name": "targeted-acceptance", "status": "not-run"},
+    {"name": "regression", "status": "not-run"}
+  ],
+  "handoff": {
+    "outcome": "needs-review",
+    "changed_paths": [],
+    "artifacts": [],
+    "limitations": []
+  }
+}
