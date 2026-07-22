@@ -64,6 +64,21 @@ command involving network, install, migration, deploy, merge, push, release,
 secrets, deletion, or destructive state changes. Record command hashes and
 statuses without storing raw output in public artifacts.
 
+Dependency bootstrap is part of the evidence contract. The disposable
+environment must declare whether its tools and dependencies are already
+available without network access. Classify results explicitly:
+
+- `pass`: the command ran and exited successfully;
+- `fail`: the command ran in an available environment and exited unsuccessfully;
+- `blocked`: verification was prevented by policy, including a package manager
+  or runner attempting network bootstrap;
+- `unavailable`: the executable or required local dependency was not present.
+
+`blocked` and `unavailable` are measurement gaps, not quality failures. Record
+only a fixed reason code and an output hash; never persist raw command output in
+shared or public artifacts. A no-network command that cannot materialize its
+environment must not be reported as a failing repository quality gate.
+
 If the baseline is unsafe or the command cannot be verified, produce a blocked
 finding and a remediation step. Do not repair the checkout as part of the
 audit.
@@ -86,6 +101,18 @@ Promote a recurring high-impact failure to a shared rule only when it has a
 named owner, executable validation, supported targets, and a removal condition.
 Group adjacent symptoms into one routed workflow. Keep global instructions to
 hard invariants and pointers; keep procedures here or in a narrow reference.
+
+The current promoted rule is **offline bootstrap classification**:
+
+- Owner: the leverage runtime maintainers.
+- Validation: the dynamic audit fixture must distinguish `pass`, `fail`,
+  `blocked`, and `unavailable` without retaining raw output; replay must remain
+  deterministic.
+- Supported targets: any repository with an allowlisted quality command and a
+  disposable protected baseline.
+- Removal condition: retire the rule only after three consecutive weekly audits
+  across at least three repository classes show no misclassified bootstrap
+  failures and every dynamic adapter records the same outcome taxonomy.
 
 ## Validation
 

@@ -360,6 +360,11 @@
       "evidence": [
         "docs/case-studies/environment-legibility-audit.md"
       ],
+      "validation": [
+        "python3 -m unittest discover -s tests -p 'test_*.py'",
+        "python3 scripts/validate_catalog.py",
+        "replay the same audit with a fixed as-of timestamp"
+      ],
       "install": {
         "mode": "copy",
         "destination": "workbench/workflows/environment-legibility-audit",

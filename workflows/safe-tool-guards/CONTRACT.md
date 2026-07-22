@@ -35,4 +35,13 @@ Repository-specific checks additionally require:
 - public projections that contain aggregates and methodology only, never raw
   prompts, code, diffs, paths, transcripts, credentials, or command output.
 
+Dynamic verification must distinguish an execution failure from an environment
+that could not be verified under the guard policy. Use `pass` for a successful
+command, `fail` only when an available command exits unsuccessfully, `blocked`
+when policy or network-required bootstrap prevents execution, and `unavailable`
+when the executable or local dependency is missing. Persist fixed reason codes
+and output hashes, never raw output. Consumers must count only genuine command
+failures and timeouts as quality failures; blocked or unavailable results remain
+explicit measurement gaps.
+
 This is a contract reference, not a replacement for a host's security policy.

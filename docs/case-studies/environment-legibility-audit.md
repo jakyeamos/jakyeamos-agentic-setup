@@ -18,7 +18,11 @@ baselines for dynamic checks and keeps public projections aggregate-only.
 
 The workflow was derived from a cross-repository audit implementation that
 records duplicate-origin grouping, linked worktree state, context freshness,
-command verification, redaction, replay, and blocked-baseline outcomes.
+command verification, redaction, replay, and blocked-baseline outcomes. A
+bounded dynamic pilot also showed that fresh disposable archives can trigger
+package-manager or Python-runner bootstrap attempts; the prevention contract
+now records those as blocked or unavailable instead of mislabeling them as
+quality failures.
 
 ## Limitation
 

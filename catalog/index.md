@@ -11,6 +11,7 @@ handoffs. The machine-readable source of truth is
 | --- | --- | --- | --- |
 | `context-budget-governor` | 150k-token checkpoint policy and compact handoff template | beta | copy |
 | `repo-aware-context` | Repository-first routing and context-layer discipline | beta | copy |
+| `environment-legibility-audit` | Evidence-first repository environment audit and remediation plans | experimental | copy |
 | `governed-work-loop` | route -> context -> execute -> verify -> handoff | stable | copy |
 | `safe-tool-guards` | Dry-run, scope, approval, and verification contract | beta | copy |
 | `evaluation-evidence` | Sanitized contract fixture and evidence vocabulary | beta | copy |
