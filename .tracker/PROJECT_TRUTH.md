@@ -1,14 +1,14 @@
 ---
 schemaVersion: 1
-projectName: jakyeamos-agent-skills
-summary: Portable Agentic Workbench cataloging reusable context, routing, safety, evaluation, handoff, environment-legibility, and durable execution workflows with eleven portable skills.
+projectName: jakyeamos-agentic-setup
+summary: Public Portable Agentic Workbench catalog with low-loaded routing, manifest-aware setup, fail-closed synchronization, sanitized runtime adapters, and reusable workflow skills.
 healthScore: 94
 statusLabel: ready
-nextStep: Hold the additive v0.3.0 catalog for human review and a separately authorized release decision; no publish, tag, or push occurred in this pass.
+nextStep: Review the v0.4.0 setup engine and verify GitHub rename/redirect/archive availability before any remote mutation.
 blockers: []
 lastUpdated: 2026-07-22
-tags: [agent-skills, portable-workbench, context-management, workflow-routing, safety, evaluation]
-areas: [catalog, installer, workflows, adapters, documentation, validation]
+tags: [agentic-setup, portable-workbench, low-loaded, manifest, workflow-routing, safety, evaluation]
+areas: [catalog, node-cli, manifest, workflows, adapters, documentation, validation]
 goals:
   - Keep native Research Domain Writing and Terrace skills portable and backward-compatible
   - Make catalog provenance, evidence, targets, dependencies, and installation mode agent-minable
@@ -17,7 +17,7 @@ goals:
   - Keep the public catalog canonical for portable redistribution while preserving AIOS as an internal archival/runtime reference
 repoType: portable-agent-workbench
 sourceOfTruth: catalog/manifest.json
-primaryLanguage: Python
+primaryLanguage: Python and Node.js
 integrationBranch: dev
 activeBranch: dev
 lastCommitDate: "2026-07-22"
@@ -32,28 +32,31 @@ quality:
   deadCode: pass
   structure: pass
 canonicalCommands:
-  install: python3 scripts/workbench.py install <asset-id> --target <target> --root <explicit-root> --dry-run
+  install: python3 scripts/workbench.py install <asset-id> --target <target> --root <explicit-root> --dry-run; pnpm agent-config install --dry-run --json
   dev: unknown
   lint: ruff check scripts tests
   typecheck: basedpyright scripts tests
-  test: python3 -m unittest discover -s tests -p 'test_*.py'
+  test: python3 -m unittest discover -s tests -p 'test_*.py'; pnpm test
   coverage: python3 scripts/pre_cr_coverage.py
   package: python3 scripts/workbench.py validate
   ci: pre-cr run --workspace .
   audit: python3 scripts/public_safety_check.py
   deadcode: vulture scripts tests --min-confidence 70
 agentExpectationsVersion: 1
-lastVerifiedCommand: python3 scripts/validate_skills.py; python3 scripts/validate_catalog.py; python3 scripts/public_safety_check.py; python3 scripts/workbench.py validate; python3 -m unittest discover -s tests -p 'test_*.py'
+lastVerifiedCommand: python3 scripts/validate_skills.py; python3 scripts/validate_catalog.py; python3 scripts/public_safety_check.py; python3 scripts/workbench.py validate; python3 -m unittest discover -s tests -p 'test_*.py'; pnpm test; node bin/agent-config.mjs smoke --json
 lastVerifiedAt: "2026-07-22"
 ---
 
 ## Current State
 
-The repository is now a public Portable Agentic Workbench catalog. The
-authoritative `catalog/manifest.json` is version `0.3.0` and records eleven
-portable skills, portable workflows, staged adapters, external references,
-evidence, provenance, and safe installation. The dependency-free Python CLI
-supports deterministic list, search, show, install, and validate commands.
+The repository is now the public `jakyeamos-agentic-setup` checkout. The
+authoritative `catalog/manifest.json` is version `0.4.0` and records reusable
+skills, portable workflows, staged Claude/Codex/Gemini/Cursor/Antigravity
+adapters, external references, evidence, provenance, and safe installation.
+The dependency-free Python catalog CLI remains available alongside the
+standard-library Node `agent-config` audit/drift/doctor/sync/install/bootstrap/
+smoke engine. The private `claude-config` companion retains personal mappings,
+audit evidence, and unresolved conflicts.
 The original skill paths remain unchanged, and the nine additive skills have
 trigger/non-trigger forward cases plus clean-room package fixtures. The
 environment-legibility workflow continues to document the offline bootstrap
@@ -109,6 +112,10 @@ no repair or regeneration was performed.
 - 2026-07-22: Completed the cross-repository handoff review; public `dev` is
   clean with all local commits still unpushed, AIOS runtime references still
   point to the preserved archive, and no publish, tag, or push was performed.
+- 2026-07-22: Added the manifest-aware low-loaded setup engine, sanitized
+  runtime edges, symbolic-root schema, conflict-safe sync, and public mining
+  record in `58cf4ac`; Node/Python catalog gates and Claude/Codex/Gemini smoke
+  checks pass while Cursor and Antigravity remain unverified.
 
 ## Open Problems
 
@@ -117,6 +124,8 @@ no repair or regeneration was performed.
   non-empty diffs.
 - Ruff, basedpyright, and Vulture are available for the dependency-free Python
   package; basedpyright reports only dynamic-JSON typing warnings.
+- The public rename and private companion archive are pending remote
+  visibility/redirect verification; no remote mutation has been performed.
 
 ## Quality Ladder Notes
 
@@ -125,6 +134,10 @@ no repair or regeneration was performed.
 - **Public safety:** PASS after the truth-surface update; excluded QR planning
   remains separate from the installable public asset set.
 - **Focused tests:** `python3 -m unittest discover -s tests -p 'test_*.py'` PASS.
+- **Node engine:** `pnpm test` PASS with 13 manifest, routing, provenance, and
+  safe-sync tests; public safety and `git diff --check` PASS.
+- **Runtime smoke:** Claude, Codex, and Gemini `--help` PASS; Cursor and
+  Antigravity are explicitly `unverified`.
 - **Pre-CR:** non-empty feature diff PASS with 67% aggregate changed-line
   coverage, threshold 0%, and anti-slop PASS.
 - **Clean-room:** standard-library checkout passed validation and disposable
@@ -134,9 +147,10 @@ no repair or regeneration was performed.
 
 ## Next Concrete Steps
 
-1. Human-review the catalog, mining report, and private disposition ledger.
-2. If approved, authorize release actions separately; this pass intentionally did not publish, tag, or push.
-3. Keep the AIOS generated library archival and its local runtime references intact.
+1. Verify target/source remotes and GitHub rename/redirect/archive availability.
+2. Publish the preserved `dev` histories only after remote visibility is proven.
+3. Keep the private manifest, live mappings, conflict ledger, and AIOS archive
+   outside the public distribution boundary.
 
 ## QR Remediation Planning
 
