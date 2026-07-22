@@ -1,10 +1,10 @@
 ---
 schemaVersion: 1
 projectName: jakyeamos-agent-skills
-summary: Portable Agentic Workbench cataloging reusable context, routing, safety, evaluation, handoff, and environment-legibility workflows while retaining the original two skills.
-healthScore: 92
+summary: Portable Agentic Workbench cataloging reusable context, routing, safety, evaluation, handoff, environment-legibility, and durable execution workflows with eleven portable skills.
+healthScore: 94
 statusLabel: ready
-nextStep: Review and approve the additive v0.2.0 release/tag, including the offline bootstrap evidence contract; no publish or tag was performed by this implementation pass.
+nextStep: Complete the AIOS archival redirect verification and review the additive v0.3.0 catalog; no publish, tag, or push is authorized in this pass.
 blockers: []
 lastUpdated: 2026-07-22
 tags: [agent-skills, portable-workbench, context-management, workflow-routing, safety, evaluation]
@@ -14,6 +14,7 @@ goals:
   - Make catalog provenance, evidence, targets, dependencies, and installation mode agent-minable
   - Keep private runtime infrastructure, generated harvests, credentials, and managed vendor files outside the public boundary
   - Keep validation simple enough to run without external dependencies
+  - Keep the public catalog canonical for portable redistribution while preserving AIOS as an internal archival/runtime reference
 repoType: portable-agent-workbench
 sourceOfTruth: catalog/manifest.json
 primaryLanguage: Python
@@ -48,17 +49,18 @@ lastVerifiedAt: "2026-07-22"
 
 ## Current State
 
-The repository is being expanded from a two-skill public package into the
-Portable Agentic Workbench. `catalog/manifest.json` is the source of truth for
-portable workflows, staged adapters, external references, evidence, and safe
-installation. The dependency-free Python CLI supports deterministic list,
-search, show, install, and validate commands. The original skill paths remain
-unchanged. The environment-legibility workflow now documents and validates the
-offline bootstrap outcome taxonomy used by the leverage audit.
+The repository is now a public Portable Agentic Workbench catalog. The
+authoritative `catalog/manifest.json` is version `0.3.0` and records eleven
+portable skills, portable workflows, staged adapters, external references,
+evidence, provenance, and safe installation. The dependency-free Python CLI
+supports deterministic list, search, show, install, and validate commands.
+The original skill paths remain unchanged, and the nine additive skills have
+trigger/non-trigger forward cases plus clean-room package fixtures. The
+environment-legibility workflow continues to document the offline bootstrap
+outcome taxonomy used by the leverage audit.
 
-The verified feature branch `codex/agentic-workbench-expansion` was fast-forward
-integrated into `dev` at `c8fe9fe`. The current work is additive and does not
-execute or rewrite the existing QR-remediation phase.
+Commit `1762727` contains the additive mining release. The current work is
+additive and does not execute or rewrite the existing QR-remediation phase.
 
 ## Recent Progress
 
@@ -90,6 +92,9 @@ execute or rewrite the existing QR-remediation phase.
 - 2026-07-22: Added offline bootstrap classification to the environment-legibility
   audit and safe-tool-guards contract; catalog, public-safety, workbench, and
   focused tests pass in `1709a15`.
+- 2026-07-22: Mined and sanitized nine durable first-party workflow patterns,
+  added forward-test fixtures and the `0.3.0` manifest, and committed them as
+  `1762727`; public validators, Pre-CR, and clean-room no-overwrite checks pass.
 
 ## Open Problems
 
@@ -115,8 +120,8 @@ execute or rewrite the existing QR-remediation phase.
 
 ## Next Concrete Steps
 
-1. Review the catalog and clean-room evidence for the additive v0.2.0 release.
-2. Decide whether to create the release tag and publish after review.
+1. Complete and verify the AIOS archival redirect and private disposition record.
+2. Review the catalog and clean-room evidence for the additive v0.3.0 release.
 3. Keep the QR-remediation phase on its separate execution track.
 
 ## QR Remediation Planning
