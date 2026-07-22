@@ -17,6 +17,10 @@ released under the MIT license in this repository.
   not redistributed.
 - Vendor adapters are behavioral mappings only. They do not redistribute
   managed host configuration, private hooks, session state, or binaries.
+- The `agent-config` engine and public manifest contract are sanitized,
+  first-party behavioral mining from the private instruction-migration
+  companion. The companion's concrete manifest, live mappings, audit evidence,
+  and conflict ledger are not redistributed.
 
 ## External references
 

@@ -48,10 +48,20 @@ test("parses JSON-compatible YAML and validates the manifest contract", () => {
   assert.equal(validateManifest(manifest), true);
 });
 
+test("publishes a schema with the required fields and all supported runtime adapters", () => {
+  const schema = JSON.parse(fs.readFileSync(path.join(process.cwd(), "schemas", "agent-config-manifest.schema.json"), "utf8"));
+  assert.deepEqual(schema.$defs.entry.required, [
+    "id", "source", "destination", "owner", "runtime", "layer", "always_loaded",
+    "path_kind", "sync_direction", "provenance", "install_recipe", "status"
+  ]);
+  assert.deepEqual(schema.$defs.runtime.enum, ["claude", "codex", "gemini", "cursor", "antigravity"]);
+});
+
 test("rejects host-specific absolute paths and credential-shaped values", () => {
   assert.throws(() => validateManifest(minimalManifest({ entries: [{ ...minimalManifest().entries[0], source: path.join(os.homedir(), "secret.md") }] })), /absolute path/);
   assert.throws(() => validateManifest(minimalManifest({ entries: [{ ...minimalManifest().entries[0], source: "~" + "/secret.md" }] })), /home shorthand/);
   assert.throws(() => validateManifest(minimalManifest({ entries: [{ ...minimalManifest().entries[0], source: "../secret.md" }] })), /unsafe path segment/);
+  assert.throws(() => validateManifest(minimalManifest({ entries: [{ ...minimalManifest().entries[0], runtime: ["unsupported"] }] })), /unsupported runtime/);
   assert.throws(() => validateManifest(minimalManifest({ description: `token=${"x".repeat(16)}` })), /credential|secret/);
 });
 
@@ -140,6 +150,9 @@ test("safe sync applies a source-only file, records a baseline, and blocks live 
     const blocked = syncManifest(manifest, root, { apply: false });
     assert.equal(blocked.actions[0].action, "blocked");
     assert.equal(blocked.actions[0].reason, "live-modified");
+    const noOverwrite = syncManifest(manifest, root, { apply: true });
+    assert.equal(noOverwrite.status, "SYNC_BLOCKED");
+    assert.equal(fs.readFileSync(path.join(root, "destination.md"), "utf8"), "live edit\n");
   } finally {
     fs.rmSync(root, { recursive: true, force: true });
   }
