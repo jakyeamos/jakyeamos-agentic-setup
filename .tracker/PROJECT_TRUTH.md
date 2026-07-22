@@ -4,7 +4,7 @@ projectName: jakyeamos-agent-skills
 summary: Portable Agentic Workbench cataloging reusable context, routing, safety, evaluation, handoff, environment-legibility, and durable execution workflows with eleven portable skills.
 healthScore: 94
 statusLabel: ready
-nextStep: Complete the AIOS archival redirect verification and review the additive v0.3.0 catalog; no publish, tag, or push is authorized in this pass.
+nextStep: Complete the final cross-repository status review for the additive v0.3.0 catalog; no publish, tag, or push is authorized in this pass.
 blockers: []
 lastUpdated: 2026-07-22
 tags: [agent-skills, portable-workbench, context-management, workflow-routing, safety, evaluation]
@@ -61,6 +61,9 @@ outcome taxonomy used by the leverage audit.
 
 Commit `1762727` contains the additive mining release. The current work is
 additive and does not execute or rewrite the existing QR-remediation phase.
+Commit `f5389ac` folds the mined durable-work, change-surface, claim-evidence,
+and instruction-routing boundaries into the existing public workflows instead
+of leaving overlapping guidance as duplicate surfaces.
 
 ## Recent Progress
 
@@ -95,6 +98,10 @@ additive and does not execute or rewrite the existing QR-remediation phase.
 - 2026-07-22: Mined and sanitized nine durable first-party workflow patterns,
   added forward-test fixtures and the `0.3.0` manifest, and committed them as
   `1762727`; public validators, Pre-CR, and clean-room no-overwrite checks pass.
+- 2026-07-22: Folded durable delegation, change-surface evidence, claim-to-
+  evidence rules, and report-first instruction routing into existing public
+  workflows as `f5389ac`; catalog, safety, workbench, unit, Ruff, and Vulture
+  checks pass.
 
 ## Open Problems
 
@@ -120,8 +127,8 @@ additive and does not execute or rewrite the existing QR-remediation phase.
 
 ## Next Concrete Steps
 
-1. Complete and verify the AIOS archival redirect and private disposition record.
-2. Review the catalog and clean-room evidence for the additive v0.3.0 release.
+1. Complete the final cross-repository status review for the additive v0.3.0 release.
+2. Keep the AIOS generated library archival and its local runtime references intact.
 3. Keep the QR-remediation phase on its separate execution track.
 
 ## QR Remediation Planning
