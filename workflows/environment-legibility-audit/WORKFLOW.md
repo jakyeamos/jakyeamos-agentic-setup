@@ -171,6 +171,31 @@ and pointers; keep procedures in this workflow or a narrow reference. Missing,
 stale, or blocked evidence must remain visible in routing and promotion
 outputs.
 
+## Host integration surfaces
+
+Use three complementary owners rather than turning the audit into another
+monolith:
+
+- **Pre-CR** is the fast changed-scope gate. It checks changed files for
+  context-routing and public-projection violations, then returns `pass`,
+  `fail`, or `blocked`. It must not run providers, network operations,
+  migrations, deployments, or writes.
+- **Quality Runner** is the source of truth for repository quality gates,
+  findings, and review rubrics. Add an environment-legibility skill only after
+  candidate ingest, corpus classification, overlap review, and explicit
+  activation approval. The audit must consume versioned evidence rather than
+  importing the Quality Runner database or creating a second quality engine.
+- **Leverage runtime** owns the deep weekly audit, protected disposable
+  baselines, repository identity, remediation plans, scorecards, and portfolio
+  projections. It may read Quality Runner artifacts but does not repair a
+  target checkout.
+
+The Pre-CR adapter is intentionally narrower than the weekly audit. A missing
+or stale context index can block a context-sensitive change, while an existing
+baseline problem remains a deep-audit finding until the runtime can inspect a
+protected disposable revision. Host registration and hook installation remain
+manual-review actions.
+
 ## Validation
 
 Replay the same ledger with a fixed `as-of` timestamp and require identical

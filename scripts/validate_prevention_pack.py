@@ -61,6 +61,8 @@ WORKFLOW_MARKERS: dict[str, tuple[str, ...]] = {
         "replay",
         "manual review",
         "timeout",
+        "pre-cr",
+        "quality runner",
     ),
 }
 

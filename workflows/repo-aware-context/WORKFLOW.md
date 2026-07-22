@@ -81,6 +81,11 @@ inspection only when the task permits it and label the context gap. Dynamic
 execution, routing decisions, and promotion decisions require the gap to be
 resolved or explicitly approved.
 
+For a changed-scope Pre-CR adapter, apply the same gate to context-sensitive
+files before a commit: require a local index, validate its links, and preserve
+`blocked` for missing or stale evidence. This fast check supplements the deep
+leverage audit; it does not replace protected-baseline verification.
+
 ## Scope guard
 
 Do not scan a home directory or a multi-repository workspace by default. Ask

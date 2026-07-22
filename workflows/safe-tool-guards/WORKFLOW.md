@@ -56,6 +56,13 @@ The shared result taxonomy includes `pass`, `fail`, `blocked`, `unavailable`,
 and `timeout`; preserve those distinctions when translating to a host surface.
 This package does not ship a guard binary or silently edit host configuration.
 
+A Pre-CR quality adapter is a changed-scope translation of this contract. It
+may inspect staged paths, local context indexes, and public-projection content,
+but it must not register hooks, alter configuration, repair a dirty checkout,
+call a provider, access a private runtime database, or write target files.
+Adapter output must preserve `pass`, `fail`, and `blocked`; unavailable evidence
+is not silently converted into a pass.
+
 The [environment-legibility audit](../environment-legibility-audit/WORKFLOW.md)
 uses this contract when it inspects repositories and generates remediation
 plans.

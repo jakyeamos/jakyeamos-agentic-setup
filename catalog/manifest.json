@@ -444,7 +444,9 @@
         "context-legibility",
         "evidence",
         "remediation-plans",
-        "safety"
+        "safety",
+        "pre-cr",
+        "quality-runner-routing"
       ],
       "supported_targets": [
         "generic",

@@ -6,6 +6,18 @@
   ],
   "coverageFormat": "lcov",
   "threshold": 0,
+  "qualityAdapters": [
+    {
+      "name": "anti-slop",
+      "command": "anti-slop gate --files {changedFiles} --mode block --format pre-cr",
+      "required": true
+    },
+    {
+      "name": "prevention-pack",
+      "command": "python3 scripts/validate_prevention_pack.py --json",
+      "required": true
+    }
+  ],
   "surfaces": {
     "covered": [
       "scripts/validate_skills.py",
