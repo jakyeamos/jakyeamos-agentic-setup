@@ -24,4 +24,15 @@ Required behavior:
 - The result records `status`, `actions`, `verification`, and any
   `partial_failures`.
 
+Repository-specific checks additionally require:
+
+- a resolved repository and checkout identity;
+- a clean, attached, current, non-prunable, verifiable baseline before any
+  dynamic check;
+- a runtime-owned disposable worktree or archive for dynamic checks;
+- no provider, deployment, merge, push, or private-runtime-database access;
+- before/after status evidence proving the source checkout was preserved;
+- public projections that contain aggregates and methodology only, never raw
+  prompts, code, diffs, paths, transcripts, credentials, or command output.
+
 This is a contract reference, not a replacement for a host's security policy.

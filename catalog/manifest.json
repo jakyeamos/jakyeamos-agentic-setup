@@ -324,6 +324,49 @@
       }
     },
     {
+      "id": "environment-legibility-audit",
+      "kind": "workflow",
+      "asset_class": "portable",
+      "title": "Environment legibility audit",
+      "summary": "A bounded, evidence-first audit for repository identity, machine-legible context, verified commands, and actionable remediation plans.",
+      "maturity": "experimental",
+      "capabilities": [
+        "repository-audit",
+        "context-legibility",
+        "evidence",
+        "remediation-plans",
+        "safety"
+      ],
+      "supported_targets": [
+        "generic",
+        "codex",
+        "claude",
+        "cursor",
+        "copilot"
+      ],
+      "entrypoints": [
+        "workflows/environment-legibility-audit/WORKFLOW.md"
+      ],
+      "files": [
+        "workflows/environment-legibility-audit/WORKFLOW.md"
+      ],
+      "dependencies": [],
+      "provenance": {
+        "status": "authored",
+        "source": "cross-repository-environment-legibility-audit",
+        "license_status": "MIT",
+        "redistribution": "allowed"
+      },
+      "evidence": [
+        "docs/case-studies/environment-legibility-audit.md"
+      ],
+      "install": {
+        "mode": "copy",
+        "destination": "workbench/workflows/environment-legibility-audit",
+        "manual_review": "Review the bounded root, repository exclusions, and target-specific remediation before applying any local router or context-index patch."
+      }
+    },
+    {
       "id": "reference-agent-eval-contract",
       "kind": "reference",
       "asset_class": "external",

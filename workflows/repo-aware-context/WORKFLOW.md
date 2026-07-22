@@ -6,12 +6,27 @@ recommends an installation.
 ## Route
 
 1. Identify the exact repository and branch in scope.
-2. Read the nearest operating instructions and local context index.
-3. Read the live truth file if one exists; treat it as a snapshot, not a
+2. Resolve the repository identity before broad discovery: normalize its
+   remote when present, record its common Git directory, and distinguish each
+   checkout or linked worktree state.
+3. Read the nearest operating instructions and local context index.
+4. Read the live truth file if one exists; treat it as a snapshot, not a
    historical log.
-4. Search for an existing implementation before adding a helper or surface.
-5. Select only the context needed for the current task.
-6. State assumptions when a missing artifact could change the design.
+5. Search for an existing implementation before adding a helper or surface.
+6. Select only the context needed for the current task.
+7. State assumptions when a missing artifact could change the design.
+
+## Environment evidence
+
+When auditing or preparing a repository, check the context index, linked local
+documents, command references, and their freshness. A file's presence is not
+evidence that an instruction is routed, executable, or current. Record broken
+links, missing owners, stale commands, and unverifiable baselines explicitly.
+Use `unknown`, `stale`, or `blocked` when evidence is incomplete.
+
+Dynamic command checks must run only from a runtime-owned disposable baseline.
+Refuse dirty, detached, stale, prunable, or otherwise unverifiable checkouts,
+and compare the original checkout status before and after the check.
 
 ## Context layers
 
