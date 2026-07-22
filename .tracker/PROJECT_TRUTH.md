@@ -43,7 +43,7 @@ canonicalCommands:
   audit: python3 scripts/public_safety_check.py
   deadcode: vulture scripts tests --min-confidence 70
 agentExpectationsVersion: 1
-lastVerifiedCommand: python3 scripts/validate_skills.py; python3 scripts/validate_catalog.py; python3 scripts/public_safety_check.py; python3 scripts/workbench.py validate; python3 -m unittest discover -s tests -p 'test_*.py'; pnpm test; node bin/agent-config.mjs smoke --json
+lastVerifiedCommand: python3 scripts/validate_skills.py; python3 scripts/validate_catalog.py; python3 scripts/validate_prevention_pack.py; python3 scripts/public_safety_check.py; python3 scripts/workbench.py validate; python3 -m unittest discover -s tests -p 'test_*.py'; pnpm test; node bin/agent-config.mjs smoke --json
 lastVerifiedAt: "2026-07-22"
 ---
 
@@ -61,6 +61,11 @@ The original skill paths remain unchanged, and the nine additive skills have
 trigger/non-trigger forward cases plus clean-room package fixtures. The
 environment-legibility workflow continues to document the offline bootstrap
 outcome taxonomy used by the leverage audit.
+The shared prevention pack now validates repository identity and freshness,
+minimum-context routing, disposable-baseline safety, approval and credential
+boundaries, and the explicit pass/fail/blocked/unavailable/timeout taxonomy.
+Its three portable workflows carry owner, executable validation, supported
+target, and removal-condition metadata, with manual review required at install.
 The public repository has been renamed from `jakyeamos-agent-skills`; its old
 GitHub URL redirects to the new slug, `dev` is published, and the default
 branch remains `main`.
@@ -77,18 +82,6 @@ no repair or regeneration was performed.
 
 ## Recent Progress
 
-- 2026-07-21: Added the versioned catalog, source classes, portable workflows,
-  staged vendor adapters, external reference records, and case studies.
-- 2026-07-21: Added the standard-library catalog CLI, catalog validator, public
-  safety scanner, clean-room installer tests, and coverage adapter.
-- 2026-07-21: Committed the catalog and installer implementation as
-  `50f74ea` after a non-empty-diff Pre-CR PASS.
-- 2026-07-21: Extended the trace coverage adapter and changed-line surface as
-  `342f8b6` with another Pre-CR PASS.
-- 2026-07-21: Published the human mining guide, case studies, portable
-  workflows, staged adapters, and CI validation as `f210835`.
-- 2026-07-21: Recorded the additive Phase 2 plan and live repository truth as
-  `d843b9a`; the QR Phase 1 files remain untouched.
 - 2026-07-21: Hardened direct-script imports, public artifact detection, and
   adapter/reference tests as `8a8ad42`; Pre-CR and the focused suite remain green.
 - 2026-07-21: Final static checks reached Ruff PASS, basedpyright zero errors
@@ -125,6 +118,9 @@ no repair or regeneration was performed.
 - 2026-07-22: Published the verified `dev` history and renamed the public
   repository to `jakyeamos-agentic-setup`; the old URL redirect and new remote
   configuration were verified.
+- 2026-07-22: Hardened the shared prevention pack in `34e28d3`; prevention,
+  catalog, safety, workbench, Python, Node, Pre-CR, Ruff, Vulture, and workflow
+  dry-run gates pass.
 
 ## Open Problems
 
@@ -154,12 +150,16 @@ no repair or regeneration was performed.
   target installation; a second apply was rejected without overwriting files.
 - **Clean-tree Pre-CR:** expected `no-changes` baseline returns no coverage
   result; the staged non-empty feature diff passed the same gate during commit.
+- **Prevention pack:** `python3 scripts/validate_prevention_pack.py` PASS;
+  all three shared workflows report manual-review installation metadata.
 
 ## Next Concrete Steps
 
-1. Publish the private companion deprecation pointer and preserved `dev` history.
-2. Archive `claude-config` without deletion and verify its archived state.
-3. Keep the private manifest, live mappings, conflict ledger, and AIOS archive
+1. Keep prevention-pack validation in the weekly catalog review and host-adapter
+   activation manual.
+2. Publish the private companion deprecation pointer and preserved `dev` history.
+3. Archive `claude-config` without deletion and verify its archived state.
+4. Keep the private manifest, live mappings, conflict ledger, and AIOS archive
    outside the public distribution boundary.
 
 ## QR Remediation Planning
