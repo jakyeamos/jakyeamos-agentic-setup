@@ -11,10 +11,14 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
-VALIDATOR = ROOT / "scripts" / "validate_skills.py"
+VALIDATORS = (
+    ROOT / "scripts" / "validate_skills.py",
+    ROOT / "scripts" / "validate_prevention_pack.py",
+)
 COVERAGE_PATH = ROOT / ".pre-cr" / "coverage.lcov"
 COVERED_FILES = (
     ROOT / "scripts" / "validate_skills.py",
+    ROOT / "scripts" / "validate_prevention_pack.py",
     ROOT / "scripts" / "catalog_validation.py",
     ROOT / "scripts" / "public_safety_check.py",
     ROOT / "scripts" / "validate_catalog.py",
@@ -35,12 +39,13 @@ def _executable_lines(source_file: Path) -> set[int]:
 
 def _run_validator() -> None:
     old_argv = sys.argv[:]
-    sys.argv = [str(VALIDATOR)]
     try:
-        exec(
-            compile(VALIDATOR.read_text(encoding="utf-8"), str(VALIDATOR), "exec"),
-            {"__name__": "__main__", "__file__": str(VALIDATOR)},
-        )
+        for validator in VALIDATORS:
+            sys.argv = [str(validator)]
+            exec(
+                compile(validator.read_text(encoding="utf-8"), str(validator), "exec"),
+                {"__name__": "__main__", "__file__": str(validator)},
+            )
     finally:
         sys.argv = old_argv
 
@@ -48,7 +53,12 @@ def _run_validator() -> None:
 def _run_workbench_smoke() -> None:
     """Exercise public command paths inside the trace process."""
 
-    from scripts import public_safety_check, validate_catalog, workbench
+    from scripts import (
+        public_safety_check,
+        validate_catalog,
+        validate_prevention_pack,
+        workbench,
+    )
 
     output = io.StringIO()
     with contextlib.redirect_stdout(output), contextlib.redirect_stderr(output):
@@ -56,6 +66,8 @@ def _run_workbench_smoke() -> None:
             raise RuntimeError("catalog validation failed during coverage smoke")
         if public_safety_check.main(["--root", str(ROOT)]) != 0:
             raise RuntimeError("public safety failed during coverage smoke")
+        if validate_prevention_pack.main(["--root", str(ROOT)]) != 0:
+            raise RuntimeError("prevention-pack validation failed during coverage smoke")
         commands = (
             ["list", "--json"],
             ["search", "--query", "long context", "--json"],

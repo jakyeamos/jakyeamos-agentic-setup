@@ -80,15 +80,21 @@ available without network access. Classify results explicitly:
 - `blocked`: verification was prevented by policy, including a package manager
   or runner attempting network bootstrap;
 - `unavailable`: the executable or required local dependency was not present.
+- `timeout`: an available allowlisted command started but exceeded its declared
+  execution limit.
 
-`blocked` and `unavailable` are measurement gaps, not quality failures. Record
-only a fixed reason code and an output hash; never persist raw command output in
-shared or public artifacts. A no-network command that cannot materialize its
-environment must not be reported as a failing repository quality gate.
+`blocked` and `unavailable` are measurement gaps, not quality failures.
+`timeout` is a genuine execution outcome and must be reported separately from
+bootstrap failure. Record only a fixed reason code and an output hash; never
+persist raw command output in shared or public artifacts. A no-network command
+that cannot materialize its environment must not be reported as a failing
+repository quality gate.
 
 If the baseline is unsafe or the command cannot be verified, produce a blocked
 finding and a remediation step. Do not repair the checkout as part of the
-audit.
+audit. Capture the source checkout status before and after discovery and
+preparation; any difference is a failed audit invariant, not a successful
+preparation.
 
 ## Remediation output
 
@@ -102,28 +108,75 @@ only when the evidence shows a real routing gap. Keep those files short and
 reviewable. Dirty, archival, empty, and private-runtime repositories receive a
 central plan unless a human explicitly approves a local change.
 
-## Prevention loop
+## Shared prevention contracts
 
-Promote a recurring high-impact failure to a shared rule only when it has a
-named owner, executable validation, supported targets, and a removal condition.
-Group adjacent symptoms into one routed workflow. Keep global instructions to
-hard invariants and pointers; keep procedures here or in a narrow reference.
+The audit promotes recurring high-impact failures as a small set of owned
+contracts. Each contract has executable validation, supported targets, and a
+removal condition. Adjacent documentation symptoms remain grouped in a routed
+workflow instead of becoming one rule per symptom.
 
-The current promoted rule is **offline bootstrap classification**:
+### `missing-context-index`
 
-- Owner: the leverage runtime maintainers.
-- Validation: the dynamic audit fixture must distinguish `pass`, `fail`,
-  `blocked`, and `unavailable` without retaining raw output; replay must remain
-  deterministic.
+- Owner: `repo-aware-context` maintainers.
+- Validation: `python3 scripts/validate_prevention_pack.py`, catalog and public
+  safety checks, plus deterministic audit replay when the leverage runtime is
+  available.
+- Supported targets: `generic`, `codex`, `claude`, `cursor`, `copilot`,
+  `gemini`, and `antigravity` instruction surfaces.
+- Removal condition: retire the promotion only after three consecutive weekly
+  audits across at least three repository classes show no missing or stale
+  indexes with broken links; keep the hard invariant until then.
+
+### `missing-approval-path-contract`
+
+- Owner: `safe-tool-guards` maintainers.
+- Validation: `python3 scripts/validate_prevention_pack.py`, safety scanning,
+  and guard fixtures covering exact targets, dry-runs, approval-gated paths,
+  and preserved source status.
+- Supported targets: `generic`, `codex`, `claude`, `cursor`, `copilot`,
+  `gemini`, and `antigravity` tool surfaces.
+- Removal condition: retire the promotion only after three consecutive weekly
+  audits across at least three repository classes show no unexplained
+  approval-gated paths and all applicable repositories expose executable
+  checks.
+
+### `missing-security-contract`
+
+- Owner: `safe-tool-guards` maintainers.
+- Validation: `python3 scripts/validate_prevention_pack.py`, public-safety and
+  redaction checks, and fixtures for credential-bearing arguments, private
+  artifacts, network policy, and public projection filtering.
+- Supported targets: `generic`, `codex`, `claude`, `cursor`, `copilot`,
+  `gemini`, and `antigravity` tool surfaces.
+- Removal condition: retire the promotion only after three consecutive weekly
+  audits across at least three repository classes show no credential,
+  network-boundary, or redaction findings and all public-safety checks pass.
+
+### `unverified-quality-commands`
+
+- Owner: `environment-legibility-audit` maintainers.
+- Validation: dynamic fixtures distinguish `pass`, `fail`, `blocked`,
+  `unavailable`, and `timeout` without retaining raw output; replay with a
+  fixed `as-of` timestamp remains deterministic.
 - Supported targets: any repository with an allowlisted quality command and a
-  disposable protected baseline.
-- Removal condition: retire the rule only after three consecutive weekly audits
-  across at least three repository classes show no misclassified bootstrap
-  failures and every dynamic adapter records the same outcome taxonomy.
+  clean, attached, current, non-prunable, verifiable disposable baseline.
+- Removal condition: retire the promotion only after three consecutive weekly
+  audits across at least three repository classes show no classification drift
+  and every dynamic adapter records the same outcome taxonomy.
+
+Promotion requires recurrence, impact, evidence references, and a maintainer
+who accepts the removal condition. Do not promote a single co-occurrence or
+change-surface inference. Keep global instructions limited to hard invariants
+and pointers; keep procedures in this workflow or a narrow reference. Missing,
+stale, or blocked evidence must remain visible in routing and promotion
+outputs.
 
 ## Validation
 
 Replay the same ledger with a fixed `as-of` timestamp and require identical
 inventory, findings, plans, and summary hashes. Confirm the original checkout
 statuses are unchanged. Public exports must contain only validated aggregates
-and methodology metadata and require manual review before publication.
+and methodology metadata; they must exclude prompts, code, diffs, paths,
+transcripts, credentials, and raw command output and require manual review
+before publication. Run `python3 scripts/validate_prevention_pack.py` alongside
+the catalog, public-safety, unit, and workbench checks before promoting a change.

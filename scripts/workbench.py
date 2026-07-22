@@ -19,6 +19,7 @@ if not __package__:
 # Direct script execution bootstraps the repository root before package imports.
 from scripts.catalog_validation import load_manifest, validate_manifest  # noqa: E402
 from scripts.public_safety_check import scan_repository  # noqa: E402
+from scripts.validate_prevention_pack import validate_prevention_pack  # noqa: E402
 from scripts.validate_skills import validate_skill  # noqa: E402
 
 
@@ -242,6 +243,7 @@ def _run_validation(root: Path) -> list[str]:
     errors = validate_manifest(root)
     errors.extend(scan_repository(root))
     if root.resolve() == ROOT.resolve():
+        errors.extend(validate_prevention_pack(root))
         for skill_dir in sorted(
             path for path in (root / "skills").iterdir() if path.is_dir()
         ):
@@ -288,7 +290,7 @@ def _parser() -> argparse.ArgumentParser:
     )
 
     validate_parser = subparsers.add_parser(
-        "validate", help="validate catalog, public safety, and skills"
+        "validate", help="validate catalog, public safety, prevention pack, and skills"
     )
     validate_parser.add_argument(
         "--json", action="store_true", help="emit deterministic JSON"

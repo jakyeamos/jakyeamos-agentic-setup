@@ -131,6 +131,7 @@ The catalog runtime uses only Python's standard library:
 ```bash
 python3 scripts/validate_skills.py
 python3 scripts/validate_catalog.py
+python3 scripts/validate_prevention_pack.py
 python3 scripts/public_safety_check.py
 python3 scripts/workbench.py validate
 python3 -m unittest discover -s tests -p 'test_*.py'

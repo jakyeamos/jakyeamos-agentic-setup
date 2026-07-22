@@ -410,7 +410,7 @@
       "summary": "A repository-first context selection discipline that keeps instructions, source maps, and live truth separate.",
       "maturity": "beta",
       "capabilities": ["repo-awareness", "routing", "context-selection", "scope-control"],
-      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot", "gemini", "antigravity"],
       "entrypoints": ["workflows/repo-aware-context/WORKFLOW.md"],
       "files": ["workflows/repo-aware-context/WORKFLOW.md"],
       "dependencies": [],
@@ -421,9 +421,15 @@
         "redistribution": "allowed"
       },
       "evidence": ["docs/case-studies/context-routing.md"],
+      "validation": [
+        "python3 scripts/validate_prevention_pack.py",
+        "python3 scripts/validate_catalog.py",
+        "python3 scripts/public_safety_check.py"
+      ],
       "install": {
         "mode": "copy",
-        "destination": "workbench/workflows/repo-aware-context"
+        "destination": "workbench/workflows/repo-aware-context",
+        "manual_review": "Review the repository identity, freshness, and minimum-context routing contract before enabling it for a host."
       }
     },
     {
@@ -445,7 +451,9 @@
         "codex",
         "claude",
         "cursor",
-        "copilot"
+        "copilot",
+        "gemini",
+        "antigravity"
       ],
       "entrypoints": [
         "workflows/environment-legibility-audit/WORKFLOW.md"
@@ -466,6 +474,8 @@
       "validation": [
         "python3 -m unittest discover -s tests -p 'test_*.py'",
         "python3 scripts/validate_catalog.py",
+        "python3 scripts/validate_prevention_pack.py",
+        "python3 scripts/public_safety_check.py",
         "replay the same audit with a fixed as-of timestamp"
       ],
       "install": {
@@ -632,7 +642,7 @@
       "summary": "A vendor-neutral contract for classifying, previewing, approving, and recording tool actions before execution.",
       "maturity": "beta",
       "capabilities": ["safety", "shell", "tool-guards", "dry-run", "audit"],
-      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot", "gemini", "antigravity"],
       "entrypoints": ["workflows/safe-tool-guards/WORKFLOW.md"],
       "files": [
         "workflows/safe-tool-guards/CONTRACT.md",
@@ -646,9 +656,15 @@
         "redistribution": "allowed"
       },
       "evidence": ["docs/case-studies/safety-guards.md"],
+      "validation": [
+        "python3 scripts/validate_prevention_pack.py",
+        "python3 scripts/validate_catalog.py",
+        "python3 scripts/public_safety_check.py"
+      ],
       "install": {
         "mode": "copy",
-        "destination": "workbench/workflows/safe-tool-guards"
+        "destination": "workbench/workflows/safe-tool-guards",
+        "manual_review": "Review the target, baseline, network, credential, and approval boundaries before enabling any host adapter."
       }
     },
     {
