@@ -1,46 +1,33 @@
-# Portable Agentic Workbench: mining guide
+# Jakyeamos agentic setup
 
-This repository is a public, vendor-neutral catalog of agent workflows,
-portable skills, sanitized adapters, and evidence. It is not a snapshot of a
-private agent runtime.
+This is the public, vendor-neutral catalog and setup engine. Always-loaded
+content is limited to hard stops and routing pointers; detailed payloads stay
+in their owning skill, workflow, adapter, or project context directory.
 
-## Mining contract
+## Invariants
 
-1. Start with [`catalog/manifest.json`](catalog/manifest.json). Treat it as the
-   source of truth for asset identity, maturity, targets, files, dependencies,
-   provenance, evidence, and installation mode.
-2. Use the dependency-free CLI before reading the whole tree:
+- Read before modifying and preserve existing ownership and provenance.
+- Do not publish or copy credentials, private paths, transcripts, caches,
+  session state, or host-managed registration files.
+- Use explicit manifest and target paths. Never overwrite an existing target or
+  delete an unknown live member.
+- Keep unresolved conflicts visible. `AUDIT_COMPLETE` is the stopping state;
+  `MIGRATION_COMPLETE` requires an explicitly empty conflict ledger.
 
-   ```bash
-   python3 scripts/workbench.py list --json
-   python3 scripts/workbench.py search --query "long context" --json
-   python3 scripts/workbench.py show context-budget-governor --json
-   ```
+## Routing
 
-3. Read the asset's entrypoint and its evidence references. Distinguish
-   observed evidence from hypotheses and limitations.
-4. Use `install ... --dry-run` with an explicit disposable root before any
-   apply operation. An adapter is staged for manual review; it is never
-   registered implicitly.
-5. Run `python3 scripts/workbench.py validate` after proposing a mapping.
+- Manifest, schema, path, provenance, or drift questions: read
+  [`docs/agent-config-manifest.md`](docs/agent-config-manifest.md).
+- Decision-tree precedence or runtime mapping: read
+  [`docs/agent-config-routing.md`](docs/agent-config-routing.md), then the
+  narrow adapter under `adapters/<runtime>/`.
+- Conflict, sync, or install behavior: read
+  [`docs/agent-config-conflicts.md`](docs/agent-config-conflicts.md).
+- Public mining or promotion: read [`docs/mining.md`](docs/mining.md) and load
+  the `skill-harvest-and-promotion` skill/workflow on demand.
+- Catalog asset work: start at [`catalog/manifest.json`](catalog/manifest.json)
+  and load only the matching asset entrypoint.
 
-## Safety boundary
-
-Do not search for or import private transcripts, credentials, environment
-files, session databases, AIOS logs, generated harvests, or host-managed
-configuration. The manifest's `external` and `excluded` records are links and
-boundary notes, not invitations to copy runtime material.
-
-## Recommendation format
-
-When recommending an asset to another agent, report:
-
-- the asset ID and target;
-- the problem it addresses and the mechanism it uses;
-- the provenance and license status;
-- the evidence reference and what was actually observed;
-- dependencies and installation mode;
-- limitations, including any manual adapter step.
-
-For the full inspection sequence, read [`docs/mining.md`](docs/mining.md).
-For a human overview, read [`catalog/index.md`](catalog/index.md).
+The Python catalog surface remains available for catalog inspection. The
+manifest-aware Node setup surface is routed through `agent-config`; see the
+manifest contract for its command list and explicit dry-run/apply boundary.

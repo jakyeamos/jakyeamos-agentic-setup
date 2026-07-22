@@ -1,9 +1,30 @@
-# Portable Agentic Workbench catalog
+# Jakye Amos Agentic Setup catalog
 
 The catalog turns recurring agent failure modes into portable systems for
 context management, workflow routing, safety, evaluation, durable handoffs,
 and evidence-backed execution. The machine-readable source of truth is
 [`manifest.json`](manifest.json); this page is the human index.
+
+The public repository is `jakyeamos-agentic-setup`; the preserved catalog
+identity is `Portable Agentic Workbench`. The private companion retains
+personal manifests, live mappings, audit evidence, and unresolved conflicts.
+
+## Manifest-aware setup
+
+The dependency-light Node CLI exposes the same fail-closed setup contract for
+audit, drift, doctor, sync, install, bootstrap, and smoke checks:
+
+```bash
+pnpm agent-config --help
+pnpm audit -- --json
+pnpm doctor -- --json
+pnpm sync -- --dry-run --json
+```
+
+Use `--manifest <path>` for an explicit manifest, `--apply` only after
+reviewing a dry run, and `--allow-broad-scan` only when the scan scope is
+explicitly approved. Existing destinations, unknown live members, conflicts,
+unsupported runtimes, and unsafe paths remain blocked.
 
 ## Portable workflows and skills
 
@@ -34,17 +55,18 @@ and deferred or excluded source classes are recorded in the
 
 ## Adapters
 
-`adapter-generic`, `adapter-codex`, `adapter-claude`, `adapter-cursor`, and
-`adapter-copilot` translate the portable contracts to host-shaped surfaces.
-They use `stage` mode and contain guidance only. Review and register any host
-hook or project instruction manually.
+`adapter-generic`, `adapter-codex`, `adapter-claude`, `adapter-gemini`,
+`adapter-cursor`, `adapter-antigravity`, and `adapter-copilot` translate the
+portable contracts to host-shaped surfaces. They use `stage` mode and contain
+guidance only. Review and register any host hook or project instruction
+manually; Cursor and Antigravity remain unverified until those runtimes are
+available for a smoke check.
 
 ## External references
 
-The catalog also records AIOS, TMCP, Quality Runner, agent-eval-contract,
-context-compiler-contract, and a Gemini surface reference. These entries are
-`external` and `manual`; their runtimes, generated outputs, and managed files
-are intentionally not copied.
+The catalog also records AIOS, TMCP, Quality Runner, agent-eval-contract, and
+context-compiler-contract. These entries are `external` and `manual`; their
+runtimes, generated outputs, and managed files are intentionally not copied.
 
 ## Quick inspection
 

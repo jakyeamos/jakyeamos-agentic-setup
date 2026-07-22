@@ -1,0 +1,25 @@
+{
+  "name": "jakyeamos-agentic-setup",
+  "version": "0.4.0",
+  "description": "Portable agentic setup, low-loaded routing, and fail-closed manifest tooling.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "agent-config": "bin/agent-config.mjs"
+  },
+  "scripts": {
+    "agent-config": "node bin/agent-config.mjs",
+    "audit": "node bin/agent-config.mjs audit",
+    "audit:wide": "node bin/agent-config.mjs audit --allow-broad-scan",
+    "drift": "node bin/agent-config.mjs drift",
+    "doctor": "node bin/agent-config.mjs doctor",
+    "sync": "node bin/agent-config.mjs sync",
+    "config-install": "node bin/agent-config.mjs install",
+    "bootstrap": "node bin/agent-config.mjs bootstrap",
+    "smoke": "node bin/agent-config.mjs smoke",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

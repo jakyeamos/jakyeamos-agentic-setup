@@ -1,15 +1,14 @@
-# Claude adapter
+# Claude adapter edge
 
-Use the portable workflows as project instructions and treat any hook mapping
-as a manual integration step.
+This is sanitized, staged guidance for Claude. It is not a live `CLAUDE.md`,
+hook file, session file, or registration recipe.
 
-- Add the governed work loop and repo-aware context rules to the project's
-  reviewed instruction surface.
-- Use the context-budget governor to request a compact checkpoint when the
-  host's lifecycle reports pressure or compaction.
-- Stage safety-guard behavior for review; do not copy private global command or
-  hook files into a project.
+- Route from the public router to the nearest repository context index.
+- Load only the matching governed-work-loop, repo-aware-context, or
+  context-budget-governor payload.
+- Stage any Claude project instruction or hook mapping for manual review.
 - Preserve the distinction between observed evidence and hypotheses in
   handoffs and case studies.
 
-No Claude runtime, session store, or private configuration is included here.
+No Claude runtime, session store, private configuration, or vendor syntax is
+included here.

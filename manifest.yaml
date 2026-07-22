@@ -1,0 +1,172 @@
+{
+  "schema_version": 1,
+  "manifest_id": "public-agentic-setup-template",
+  "format": "json-compatible-yaml",
+  "description": "Public template for low-loaded agent instruction routing and fail-closed setup.",
+  "roots": {
+    "home": "$HOME",
+    "manifest": "$MANIFEST_ROOT",
+    "target": "$MANIFEST_ROOT/.agent-config-target",
+    "TARGET": "$MANIFEST_ROOT/.agent-config-target",
+    "projects": "$HOME/projects"
+  },
+  "entries": [
+    {
+      "id": "public-router",
+      "source": "$MANIFEST_ROOT/AGENTS.md",
+      "destination": "$TARGET/AGENTS.md",
+      "owner": "public-canonical",
+      "runtime": ["claude", "codex", "gemini", "cursor", "antigravity"],
+      "layer": "global-routing",
+      "always_loaded": true,
+      "path_kind": "file",
+      "sync_direction": "report-only",
+      "provenance": "Public repository router; host registration remains a manual adapter step.",
+      "install_recipe": "stage-for-review",
+      "status": "active"
+    },
+    {
+      "id": "manifest-template",
+      "source": "$MANIFEST_ROOT/manifest.yaml",
+      "destination": "$TARGET/manifest.yaml",
+      "owner": "public-canonical",
+      "runtime": ["claude", "codex", "gemini", "cursor", "antigravity"],
+      "layer": "global-routing",
+      "always_loaded": false,
+      "path_kind": "file",
+      "sync_direction": "report-only",
+      "provenance": "Sanitized schema example with symbolic roots and no live mappings.",
+      "install_recipe": "stage-for-review",
+      "status": "planned"
+    },
+    {
+      "id": "claude-adapter",
+      "source": "$MANIFEST_ROOT/adapters/claude/WORKBENCH.md",
+      "destination": "$TARGET/adapters/claude/WORKBENCH.md",
+      "owner": "public-canonical",
+      "runtime": ["claude"],
+      "layer": "runtime-adapter",
+      "always_loaded": true,
+      "path_kind": "file",
+      "sync_direction": "report-only",
+      "provenance": "Sanitized Claude edge guidance; no live CLAUDE.md or host registration is redistributed.",
+      "install_recipe": "stage-for-review",
+      "status": "planned"
+    },
+    {
+      "id": "codex-adapter",
+      "source": "$MANIFEST_ROOT/adapters/codex/WORKBENCH.md",
+      "destination": "$TARGET/adapters/codex/WORKBENCH.md",
+      "owner": "public-canonical",
+      "runtime": ["codex"],
+      "layer": "runtime-adapter",
+      "always_loaded": true,
+      "path_kind": "file",
+      "sync_direction": "report-only",
+      "provenance": "Sanitized Codex edge guidance; host lifecycle configuration remains outside the package.",
+      "install_recipe": "stage-for-review",
+      "status": "planned"
+    },
+    {
+      "id": "gemini-adapter",
+      "source": "$MANIFEST_ROOT/adapters/gemini/WORKBENCH.md",
+      "destination": "$TARGET/adapters/gemini/WORKBENCH.md",
+      "owner": "public-canonical",
+      "runtime": ["gemini"],
+      "layer": "runtime-adapter",
+      "always_loaded": true,
+      "path_kind": "file",
+      "sync_direction": "report-only",
+      "provenance": "Sanitized Gemini edge guidance; verify the host's documented project surface before registration.",
+      "install_recipe": "stage-for-review",
+      "status": "planned"
+    },
+    {
+      "id": "cursor-adapter",
+      "source": "$MANIFEST_ROOT/adapters/cursor/WORKBENCH.md",
+      "destination": "$TARGET/adapters/cursor/WORKBENCH.md",
+      "owner": "public-canonical",
+      "runtime": ["cursor"],
+      "layer": "runtime-adapter",
+      "always_loaded": true,
+      "path_kind": "file",
+      "sync_direction": "report-only",
+      "provenance": "Sanitized Cursor edge guidance; runtime availability remains unverified until installed.",
+      "install_recipe": "stage-for-review",
+      "status": "unverified"
+    },
+    {
+      "id": "antigravity-adapter",
+      "source": "$MANIFEST_ROOT/adapters/antigravity/WORKBENCH.md",
+      "destination": "$TARGET/adapters/antigravity/WORKBENCH.md",
+      "owner": "public-canonical",
+      "runtime": ["antigravity"],
+      "layer": "runtime-adapter",
+      "always_loaded": true,
+      "path_kind": "file",
+      "sync_direction": "report-only",
+      "provenance": "Sanitized Antigravity edge guidance; runtime availability remains unverified until installed.",
+      "install_recipe": "stage-for-review",
+      "status": "unverified"
+    },
+    {
+      "id": "repo-context-router",
+      "source": "$MANIFEST_ROOT/templates/context/README.md",
+      "destination": "$TARGET/.agents/context/README.md",
+      "owner": "public-canonical",
+      "runtime": ["claude", "codex", "gemini", "cursor", "antigravity"],
+      "layer": "repo-context",
+      "always_loaded": true,
+      "path_kind": "file",
+      "sync_direction": "report-only",
+      "provenance": "Portable repository context router; project-owned detail remains local.",
+      "install_recipe": "stage-for-review",
+      "status": "planned"
+    },
+    {
+      "id": "on-demand-payloads",
+      "source": "$MANIFEST_ROOT/skills",
+      "destination": "$TARGET/skills",
+      "owner": "public-canonical",
+      "runtime": ["claude", "codex", "gemini", "cursor", "antigravity"],
+      "layer": "on-demand",
+      "always_loaded": false,
+      "path_kind": "directory",
+      "sync_direction": "report-only",
+      "provenance": "Public skill payloads selected by trigger; no catalog-wide preload is implied.",
+      "install_recipe": "stage-for-review",
+      "status": "planned"
+    }
+  ],
+  "inventory_scopes": [
+    {
+      "id": "public-repository",
+      "root": "$MANIFEST_ROOT",
+      "max_depth": 5,
+      "patterns": ["AGENTS.md", "**/*.md", "manifest.yaml", "package.json"],
+      "excludes": [".git", "node_modules", ".agent-config-state", "audit", "dist", "build", "coverage"],
+      "exclude_patterns": []
+    }
+  ],
+  "routes": [
+    {"id": "router-to-manifest", "from": "public-router", "to": "manifest-template", "when": "manifest, provenance, drift, or setup behavior is relevant", "load": "on-demand", "reason": "Use the manifest as the source of truth before inspecting payloads."},
+    {"id": "router-to-claude", "from": "public-router", "to": "claude-adapter", "when": "the task runs under Claude", "load": "on-demand", "reason": "Keep Claude syntax at the adapter edge."},
+    {"id": "router-to-codex", "from": "public-router", "to": "codex-adapter", "when": "the task runs under Codex", "load": "on-demand", "reason": "Keep Codex lifecycle mapping at the adapter edge."},
+    {"id": "router-to-gemini", "from": "public-router", "to": "gemini-adapter", "when": "the task runs under Gemini", "load": "on-demand", "reason": "Keep Gemini project-surface mapping at the adapter edge."},
+    {"id": "router-to-cursor", "from": "public-router", "to": "cursor-adapter", "when": "the task runs under Cursor", "load": "on-demand", "reason": "Keep Cursor registration guidance manual and staged."},
+    {"id": "router-to-antigravity", "from": "public-router", "to": "antigravity-adapter", "when": "the task runs under Antigravity", "load": "on-demand", "reason": "Keep Antigravity registration guidance manual and staged."},
+    {"id": "adapter-to-context", "from": "claude-adapter", "to": "repo-context-router", "when": "repository work is non-trivial", "load": "on-demand", "reason": "Select the nearest repository context router before payloads."},
+    {"id": "adapter-to-context-codex", "from": "codex-adapter", "to": "repo-context-router", "when": "repository work is non-trivial", "load": "on-demand", "reason": "Select the nearest repository context router before payloads."},
+    {"id": "adapter-to-context-gemini", "from": "gemini-adapter", "to": "repo-context-router", "when": "repository work is non-trivial", "load": "on-demand", "reason": "Select the nearest repository context router before payloads."},
+    {"id": "adapter-to-context-cursor", "from": "cursor-adapter", "to": "repo-context-router", "when": "repository work is non-trivial", "load": "on-demand", "reason": "Select the nearest repository context router before payloads."},
+    {"id": "adapter-to-context-antigravity", "from": "antigravity-adapter", "to": "repo-context-router", "when": "repository work is non-trivial", "load": "on-demand", "reason": "Select the nearest repository context router before payloads."},
+    {"id": "context-to-payloads", "from": "repo-context-router", "to": "on-demand-payloads", "when": "a route matches a skill, workflow, or agent payload", "load": "on-demand", "reason": "Load only the narrowest matching payload."}
+  ],
+  "runtime_commands": [
+    {"runtime": "claude", "command": "claude", "verification": "claude --help", "install_recipe": "install the documented Claude CLI; do not automate login"},
+    {"runtime": "codex", "command": "codex", "verification": "codex --help", "install_recipe": "install the documented Codex CLI; do not automate login"},
+    {"runtime": "gemini", "command": "gemini", "verification": "gemini --help", "install_recipe": "install the documented Gemini CLI; do not automate login"},
+    {"runtime": "cursor", "command": "cursor", "verification": "cursor --help", "install_recipe": "install the documented Cursor CLI when available; GUI setup remains manual"},
+    {"runtime": "antigravity", "command": "antigravity", "verification": "antigravity --help", "install_recipe": "install the documented Antigravity CLI when available; GUI setup remains manual"}
+  ]
+}

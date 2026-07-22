@@ -18,6 +18,8 @@ IGNORED_DIRECTORIES = {
     "__pycache__",
     ".venv",
     "node_modules",
+    "audit",
+    ".agent-config-state",
 }
 INTENTIONAL_RULE_FILES = {
     "scripts/catalog_validation.py",

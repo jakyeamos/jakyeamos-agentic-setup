@@ -20,9 +20,10 @@ change, or a conflict that has not been approved for resolution.
    and status in a manifest.
 3. Separate invariant, routing, adapter, project-context, and on-demand layers.
 4. Record contradictory or behavior-bearing content in a conflict ledger.
-5. Run report-only audit, drift, doctor, and install checks before any apply.
-6. Apply only to explicit targets, never by broad recursive copying.
-7. Re-run validation and leave a compact migration receipt.
+5. Validate the route graph as a DAG and preserve symlink provenance.
+6. Run report-only audit, drift, doctor, and install checks before any apply.
+7. Apply only to explicit targets, never by broad recursive copying.
+8. Re-run validation and leave a compact migration receipt.
 
 ## Hard stops
 
@@ -30,12 +31,16 @@ change, or a conflict that has not been approved for resolution.
   unsupported runtimes;
 - overwriting existing user-owned instructions;
 - credentials, host-managed state, raw transcripts, or machine-specific paths;
+- route cycles, unsafe symbolic or absolute paths, and broken symlink provenance;
+- any blocked item during preflight, which blocks the complete apply rather than
+  permitting a partial sync;
 - declaring migration complete while the conflict ledger is unresolved.
 
 ## Output
 
 Return the manifest path, source inventory, skipped sources, conflict ledger,
-drift state, apply plan, verification results, and the exact remaining manual
-step. Use `AUDIT_COMPLETE` before `MIGRATION_COMPLETE`.
+route graph, provenance results, drift state, apply plan, verification results,
+and the exact remaining manual step. Use `AUDIT_COMPLETE` before
+`MIGRATION_COMPLETE`.
 
 See the [migration workflow](../../workflows/low-always-loaded-instruction-migration/WORKFLOW.md).

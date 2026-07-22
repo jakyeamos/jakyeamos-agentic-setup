@@ -6,10 +6,12 @@ this report uses logical source classes so it is safe to redistribute.
 
 ## Canonical Boundary
 
-`jakyeamos-agent-skills` is the canonical catalog for portable, redistributable
-skills. AIOS remains an archival/internal runtime source. Generated harvests,
-runtime state, transcripts, credentials, caches, vendor-managed configuration,
-and product-private workflows are not copied into this repository.
+`jakyeamos-agentic-setup` is the canonical repository for portable,
+redistributable setup contracts and skills. The preserved catalog identity is
+`Portable Agentic Workbench`. AIOS and the private companion remain
+archival/internal runtime sources. Generated harvests, runtime state,
+transcripts, credentials, caches, vendor-managed configuration, and
+product-private workflows are not copied into this repository.
 
 ## Promoted Skills
 
@@ -35,6 +37,19 @@ workflow/reference material:
   approval-gated promotion of strategy artifacts.
 - `operating-language` — canonical domain, architecture, and agent-control
   vocabulary with observable leading-word tests.
+
+## Agent-config mining record
+
+The public setup engine and its manifest schema were mined from the reusable
+behavior of the private instruction migration tooling. Published material is
+limited to portable field contracts, symbolic roots, route-DAG validation,
+symlink provenance, always-loaded linting, fail-closed drift states, and
+explicit runtime adapter edges.
+
+The concrete personal manifest, live mappings, private agents and commands,
+raw inventories, audit worktrees, conflict ledger, credentials, caches, and
+runtime state remain in the private companion. No personal path or host
+registration file is required by the public package.
 
 ## Merged or Referenced
 

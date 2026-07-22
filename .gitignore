@@ -14,6 +14,10 @@ build/
 
 .quality-runner/
 
+# Manifest engine state and generated audit evidence
+.agent-config-state/
+audit/
+
 # Generated / cache / audit output
 .turbo/
 .firecrawl/

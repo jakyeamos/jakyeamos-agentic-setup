@@ -1,4 +1,4 @@
-# Jakye Amos Agent Skills
+# Jakye Amos Agentic Setup
 
 ## Portable Agentic Workbench
 
@@ -11,6 +11,11 @@ workflow contracts and a growing set of backward-compatible skills while
 keeping private runtime infrastructure, managed vendor configuration,
 generated harvests, session stores, and credentials outside the distribution
 boundary.
+
+The public canonical repository is `jakyeamos-agentic-setup`. The preserved
+`Portable Agentic Workbench` catalog identity and existing asset IDs remain
+stable for consumers. A private companion holds personal manifests, concrete
+live mappings, audit evidence, and unresolved conflicts.
 
 ## Start here
 
@@ -27,6 +32,28 @@ python3 scripts/workbench.py install context-budget-governor \
 Read [`AGENTS.md`](AGENTS.md) for the agent mining contract,
 [`catalog/index.md`](catalog/index.md) for the human index, and
 [`docs/mining.md`](docs/mining.md) for the inspection workflow.
+
+## Manifest-aware setup
+
+The repository also includes a dependency-light Node setup engine for explicit,
+fail-closed configuration work:
+
+```bash
+pnpm agent-config --help
+pnpm audit -- --json
+pnpm drift -- --json
+pnpm doctor -- --json
+pnpm sync -- --dry-run --json
+pnpm agent-config install --dry-run --json
+pnpm bootstrap -- --dry-run --json
+pnpm smoke -- --json
+```
+
+Pass `--manifest <path>` to select a manifest, `--apply` only after reviewing
+the plan, and `--allow-broad-scan` only with explicit approval. The engine
+does not overwrite existing targets, delete unknown live members, resolve
+unresolved conflicts, or handle credentials, login, CAPTCHA, MFA, or GUI-only
+setup.
 
 ## Curated surfaces
 
@@ -59,9 +86,10 @@ Read [`AGENTS.md`](AGENTS.md) for the agent mining contract,
 - `operating-language` - behavior-changing vocabulary with a Leading Word
   Test and completion evidence.
 
-Codex, Claude, Cursor, Copilot, and generic adapters are available as staged
-manual-review mappings. Gemini is cataloged as a reference only in v1 because
-this package does not claim stable install semantics for that surface.
+Codex, Claude, Gemini, Cursor, Antigravity, Copilot, and generic adapters are
+available as staged manual-review mappings. The public package does not claim
+that any adapter can register live host configuration automatically; Cursor
+and Antigravity remain explicitly unverified until available for smoke checks.
 
 ## Install safely
 
@@ -98,7 +126,7 @@ supporting workflow and fixture files staged together.
 
 ## Validation and clean-room check
 
-Runtime code uses only Python's standard library:
+The catalog runtime uses only Python's standard library:
 
 ```bash
 python3 scripts/validate_skills.py
@@ -108,6 +136,9 @@ python3 scripts/workbench.py validate
 python3 -m unittest discover -s tests -p 'test_*.py'
 python3 scripts/pre_cr_coverage.py
 ```
+
+The manifest engine uses Node's standard library and its tests run with
+`pnpm test` (which invokes `node --test`).
 
 The tests install into a disposable temporary directory and do not require
 Codex, Claude, Cursor, Copilot, Gemini, AIOS, TMCP, Quality Runner, or any

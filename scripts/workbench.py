@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
-INSTALL_TARGETS = ("generic", "codex", "claude", "cursor", "copilot")
+INSTALL_TARGETS = ("generic", "codex", "claude", "gemini", "cursor", "antigravity", "copilot")
 if not __package__:
     sys.path.insert(0, str(ROOT))
 

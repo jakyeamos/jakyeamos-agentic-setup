@@ -1,0 +1,106 @@
+#!/usr/bin/env node
+
+import {
+  bootstrapRuntimes,
+  collectAudit,
+  collectDrift,
+  defaultManifestPath,
+  doctorManifest,
+  formatEntryTable,
+  loadManifest,
+  smokeRuntimes,
+  syncManifest,
+  writeAuditReports
+} from "../src/agent-config.mjs";
+
+function parseArgs(argv) {
+  const args = { command: argv[0] ?? "help", json: false, apply: false, allowBroadScan: false };
+  if (args.command === "--help" || args.command === "-h") args.command = "help";
+  for (let index = 1; index < argv.length; index += 1) {
+    const value = argv[index];
+    if (value === "--json") args.json = true;
+    else if (value === "--apply") args.apply = true;
+    else if (value === "--dry-run") args.apply = false;
+    else if (value === "--allow-broad-scan") args.allowBroadScan = true;
+    else if (value === "--manifest") {
+      args.manifest = argv[++index];
+      if (!args.manifest) throw new Error("--manifest requires a path");
+    } else if (value === "--help" || value === "-h") args.command = "help";
+    else throw new Error(`unknown option ${value}`);
+  }
+  return args;
+}
+
+function print(value, json) {
+  process.stdout.write(`${json ? JSON.stringify(value, null, 2) : value}\n`);
+}
+
+function help() {
+  return `Usage: agent-config <audit|drift|doctor|sync|install|bootstrap|smoke> [options]
+
+Commands are read-only by default.
+  audit   inventory surfaces, lint always-loaded files, and write audit reports
+  drift   compare manifest entries against the last safe baseline
+  doctor  validate targets, conflicts, links, and runtime availability
+  sync    preview safe sync actions; use --apply to write missing targets
+  install preview the same safe manifest install path; use --apply to write
+  bootstrap report known CLI recipes and verify available commands
+  smoke   run non-destructive --help checks for available runtimes
+
+Options:
+  --manifest <path>       manifest path (default: repository manifest.yaml)
+  --allow-broad-scan      permit an explicitly requested home inventory scan
+  --apply                 allow safe writes after the full preflight passes
+  --dry-run               force report-only behavior (the default)
+  --json                  emit machine-readable output`;
+}
+
+function main(argv) {
+  const args = parseArgs(argv);
+  if (args.command === "help") {
+    print(help(), false);
+    return 0;
+  }
+  const { manifest, manifestRoot } = loadManifest(args.manifest ?? defaultManifestPath());
+  if (args.command === "audit") {
+    const result = collectAudit(manifest, manifestRoot, { allowBroadScan: args.allowBroadScan });
+    writeAuditReports(result, manifestRoot);
+    print(args.json ? result : `status: ${result.status}\nentries: ${result.entries.length}\nconflicts: ${result.conflicts.length}\nduplicates: ${result.duplicates.length}\naudit: ${manifestRoot}/audit`, args.json);
+    return 0;
+  }
+  if (args.command === "drift") {
+    const result = collectDrift(manifest, manifestRoot);
+    print(args.json ? result : `${result.status}\n${formatEntryTable(result.entries)}\nunknown_live: ${result.unknown_live.length}`, args.json);
+    return result.status === "DRIFT_PRESENT" ? 2 : 0;
+  }
+  if (args.command === "doctor") {
+    const result = doctorManifest(manifest, manifestRoot);
+    print(args.json ? result : `${result.status}\n${result.findings.map((item) => `${item.severity}: ${item.id}: ${item.message}`).join("\n") || "no findings"}`, args.json);
+    return result.status === "DOCTOR_BLOCKED" ? 2 : 0;
+  }
+  if (args.command === "sync" || args.command === "install") {
+    const result = syncManifest(manifest, manifestRoot, { apply: args.apply });
+    print(args.json ? result : `${result.status}${args.apply ? " (applied safe actions)" : " (dry run)"}\n${result.actions.map((item) => `${item.action}: ${item.id}: ${item.reason}`).join("\n")}`, args.json);
+    return result.status === "SYNC_BLOCKED" ? 2 : 0;
+  }
+  if (args.command === "smoke") {
+    const result = smokeRuntimes(manifest);
+    print(args.json ? result : `${result.status}\n${result.results.map((item) => `${item.status}: ${item.runtime} (${item.command})`).join("\n")}`, args.json);
+    return result.status === "SMOKE_FAILED" ? 2 : 0;
+  }
+  if (args.command === "bootstrap") {
+    const config = syncManifest(manifest, manifestRoot, { apply: args.apply });
+    const runtimes = bootstrapRuntimes(manifest);
+    const result = { generated_at: new Date().toISOString(), apply: args.apply, config, runtimes };
+    print(args.json ? result : `${runtimes.status}\n${runtimes.results.map((item) => `${item.status}: ${item.runtime} — ${item.install_recipe}`).join("\n")}\nconfig: ${config.status}`, args.json);
+    return config.status === "SYNC_BLOCKED" || runtimes.status === "BOOTSTRAP_NEEDS_MANUAL_INSTALL" ? 2 : 0;
+  }
+  throw new Error(`unknown command ${args.command}`);
+}
+
+try {
+  process.exitCode = main(process.argv.slice(2));
+} catch (error) {
+  process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
+  process.exitCode = 1;
+}

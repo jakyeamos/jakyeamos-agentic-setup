@@ -11,9 +11,9 @@ from urllib.parse import urlparse
 
 MANIFEST_RELATIVE_PATH = Path("catalog/manifest.json")
 ALLOWED_ASSET_CLASSES = {"portable", "adapter", "case-study", "external", "excluded"}
-ALLOWED_KINDS = {"adapter", "case-study", "fixture", "reference", "skill", "workflow"}
+ALLOWED_KINDS = {"adapter", "case-study", "cli", "fixture", "reference", "skill", "workflow"}
 ALLOWED_MATURITIES = {"experimental", "alpha", "beta", "stable", "reference"}
-ALLOWED_TARGETS = {"generic", "codex", "claude", "cursor", "copilot", "gemini"}
+ALLOWED_TARGETS = {"generic", "codex", "claude", "cursor", "copilot", "gemini", "antigravity"}
 ALLOWED_INSTALL_MODES = {"copy", "stage", "manual"}
 ALLOWED_PROVENANCE_STATUSES = {"authored", "external-reference", "sanitized-derived"}
 ALLOWED_LICENSE_STATUSES = {

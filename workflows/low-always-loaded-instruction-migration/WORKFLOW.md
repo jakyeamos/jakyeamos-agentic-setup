@@ -27,9 +27,14 @@ Compare instruction atoms, not whole files. Mark each atom as `compatible`, `dup
 
 Every report must end with `AUDIT_COMPLETE` and include counts for unchanged, movable, conflicting, unknown, and blocked items. A successful applied migration must end with `MIGRATION_COMPLETE`, the exact files changed, and a no-overwrite result.
 
+Validate the manifest schema, symbolic-root expansion, symlink provenance, and
+route graph before comparing snapshots. Route edges must form a DAG. Runtime
+syntax belongs only at adapter edges; a portable route must not assume that a
+host-specific import form works in another runtime.
+
 ## 4. Apply with hard stops
 
-Never overwrite an existing instruction source, delete an unresolved conflict, or silently lower a higher-precedence rule. Refuse to apply when the manifest is incomplete, the source owner is unknown, the destination is occupied, or the plan changes protected runtime behavior. Produce a review packet for those cases instead.
+Never overwrite an existing instruction source, delete an unresolved conflict, or silently lower a higher-precedence rule. Refuse to apply when the manifest is incomplete, the source owner is unknown, the destination is occupied, or the plan changes protected runtime behavior. Preflight every action first; if any action is blocked, write nothing. Produce a review packet for those cases instead.
 
 ## 5. Verify
 

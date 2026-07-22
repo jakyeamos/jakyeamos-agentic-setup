@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/jakyeamos/jakyeamos-agentic-setup/schemas/agent-config-manifest.schema.json",
+  "title": "Agentic setup manifest",
+  "description": "A public, symbolic-root manifest for low-loaded routing and fail-closed synchronization.",
+  "type": "object",
+  "required": ["schema_version", "manifest_id", "roots", "entries", "inventory_scopes", "routes"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "manifest_id": {"type": "string", "minLength": 1},
+    "format": {"const": "json-compatible-yaml"},
+    "description": {"type": "string"},
+    "roots": {"type": "object", "additionalProperties": {"type": "string", "minLength": 1}},
+    "entries": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/entry"}},
+    "inventory_scopes": {"type": "array", "items": {"$ref": "#/$defs/scope"}},
+    "routes": {"type": "array", "items": {"$ref": "#/$defs/route"}},
+    "runtime_commands": {"type": "array", "items": {"$ref": "#/$defs/runtimeCommand"}}
+  },
+  "$defs": {
+    "runtime": {"type": "string", "enum": ["claude", "codex", "gemini", "cursor", "antigravity"]},
+    "entry": {
+      "type": "object",
+      "required": ["id", "source", "destination", "owner", "runtime", "layer", "always_loaded", "path_kind", "sync_direction", "provenance", "install_recipe", "status"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$"},
+        "source": {"type": "string", "minLength": 1, "not": {"pattern": "^/|^~[/]|(^|/)\\.\\.(/|$)"}},
+        "destination": {"type": "string", "minLength": 1, "not": {"pattern": "^/|^~[/]|(^|/)\\.\\.(/|$)"}},
+        "owner": {"type": "string", "minLength": 1},
+        "runtime": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/runtime"}},
+        "layer": {"type": "string", "enum": ["global-invariants", "global-routing", "runtime-adapter", "repo-context", "module-context", "on-demand"]},
+        "always_loaded": {"type": "boolean"},
+        "path_kind": {"type": "string", "enum": ["file", "directory", "symlink"]},
+        "sync_direction": {"type": "string", "enum": ["bidirectional", "push-only", "report-only", "none"]},
+        "provenance": {"type": "string", "minLength": 1},
+        "install_recipe": {"type": "string", "minLength": 1},
+        "status": {"type": "string", "enum": ["active", "conflict", "excluded", "unverified", "planned"]}
+      },
+      "additionalProperties": true
+    },
+    "scope": {
+      "type": "object",
+      "required": ["id", "root", "max_depth", "patterns", "excludes"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "root": {"type": "string", "minLength": 1},
+        "max_depth": {"type": "integer", "minimum": 0, "maximum": 12},
+        "patterns": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "excludes": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "exclude_patterns": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "route": {
+      "type": "object",
+      "required": ["id", "from", "to", "when", "load", "reason"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "from": {"type": "string", "minLength": 1},
+        "to": {"type": "string", "minLength": 1},
+        "when": {"type": "string", "minLength": 1},
+        "load": {"type": "string", "minLength": 1},
+        "reason": {"type": "string", "minLength": 1}
+      }
+    },
+    "runtimeCommand": {
+      "type": "object",
+      "required": ["runtime", "command", "verification", "install_recipe"],
+      "properties": {
+        "runtime": {"$ref": "#/$defs/runtime"},
+        "command": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+$"},
+        "verification": {"type": "string", "minLength": 1},
+        "install_recipe": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

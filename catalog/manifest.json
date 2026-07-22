@@ -3,8 +3,8 @@
   "workbench": {
     "id": "portable-agentic-workbench",
     "name": "Portable Agentic Workbench",
-    "repository": "jakyeamos-agent-skills",
-    "version": "0.3.0",
+    "repository": "jakyeamos-agentic-setup",
+    "version": "0.4.0",
     "license": "MIT"
   },
   "asset_policy": {
@@ -44,6 +44,11 @@
       "source_id": "first-party-authored-workflow-mining",
       "class": "portable",
       "treatment": "sanitized behavioral patterns from owned authored repositories and first-party skill sources; private source paths remain undistributed"
+    },
+    {
+      "source_id": "private-agent-config-companion",
+      "class": "external",
+      "treatment": "behavioral mining only; concrete manifests, live mappings, agents, commands, audit evidence, and unresolved conflicts remain private"
     }
   ],
   "assets": [
@@ -148,6 +153,56 @@
       }
     },
     {
+      "id": "adapter-gemini",
+      "kind": "adapter",
+      "asset_class": "adapter",
+      "title": "Gemini adapter",
+      "summary": "Manual-review mapping from the vendor-neutral contracts to Gemini project-instruction surfaces.",
+      "maturity": "experimental",
+      "capabilities": ["workflow-routing", "manual-hook-staging", "safety"],
+      "supported_targets": ["gemini"],
+      "entrypoints": ["adapters/gemini/WORKBENCH.md"],
+      "files": ["adapters/gemini/WORKBENCH.md"],
+      "dependencies": [],
+      "provenance": {
+        "status": "sanitized-derived",
+        "source": "private-agent-config-companion-runtime-boundary",
+        "license_status": "MIT-compatible",
+        "redistribution": "allowed"
+      },
+      "evidence": ["docs/agent-config-routing.md"],
+      "install": {
+        "mode": "stage",
+        "destination": "workbench/adapters/gemini",
+        "manual_review": "Verify the host's current supported project surface before registration."
+      }
+    },
+    {
+      "id": "adapter-antigravity",
+      "kind": "adapter",
+      "asset_class": "adapter",
+      "title": "Antigravity adapter",
+      "summary": "Manual-review mapping from the vendor-neutral contracts to Antigravity project-instruction surfaces.",
+      "maturity": "experimental",
+      "capabilities": ["workflow-routing", "manual-hook-staging", "safety"],
+      "supported_targets": ["antigravity"],
+      "entrypoints": ["adapters/antigravity/WORKBENCH.md"],
+      "files": ["adapters/antigravity/WORKBENCH.md"],
+      "dependencies": [],
+      "provenance": {
+        "status": "sanitized-derived",
+        "source": "private-agent-config-companion-runtime-boundary",
+        "license_status": "MIT-compatible",
+        "redistribution": "allowed"
+      },
+      "evidence": ["docs/agent-config-routing.md"],
+      "install": {
+        "mode": "stage",
+        "destination": "workbench/adapters/antigravity",
+        "manual_review": "Verify the host's current supported project surface before registration."
+      }
+    },
+    {
       "id": "adapter-generic",
       "kind": "adapter",
       "asset_class": "adapter",
@@ -173,6 +228,49 @@
       }
     },
     {
+      "id": "agent-config",
+      "kind": "cli",
+      "asset_class": "portable",
+      "title": "Manifest-aware agent-config CLI",
+      "summary": "Dependency-light audit, drift, doctor, sync, install, bootstrap, and smoke commands for explicit low-loaded instruction manifests.",
+      "maturity": "beta",
+      "capabilities": ["manifest", "routing", "provenance", "safe-sync", "runtime-smoke"],
+      "supported_targets": ["generic", "codex", "claude", "gemini", "cursor", "antigravity"],
+      "entrypoints": ["bin/agent-config.mjs"],
+      "files": [
+        "bin/agent-config.mjs",
+        "src/agent-config.mjs",
+        "manifest.yaml",
+        "schemas/agent-config-manifest.schema.json",
+        "docs/agent-config-manifest.md",
+        "docs/agent-config-routing.md",
+        "docs/agent-config-conflicts.md"
+      ],
+      "dependencies": [
+        {"name": "Node.js", "kind": "runtime", "required": true, "command": "node"}
+      ],
+      "provenance": {
+        "status": "sanitized-derived",
+        "source": "private-agent-config-companion",
+        "license_status": "MIT-compatible",
+        "redistribution": "allowed"
+      },
+      "evidence": ["docs/agent-config-manifest.md", "docs/mining/2026-07-public-skill-mining.md"],
+      "install": {
+        "mode": "copy",
+        "destination": "agent-config",
+        "path_map": {
+          "bin/agent-config.mjs": "bin/agent-config.mjs",
+          "src/agent-config.mjs": "src/agent-config.mjs",
+          "manifest.yaml": "manifest.yaml",
+          "schemas/agent-config-manifest.schema.json": "schemas/agent-config-manifest.schema.json",
+          "docs/agent-config-manifest.md": "docs/agent-config-manifest.md",
+          "docs/agent-config-routing.md": "docs/agent-config-routing.md",
+          "docs/agent-config-conflicts.md": "docs/agent-config-conflicts.md"
+        }
+      }
+    },
+    {
       "id": "context-budget-governor",
       "kind": "workflow",
       "asset_class": "portable",
@@ -180,7 +278,7 @@
       "summary": "A vendor-neutral checkpoint policy that turns a token-budget threshold into a reviewable compaction handoff.",
       "maturity": "beta",
       "capabilities": ["long-context", "compaction", "checkpointing", "handoff"],
-      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "supported_targets": ["generic", "codex", "claude", "gemini", "cursor", "antigravity", "copilot"],
       "entrypoints": ["workflows/context-budget-governor/WORKFLOW.md"],
       "files": [
         "workflows/context-budget-governor/CHECKPOINT_TEMPLATE.md",
@@ -207,7 +305,7 @@
       "summary": "A contract-oriented evidence workflow for separating observed results, hypotheses, limitations, and reproducible fixtures.",
       "maturity": "beta",
       "capabilities": ["evaluation", "evidence", "fixtures", "provenance"],
-      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "supported_targets": ["generic", "codex", "claude", "gemini", "cursor", "antigravity", "copilot"],
       "entrypoints": ["workflows/evaluation-evidence/WORKFLOW.md"],
       "files": [
         "fixtures/evaluation/contract-fixture.json",
@@ -596,7 +694,7 @@
       "summary": "Inventory, reconcile, and safely migrate durable instructions out of crowded startup surfaces without overwriting unresolved behavior.",
       "maturity": "beta",
       "capabilities": ["instruction-routing", "migration", "conflict-detection", "safety", "verification"],
-      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "supported_targets": ["generic", "codex", "claude", "gemini", "cursor", "antigravity", "copilot"],
       "entrypoints": [
         "skills/low-always-loaded-instruction-migration/SKILL.md",
         "workflows/low-always-loaded-instruction-migration/WORKFLOW.md"
