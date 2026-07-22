@@ -4,7 +4,7 @@ projectName: jakyeamos-agentic-setup
 summary: Public Portable Agentic Workbench catalog with low-loaded routing, manifest-aware setup, fail-closed synchronization, sanitized runtime adapters, and reusable workflow skills.
 healthScore: 94
 statusLabel: ready
-nextStep: Review the v0.4.0 setup engine and verify GitHub rename/redirect/archive availability before any remote mutation.
+nextStep: Publish the private companion deprecation pointer and archive its remote after final wrapper verification.
 blockers: []
 lastUpdated: 2026-07-22
 tags: [agentic-setup, portable-workbench, low-loaded, manifest, workflow-routing, safety, evaluation]
@@ -61,6 +61,9 @@ The original skill paths remain unchanged, and the nine additive skills have
 trigger/non-trigger forward cases plus clean-room package fixtures. The
 environment-legibility workflow continues to document the offline bootstrap
 outcome taxonomy used by the leverage audit.
+The public repository has been renamed from `jakyeamos-agent-skills`; its old
+GitHub URL redirects to the new slug, `dev` is published, and the default
+branch remains `main`.
 
 Commit `1762727` contains the additive mining release. The current work is
 additive and does not execute or rewrite the existing QR-remediation phase.
@@ -119,6 +122,9 @@ no repair or regeneration was performed.
 - 2026-07-22: Added public attribution for the private-companion mining
   boundary and extended manifest tests for schema/runtime coverage and
   no-overwrite behavior in `fc820dc`.
+- 2026-07-22: Published the verified `dev` history and renamed the public
+  repository to `jakyeamos-agentic-setup`; the old URL redirect and new remote
+  configuration were verified.
 
 ## Open Problems
 
@@ -127,8 +133,9 @@ no repair or regeneration was performed.
   non-empty diffs.
 - Ruff, basedpyright, and Vulture are available for the dependency-free Python
   package; basedpyright reports only dynamic-JSON typing warnings.
-- The public rename and private companion archive are pending remote
-  visibility/redirect verification; no remote mutation has been performed.
+- The private companion deprecation pointer still needs publication and its
+  remote archive still needs verification; its concrete manifest and conflict
+  ledger remain private and unchanged.
 
 ## Quality Ladder Notes
 
@@ -150,8 +157,8 @@ no repair or regeneration was performed.
 
 ## Next Concrete Steps
 
-1. Verify target/source remotes and GitHub rename/redirect/archive availability.
-2. Publish the preserved `dev` histories only after remote visibility is proven.
+1. Publish the private companion deprecation pointer and preserved `dev` history.
+2. Archive `claude-config` without deletion and verify its archived state.
 3. Keep the private manifest, live mappings, conflict ledger, and AIOS archive
    outside the public distribution boundary.
 
