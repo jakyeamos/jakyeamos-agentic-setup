@@ -16,6 +16,12 @@ recommends an installation.
 6. Select only the context needed for the current task.
 7. State assumptions when a missing artifact could change the design.
 
+For global or low-always-loaded instruction changes, use a report-first route:
+inventory loaded surfaces, layering and precedence, duplicates or conflicts,
+and ownership before proposing edits. Leave unresolved sources untouched, and
+require manifest, drift, or doctor evidence before apply with no-overwrite
+behavior. See the [low-always-loaded instruction migration skill](../../skills/low-always-loaded-instruction-migration/SKILL.md).
+
 ## Environment evidence
 
 When auditing or preparing a repository, check the context index, linked local

@@ -17,6 +17,12 @@ and the environment assumptions. Keep the fixture sanitized and deterministic.
 - **Limitation:** a missing host, dependency, credential, sample, or comparison
   that prevents a stronger conclusion.
 
+Bind every claim to evidence rather than file presence or plan completion. A
+claim that cannot be supported becomes a hypothesis or limitation; record its
+source, method, baseline, comparable inputs, confidence, freshness, and
+unresolved boundary. Merge related claims into one evidence row instead of
+creating a new artifact for every synonym.
+
 ## Capture the result
 
 Use the compact fixture in `fixtures/evaluation/contract-fixture.json` as a

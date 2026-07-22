@@ -40,6 +40,13 @@ credit. Missing or stale evidence is `unknown`, `stale`, or `blocked`, never an
 optimistic pass. Use evidence-backed `N/A` only when the repository class makes
 a dimension inapplicable.
 
+When an audit informs a change, map confirmed, inferred, unknown, stale, and
+excluded downstream surfaces separately. Each edge needs evidence, confidence,
+freshness, provenance, and a declared cap. Zero matches mean no supported
+evidence, not no consumers. Keep the map advisory and do not edit consumers
+automatically; use the [evidence-backed change-surface workflow](../../skills/evidence-backed-change-surface-mapping/SKILL.md)
+for the detailed contract.
+
 ## Scoring
 
 Score each applicable dimension from 0 to 4:

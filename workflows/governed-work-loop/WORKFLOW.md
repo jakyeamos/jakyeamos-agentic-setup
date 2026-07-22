@@ -23,6 +23,12 @@ Make the smallest coherent change. Use explicit target roots, dry-run capable
 commands, and existing repository behavior. Keep vendor adapters separate from
 the portable contract.
 
+For work that spans checkpoints, agents, or external state, persist the goal,
+artifact, and next action using the [durable workflow contract](../../skills/durable-agent-workflows/SKILL.md).
+For ambiguous delegated work, compile an [agentized task packet](../../skills/agentized-task-packet/SKILL.md)
+before execution. Keep steering and approval separate from queue items, and do
+not treat a handoff as acceptance.
+
 ## Verify
 
 Verify the behavior, not only the file presence. Run focused tests first, then
