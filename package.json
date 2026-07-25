@@ -17,8 +17,13 @@
     "config-install": "node bin/agent-config.mjs install",
     "bootstrap": "node bin/agent-config.mjs bootstrap",
     "smoke": "node bin/agent-config.mjs smoke",
+    "lint": "python3 scripts/validate_repository.py",
+    "typecheck": "node scripts/check_javascript.mjs",
+    "build": "python3 scripts/validate_catalog.py",
+    "check": "node scripts/check_environment_contract.mjs",
     "test": "node --test"
   },
+  "packageManager": "pnpm@11.9.0",
   "engines": {
     "node": ">=20"
   }

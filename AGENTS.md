@@ -4,6 +4,11 @@ This is the public, vendor-neutral catalog and setup engine. Always-loaded
 content is limited to hard stops and routing pointers; detailed payloads stay
 in their owning skill, workflow, adapter, or project context directory.
 
+Before non-trivial repository work, read `.agents/context/README.md` and load
+only the linked packet that matches the task. The context contract is
+executable through `scripts/check_environment_contract.mjs` and required by
+`.pre-cr.json`.
+
 ## Invariants
 
 - Read before modifying and preserve existing ownership and provenance.

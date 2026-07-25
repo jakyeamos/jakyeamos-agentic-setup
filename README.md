@@ -129,6 +129,17 @@ supporting workflow and fixture files staged together.
 The catalog runtime uses only Python's standard library:
 
 ```bash
+pnpm lint
+pnpm typecheck
+pnpm test
+pnpm build
+pnpm check
+python3 scripts/pre_cr_coverage.py
+```
+
+The individual validator entrypoints remain available for diagnosis:
+
+```bash
 python3 scripts/validate_skills.py
 python3 scripts/validate_catalog.py
 python3 scripts/validate_prevention_pack.py
