@@ -43,7 +43,7 @@ canonicalCommands:
   audit: python3 scripts/public_safety_check.py; leverage audit run --all --projects-root <repo> --dynamic
   deadcode: vulture scripts tests --min-confidence 70
 agentExpectationsVersion: 1
-lastVerifiedCommand: pnpm lint; pnpm typecheck; pnpm test; pnpm build; pnpm check; python3 scripts/pre_cr_coverage.py; leverage audit replay --audit-id audit_bf50045467fdfd35
+lastVerifiedCommand: pnpm lint; pnpm typecheck; pnpm test; pnpm build; pnpm check; python3 scripts/pre_cr_coverage.py; leverage audit replay --audit-id audit_df5c52be470d01f9
 lastVerifiedAt: "2026-07-25"
 ---
 
@@ -72,9 +72,10 @@ the repository Pre-CR configuration runs prevention-pack validation as a
 required quality adapter.
 The executable environment contract now owns the repository's routed context
 packets, strict JavaScript syntax check, canonical quality command set, and
-Pre-CR adapter contract. Dynamic audit `audit_bf50045467fdfd35` verifies all
+Pre-CR adapter contract. Dynamic audit `audit_df5c52be470d01f9` verifies all
 ten applicable dimensions at 4.000/4 with zero findings, zero blocked
-baselines, zero stale context indexes, and deterministic replay.
+baselines, zero stale context indexes, and deterministic replay matching
+summary hash `a5353066d8b606508d060e232bcd8d6cc1806a9902ba7530accea1353d54d807`.
 The public repository has been renamed from `jakyeamos-agent-skills`; its old
 GitHub URL redirects to the new slug, `dev` is published, and the default
 branch remains `main`.
@@ -93,7 +94,8 @@ no repair or regeneration was performed.
 
 - 2026-07-25: Added and pushed the executable environment contract as
   `483a45f`; pnpm lint, typecheck, test, build, check, Pre-CR coverage, and
-  the dynamic audit pass from a protected disposable baseline.
+  dynamic audit `audit_df5c52be470d01f9` pass from a protected disposable
+  baseline with zero findings and deterministic replay.
 - 2026-07-21: Hardened direct-script imports, public artifact detection, and
   adapter/reference tests as `8a8ad42`; Pre-CR and the focused suite remain green.
 - 2026-07-21: Final static checks reached Ruff PASS, basedpyright zero errors
