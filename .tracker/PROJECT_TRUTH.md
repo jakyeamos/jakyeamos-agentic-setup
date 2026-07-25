@@ -4,9 +4,9 @@ projectName: jakyeamos-agentic-setup
 summary: Public Portable Agentic Workbench catalog with low-loaded routing, manifest-aware setup, fail-closed synchronization, sanitized runtime adapters, and reusable workflow skills.
 healthScore: 94
 statusLabel: ready
-nextStep: Keep the shared prevention pack and host adapters on weekly validation; activate only reviewed, manually approved installs and preserve private runtime boundaries.
+nextStep: Keep the executable environment contract and shared prevention pack on weekly validation; activate only reviewed, manually approved installs and preserve private runtime boundaries.
 blockers: []
-lastUpdated: 2026-07-22
+lastUpdated: 2026-07-25
 tags: [agentic-setup, portable-workbench, low-loaded, manifest, workflow-routing, safety, evaluation]
 areas: [catalog, node-cli, manifest, workflows, adapters, documentation, validation]
 goals:
@@ -20,7 +20,7 @@ sourceOfTruth: catalog/manifest.json
 primaryLanguage: Python and Node.js
 integrationBranch: dev
 activeBranch: dev
-lastCommitDate: "2026-07-22"
+lastCommitDate: "2026-07-25"
 quality:
   lint: pass
   types: warning
@@ -40,11 +40,11 @@ canonicalCommands:
   coverage: python3 scripts/pre_cr_coverage.py
   package: python3 scripts/workbench.py validate
   ci: pre-cr run --workspace .
-  audit: python3 scripts/public_safety_check.py
+  audit: python3 scripts/public_safety_check.py; leverage audit run --all --projects-root <repo> --dynamic
   deadcode: vulture scripts tests --min-confidence 70
 agentExpectationsVersion: 1
-lastVerifiedCommand: python3 scripts/validate_skills.py; python3 scripts/validate_catalog.py; python3 scripts/validate_prevention_pack.py; python3 scripts/public_safety_check.py; python3 scripts/workbench.py validate; python3 -m unittest discover -s tests -p 'test_*.py'; pnpm test; node bin/agent-config.mjs smoke --json
-lastVerifiedAt: "2026-07-22"
+lastVerifiedCommand: pnpm lint; pnpm typecheck; pnpm test; pnpm build; pnpm check; python3 scripts/pre_cr_coverage.py; leverage audit replay --audit-id audit_bf50045467fdfd35
+lastVerifiedAt: "2026-07-25"
 ---
 
 ## Current State
@@ -70,6 +70,11 @@ The environment-legibility workflow now documents the Pre-CR fast gate,
 Quality Runner evidence-owner boundary, and leverage deep-audit integration;
 the repository Pre-CR configuration runs prevention-pack validation as a
 required quality adapter.
+The executable environment contract now owns the repository's routed context
+packets, strict JavaScript syntax check, canonical quality command set, and
+Pre-CR adapter contract. Dynamic audit `audit_bf50045467fdfd35` verifies all
+ten applicable dimensions at 4.000/4 with zero findings, zero blocked
+baselines, zero stale context indexes, and deterministic replay.
 The public repository has been renamed from `jakyeamos-agent-skills`; its old
 GitHub URL redirects to the new slug, `dev` is published, and the default
 branch remains `main`.
@@ -86,6 +91,9 @@ no repair or regeneration was performed.
 
 ## Recent Progress
 
+- 2026-07-25: Added and pushed the executable environment contract as
+  `483a45f`; pnpm lint, typecheck, test, build, check, Pre-CR coverage, and
+  the dynamic audit pass from a protected disposable baseline.
 - 2026-07-21: Hardened direct-script imports, public artifact detection, and
   adapter/reference tests as `8a8ad42`; Pre-CR and the focused suite remain green.
 - 2026-07-21: Final static checks reached Ruff PASS, basedpyright zero errors
