@@ -37,6 +37,18 @@ workflow/reference material:
   approval-gated promotion of strategy artifacts.
 - `operating-language` — canonical domain, architecture, and agent-control
   vocabulary with observable leading-word tests.
+- `execution-reassessment` — repeated-failure and lifecycle-invalidation gate
+  with a bounded corrective change, explicit stop boundary, and regression
+  status.
+- `safe-canonical-branch-folding` — guarded consolidation into a canonical
+  development line that preserves uncertain work and separates integration,
+  publication, and pruning authority.
+- `unknowns-first-exploration` — four-quadrant exploration map with staged
+  user reaction, evidence-backed landmines, visible open decisions, and a
+  copyable implementation prompt.
+- `recurring-loop-authorship` — customizable recurring workflow specification
+  with explicit state, human checkpoints, bounded retry behavior, and a
+  readiness gate.
 
 ## Agent-config mining record
 

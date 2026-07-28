@@ -1,0 +1,8 @@
+{
+  "schema_version": "change-matrix-operation-fixture/v1",
+  "subject": "project-compass",
+  "operation": "remove",
+  "scenario": "Remove a distributed Project Compass capability or artifact.",
+  "expected_surface_ids": ["hosted-source", "catalog-manifest", "installer-projection", "installed-canonical-copy", "pronto-topology", "tmcp-contract-quality"],
+  "assertions": ["Catalog and projection references are removed with the source.", "Installed copies cannot retain an orphan.", "Pronto topology no longer reports a stale hosted source.", "Negative triggers and observable behavior are re-evaluated."]
+}

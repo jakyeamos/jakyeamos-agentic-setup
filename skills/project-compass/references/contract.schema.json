@@ -1,0 +1,219 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.project-compass/contract.schema.json",
+  "title": "Project Compass Contract",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "revision",
+    "project",
+    "targets",
+    "pillars",
+    "source_layers",
+    "drift",
+    "updated_at"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "project": {
+      "type": "object",
+      "required": [
+        "name",
+        "identity",
+        "audience",
+        "core_loop",
+        "north_star",
+        "not_this"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "identity": { "type": "string", "minLength": 1 },
+        "audience": { "type": "string", "minLength": 1 },
+        "core_loop": { "type": "string", "minLength": 1 },
+        "north_star": { "type": "string", "minLength": 1 },
+        "not_this": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        }
+      }
+    },
+    "targets": {
+      "type": "object",
+      "required": ["mvp", "complete_product"],
+      "additionalProperties": false,
+      "properties": {
+        "mvp": { "$ref": "#/$defs/target" },
+        "complete_product": { "$ref": "#/$defs/target" }
+      }
+    },
+    "pillars": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/pillar" }
+    },
+    "source_layers": {
+      "type": "object",
+      "required": ["intended", "planned", "implemented", "verified"],
+      "additionalProperties": false,
+      "properties": {
+        "intended": { "$ref": "#/$defs/sources" },
+        "planned": { "$ref": "#/$defs/sources" },
+        "implemented": { "$ref": "#/$defs/sources" },
+        "verified": { "$ref": "#/$defs/sources" }
+      }
+    },
+    "drift": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/drift" }
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "$defs": {
+    "target": {
+      "type": "object",
+      "required": ["definition"],
+      "additionalProperties": false,
+      "properties": {
+        "definition": { "type": "string", "minLength": 1 }
+      }
+    },
+    "pillar": {
+      "type": "object",
+      "required": ["id", "name", "outcomes"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "type": "string", "minLength": 1 },
+        "outcomes": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/outcome" }
+        }
+      }
+    },
+    "outcome": {
+      "type": "object",
+      "required": [
+        "id",
+        "name",
+        "targets",
+        "maturity",
+        "confidence",
+        "layers",
+        "evidence",
+        "blockers"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "type": "string", "minLength": 1 },
+        "targets": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": ["mvp", "complete_product"]
+          }
+        },
+        "maturity": {
+          "enum": [0, 25, 50, 75, 100]
+        },
+        "confidence": {
+          "enum": ["low", "medium", "high"]
+        },
+        "layers": {
+          "type": "object",
+          "required": ["intended", "planned", "implemented", "verified"],
+          "additionalProperties": false,
+          "properties": {
+            "intended": { "type": "string", "minLength": 1 },
+            "planned": { "type": "string", "minLength": 1 },
+            "implemented": { "type": "string", "minLength": 1 },
+            "verified": { "type": "string", "minLength": 1 }
+          }
+        },
+        "evidence": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/source" }
+        },
+        "blockers": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/blocker" }
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/source" }
+    },
+    "source": {
+      "type": "object",
+      "required": ["ref", "observed_at"],
+      "additionalProperties": false,
+      "properties": {
+        "ref": { "type": "string", "minLength": 1 },
+        "note": { "type": "string" },
+        "observed_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "blocker": {
+      "type": "object",
+      "required": ["kind", "summary"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "product-decision",
+            "technical",
+            "external",
+            "sequencing",
+            "verification"
+          ]
+        },
+        "summary": { "type": "string", "minLength": 1 }
+      }
+    },
+    "drift": {
+      "type": "object",
+      "required": ["kind", "summary", "status", "observed_at", "evidence"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "intent-change",
+            "planning-drift",
+            "implementation-drift",
+            "verification-gap",
+            "stale-source",
+            "conflict"
+          ]
+        },
+        "summary": { "type": "string", "minLength": 1 },
+        "status": {
+          "enum": ["open", "accepted", "resolved", "superseded"]
+        },
+        "observed_at": { "type": "string", "format": "date-time" },
+        "evidence": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/source" }
+        }
+      }
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    }
+  }
+}

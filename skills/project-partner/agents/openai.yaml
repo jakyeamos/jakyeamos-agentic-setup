@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Partner"
+  short_description: "Think through product ideas with a code-aware peer"
+  default_prompt: "Use $project-partner to discuss this idea or PRD with me and how it fits the current project."

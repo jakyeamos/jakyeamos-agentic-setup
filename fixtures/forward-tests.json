@@ -63,6 +63,34 @@
       "non_trigger": "A slogan or preference does not change what an agent should inspect, decide, execute, or verify.",
       "expected_trigger": "invoke-skill",
       "expected_non_trigger": "do-not-invoke"
+    },
+    {
+      "skill": "execution-reassessment",
+      "trigger": "The same manual setup step has repeated twice after reinstall, and the next execution would repeat it again.",
+      "non_trigger": "A first-time compiler error has no repeated remediation, lifecycle transition, or invalidated trusted state.",
+      "expected_trigger": "invoke-skill",
+      "expected_non_trigger": "do-not-invoke"
+    },
+    {
+      "skill": "safe-canonical-branch-folding",
+      "trigger": "Named feature branches need to be folded into canonical dev while dirty, unique, unpublished, and remote-divergent work must be preserved and pruning requires proof and authority.",
+      "non_trigger": "A one-off README edit on the current branch has no branch consolidation, target branch, or ref deletion request.",
+      "expected_trigger": "invoke-skill",
+      "expected_non_trigger": "do-not-invoke"
+    },
+    {
+      "skill": "unknowns-first-exploration",
+      "trigger": "An ambiguous cross-cutting task needs a four-quadrant map, user-reactable artifacts, evidence-backed landmines, and a copyable implementation prompt before coding.",
+      "non_trigger": "A bounded one-file rename has settled inputs, acceptance, and verification with no unresolved product or architecture decisions.",
+      "expected_trigger": "invoke-skill",
+      "expected_non_trigger": "do-not-invoke"
+    },
+    {
+      "skill": "recurring-loop-authorship",
+      "trigger": "A repeated personal routine should become a customizable workflow specification with state, human checkpoints, retry behavior, and a safe stopping condition.",
+      "non_trigger": "A one-off file rename has fixed inputs and acceptance and does not need recurrence, durable state, or checkpoint design.",
+      "expected_trigger": "invoke-skill",
+      "expected_non_trigger": "do-not-invoke"
     }
   ]
 }

@@ -1,0 +1,8 @@
+{
+  "schema_version": "change-matrix-operation-fixture/v1",
+  "subject": "project-compass",
+  "operation": "add",
+  "scenario": "Add a new continuity artifact to the distributed skill.",
+  "expected_surface_ids": ["hosted-source", "catalog-manifest", "installer-projection", "installed-canonical-copy", "pronto-topology", "tmcp-contract-quality"],
+  "assertions": ["All applicable surfaces are routed.", "The installed copy and Pronto topology are revalidated.", "Behavioral parity is not inferred from static identity."]
+}

@@ -12,10 +12,33 @@ FORWARD_CASES = REPO / "fixtures/forward-tests.json"
 
 
 class PromotedSkillTests(unittest.TestCase):
+    def test_project_compass_is_the_only_authored_change_matrix(self) -> None:
+        matrices = sorted(REPO.glob("skills/*/change-surface-matrix.json"))
+        self.assertEqual(
+            [path.relative_to(REPO).as_posix() for path in matrices],
+            ["skills/project-compass/change-surface-matrix.json"],
+        )
+        matrix = json.loads(matrices[0].read_text(encoding="utf-8"))
+        surface_ids = {surface["id"] for surface in matrix["surfaces"]}
+        self.assertEqual(matrix["unresolved_surfaces"], [])
+        self.assertIn("hosted-source", surface_ids)
+        self.assertIn("installed-canonical-copy", surface_ids)
+        self.assertIn("pronto-topology", surface_ids)
+        self.assertIn("tmcp-contract-quality", surface_ids)
+        for operation in ("add", "change", "remove"):
+            fixture = json.loads(
+                (
+                    REPO
+                    / f"fixtures/change-matrix/project-compass-{operation}.json"
+                ).read_text(encoding="utf-8")
+            )
+            self.assertEqual(fixture["operation"], operation)
+            self.assertEqual(set(fixture["expected_surface_ids"]), surface_ids)
+
     def test_each_promoted_skill_has_trigger_and_non_trigger_forward_cases(self) -> None:
         payload = json.loads(FORWARD_CASES.read_text(encoding="utf-8"))
         cases = payload["cases"]
-        self.assertEqual(len(cases), 9)
+        self.assertEqual(len(cases), 13)
         skills = {case["skill"] for case in cases}
         self.assertEqual(len(skills), len(cases))
         for case in cases:

@@ -30,8 +30,13 @@ python3 scripts/workbench.py install context-budget-governor \
 ```
 
 Read [`AGENTS.md`](AGENTS.md) for the agent mining contract,
-[`catalog/index.md`](catalog/index.md) for the human index, and
-[`docs/mining.md`](docs/mining.md) for the inspection workflow.
+[`catalog/index.md`](catalog/index.md) for the human index,
+[`docs/workflow-multipliers.md`](docs/workflow-multipliers.md) to browse the
+advantages by recurring friction, [`docs/mining/2026-07-workflow-multiplier-audit.md`](docs/mining/2026-07-workflow-multiplier-audit.md)
+for the evidence-backed audit, [`docs/adoption-guide.md`](docs/adoption-guide.md)
+for standalone versus composable adoption, [`docs/external-references.md`](docs/external-references.md)
+for related projects, and [`docs/mining.md`](docs/mining.md) for the inspection
+workflow.
 
 ## Manifest-aware setup
 
@@ -57,6 +62,10 @@ setup.
 
 ## Curated surfaces
 
+These are independent workflow multipliers. Adopt them standalone, combine
+them with local practices, or use them as inspiration; this repository does
+not prescribe one universal operating model.
+
 - `context-budget-governor` - checkpoint and compaction policy with a 150,000
   estimated-token hard boundary and a reviewable handoff template.
 - `repo-aware-context` - repository-first routing that separates policy, live
@@ -64,8 +73,26 @@ setup.
 - `governed-work-loop` - route -> context -> execute -> verify -> handoff.
 - `safe-tool-guards` - dry-run, target, approval, and verification contract for
   shell and tool actions.
+- `execution-reassessment` - stop recurring execution churn, repair the
+  invalidated boundary, and verify the lifecycle transition before resuming.
+- `safe-canonical-branch-folding` - consolidate named branches while preserving
+  uncertain work and separating integration, publication, and pruning authority.
+- `unknowns-first-exploration` - walk four unknown quadrants and hand over a
+  user-reactable map before implementation hardens decisions.
+- `recurring-loop-authorship` - turn repeated routines into customizable,
+  human-controlled workflow specifications with durable state and checkpoints.
+- `project-compass` - reconcile changing product truth with what is planned,
+  implemented, and genuinely verified while tracking MVP and complete-product
+  progress.
+- `project-partner` - provide a candid, codebase-aware coworker for exploring
+  product ideas, existing PRDs, and engineering tradeoffs without prematurely
+  formalizing them.
 - `evaluation-evidence` - sanitized contract fixture and vocabulary for
   observed evidence, hypotheses, and limitations.
+- `evidence-based-skill-improvement` - treat skills as behavioral hypotheses;
+  test triggers, outputs, controls, and regressions before promotion.
+- `documentation-as-principles` - keep one home for each fact, explain why it
+  exists, and route readers to the source of truth rather than mirroring it.
 - `research-domain-writing` - research -> packet -> draft -> QA -> style skill.
 - `terrace` - router skill for Terrace planning, execution, validation, review,
   and release-readiness work.
@@ -168,3 +195,9 @@ without a measured baseline.
 
 See [`ATTRIBUTION.md`](ATTRIBUTION.md) and [`SECURITY.md`](SECURITY.md) for
 provenance, redistribution, and reporting guidance.
+
+Related projects such as TMCP, Pronto, Pre-CR Suite, Quality Runner, AIOS, and
+the evaluation/context contracts are linked in the
+[external reference map](docs/external-references.md). They remain optional,
+separately owned integrations; this repository does not copy their runtimes or
+private state.

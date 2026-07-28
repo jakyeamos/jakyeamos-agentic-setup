@@ -1,0 +1,74 @@
+{
+  "schema_version": "change-surface-matrix/v1",
+  "subject": {"kind": "skill", "id": "project-compass"},
+  "owner": "Jakye Amos",
+  "last_reviewed": "2026-07-28",
+  "surfaces": [
+    {
+      "id": "hosted-source",
+      "scope": "local",
+      "path": "skills/project-compass/",
+      "owner": "Jakye Amos",
+      "condition": "The authored skill contract, helper, schema, tests, or provider metadata changes.",
+      "operations": ["add", "change", "remove"],
+      "validation": ["python3 skills/project-compass/scripts/test_project_compass.py"],
+      "status": "applicable"
+    },
+    {
+      "id": "catalog-manifest",
+      "scope": "local",
+      "path": "catalog/manifest.json",
+      "owner": "Jakye Amos",
+      "condition": "A distributed Project Compass file or capability changes.",
+      "operations": ["add", "change", "remove"],
+      "validation": ["pnpm check"],
+      "status": "applicable"
+    },
+    {
+      "id": "installer-projection",
+      "scope": "local",
+      "path": "scripts/install.sh",
+      "owner": "Jakye Amos",
+      "condition": "The Project Compass distribution payload or destination changes.",
+      "operations": ["add", "change", "remove"],
+      "validation": ["pnpm test"],
+      "status": "applicable"
+    },
+    {
+      "id": "installed-canonical-copy",
+      "scope": "external",
+      "path": "canonical-skill-root://project-compass/",
+      "owner": "Jakye Amos",
+      "condition": "The hosted source is promoted to the provider-neutral canonical skill root.",
+      "operations": ["add", "change", "remove"],
+      "validation": ["Compare hosted and installed Project Compass directory snapshots and hashes."],
+      "status": "applicable"
+    },
+    {
+      "id": "pronto-topology",
+      "scope": "external",
+      "path": "repository://pronto",
+      "owner": "Jakye Amos",
+      "condition": "Hosting, source identity, hashes, provider state, or parity evidence changes.",
+      "operations": ["add", "change", "remove"],
+      "validation": ["pronto skills project-compass --json", "pronto change-matrix skill project-compass --json"],
+      "status": "applicable"
+    },
+    {
+      "id": "tmcp-contract-quality",
+      "scope": "external",
+      "path": "repository://tmcp",
+      "owner": "Jakye Amos",
+      "condition": "Triggers, required reads, verification, observable output, done criteria, approvals, precedence, host assumptions, or mandatory structure changes.",
+      "operations": ["add", "change", "remove"],
+      "validation": ["TMCP static skill evaluation and behavioral trigger/output evaluation"],
+      "status": "applicable"
+    }
+  ],
+  "unresolved_surfaces": [],
+  "operation_evidence": {
+    "add": {"status": "passed", "evidence": ["fixtures/change-matrix/project-compass-add.json"]},
+    "change": {"status": "passed", "evidence": ["fixtures/change-matrix/project-compass-change.json"]},
+    "remove": {"status": "passed", "evidence": ["fixtures/change-matrix/project-compass-remove.json"]}
+  }
+}

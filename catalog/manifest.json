@@ -487,6 +487,265 @@
       }
     },
     {
+      "id": "evidence-based-skill-improvement",
+      "kind": "reference",
+      "asset_class": "portable",
+      "title": "Evidence-based skill improvement",
+      "summary": "A reusable method for testing and refining agent skills from observed behavior, controls, and regression evidence rather than prose inspection alone.",
+      "maturity": "experimental",
+      "capabilities": ["skill-improvement", "evaluation", "evidence", "regression"],
+      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot", "gemini", "antigravity"],
+      "entrypoints": ["docs/workflow-multipliers/evidence-based-skill-improvement.md"],
+      "files": ["docs/workflow-multipliers/evidence-based-skill-improvement.md"],
+      "dependencies": [],
+      "provenance": {
+        "status": "authored",
+        "source": "evidence-based-skill-improvement-pattern",
+        "license_status": "MIT",
+        "redistribution": "allowed"
+      },
+      "evidence": [
+        "docs/workflow-multipliers.md",
+        "skills/skill-harvest-and-promotion/SKILL.md",
+        "skills/repo-behavior-spec-loop/SKILL.md"
+      ],
+      "install": {
+        "mode": "copy",
+        "destination": "workbench/references/evidence-based-skill-improvement",
+        "manual_review": "Adapt the method to the adopter's evaluation harness; static warnings are investigation signals, not outcome evidence."
+      }
+    },
+    {
+      "id": "documentation-as-principles",
+      "kind": "reference",
+      "asset_class": "portable",
+      "title": "Documentation as principles",
+      "summary": "A portable convention for one authoritative home per fact, pointer-only summaries, explicit reasons, and visible freshness or uncertainty.",
+      "maturity": "experimental",
+      "capabilities": ["documentation", "provenance", "source-of-truth", "progressive-disclosure"],
+      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot", "gemini", "antigravity"],
+      "entrypoints": ["docs/workflow-multipliers/documentation-as-principles.md"],
+      "files": ["docs/workflow-multipliers/documentation-as-principles.md"],
+      "dependencies": [],
+      "provenance": {
+        "status": "authored",
+        "source": "documentation-as-principles-pattern",
+        "license_status": "MIT",
+        "redistribution": "allowed"
+      },
+      "evidence": [
+        "docs/adoption-guide.md",
+        "docs/mining/2026-07-workflow-multiplier-audit.md"
+      ],
+      "install": {
+        "mode": "copy",
+        "destination": "workbench/references/documentation-as-principles",
+        "manual_review": "Adapt the convention to the adopter's source-of-truth, freshness, and conflict-resolution model."
+      }
+    },
+    {
+      "id": "execution-reassessment",
+      "kind": "skill",
+      "asset_class": "portable",
+      "title": "Execution reassessment",
+      "summary": "Stop recurring execution churn, diagnose the invalidated boundary, make the smallest durable change, and verify the lifecycle transition before resuming.",
+      "maturity": "experimental",
+      "capabilities": ["execution-reassessment", "lifecycle", "diagnostics", "safety", "verification"],
+      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot", "gemini", "antigravity"],
+      "entrypoints": [
+        "skills/execution-reassessment/SKILL.md",
+        "workflows/execution-reassessment/WORKFLOW.md"
+      ],
+      "files": [
+        "skills/execution-reassessment/SKILL.md",
+        "workflows/execution-reassessment/WORKFLOW.md"
+      ],
+      "dependencies": [],
+      "provenance": {
+        "status": "sanitized-derived",
+        "source": "first-party-authored-execution-reassessment",
+        "license_status": "MIT-compatible",
+        "redistribution": "allowed"
+      },
+      "evidence": [
+        "docs/case-studies/execution-reassessment.md",
+        "docs/mining/2026-07-workflow-multiplier-audit.md",
+        "fixtures/forward-tests.json"
+      ],
+      "install": {
+        "mode": "copy",
+        "destination": "skills/execution-reassessment"
+      }
+    },
+    {
+      "id": "safe-canonical-branch-folding",
+      "kind": "skill",
+      "asset_class": "portable",
+      "title": "Safe canonical branch folding",
+      "summary": "Consolidate named branches into a canonical development line while preserving uncertain work, proving equivalence, and separating integration, publication, and pruning authority.",
+      "maturity": "experimental",
+      "capabilities": ["branch-folding", "git-safety", "provenance", "approval", "verification"],
+      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot", "gemini", "antigravity"],
+      "entrypoints": [
+        "skills/safe-canonical-branch-folding/SKILL.md",
+        "workflows/safe-canonical-branch-folding/WORKFLOW.md"
+      ],
+      "files": [
+        "skills/safe-canonical-branch-folding/SKILL.md",
+        "workflows/safe-canonical-branch-folding/WORKFLOW.md"
+      ],
+      "dependencies": [],
+      "provenance": {
+        "status": "sanitized-derived",
+        "source": "first-party-authored-safe-branch-folding-behavior",
+        "license_status": "MIT-compatible",
+        "redistribution": "allowed"
+      },
+      "evidence": [
+        "docs/case-studies/safe-canonical-branch-folding.md",
+        "docs/mining/2026-07-workflow-multiplier-audit.md",
+        "fixtures/forward-tests.json"
+      ],
+      "install": {
+        "mode": "copy",
+        "destination": "skills/safe-canonical-branch-folding"
+      }
+    },
+    {
+      "id": "unknowns-first-exploration",
+      "kind": "skill",
+      "asset_class": "portable",
+      "title": "Unknowns-first exploration",
+      "summary": "Turn ambiguous work into a staged four-quadrant map with evidence, user reaction, visible landmines, open decisions, and a copyable implementation prompt.",
+      "maturity": "experimental",
+      "capabilities": ["exploration", "decision-mapping", "user-reaction", "landmine-detection", "handoff"],
+      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot", "gemini", "antigravity"],
+      "entrypoints": [
+        "skills/unknowns-first-exploration/SKILL.md",
+        "workflows/unknowns-first-exploration/WORKFLOW.md"
+      ],
+      "files": [
+        "skills/unknowns-first-exploration/SKILL.md",
+        "workflows/unknowns-first-exploration/WORKFLOW.md"
+      ],
+      "dependencies": [],
+      "provenance": {
+        "status": "sanitized-derived",
+        "source": "first-party-authored-unknowns-first-exploration-behavior",
+        "license_status": "MIT-compatible",
+        "redistribution": "allowed"
+      },
+      "evidence": [
+        "docs/case-studies/unknowns-first-exploration.md",
+        "docs/mining/2026-07-workflow-multiplier-audit.md",
+        "fixtures/forward-tests.json"
+      ],
+      "install": {
+        "mode": "copy",
+        "destination": "skills/unknowns-first-exploration"
+      }
+    },
+    {
+      "id": "recurring-loop-authorship",
+      "kind": "skill",
+      "asset_class": "portable",
+      "title": "Recurring-loop authorship",
+      "summary": "Turn a repeated personal routine into a customizable workflow specification with explicit state, human checkpoints, bounded retries, and a safe readiness gate.",
+      "maturity": "experimental",
+      "capabilities": ["workflow-authorship", "recurrence", "checkpoints", "persistence", "human-control"],
+      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot", "gemini", "antigravity"],
+      "entrypoints": [
+        "skills/recurring-loop-authorship/SKILL.md",
+        "workflows/recurring-loop-authorship/WORKFLOW.md"
+      ],
+      "files": [
+        "skills/recurring-loop-authorship/SKILL.md",
+        "workflows/recurring-loop-authorship/WORKFLOW.md"
+      ],
+      "dependencies": [],
+      "provenance": {
+        "status": "sanitized-derived",
+        "source": "first-party-authored-recurring-loop-authorship-behavior",
+        "license_status": "MIT-compatible",
+        "redistribution": "allowed"
+      },
+      "evidence": [
+        "docs/case-studies/recurring-loop-authorship.md",
+        "docs/mining/2026-07-workflow-multiplier-audit.md",
+        "fixtures/forward-tests.json"
+      ],
+      "install": {
+        "mode": "copy",
+        "destination": "skills/recurring-loop-authorship"
+      }
+    },
+    {
+      "id": "project-compass",
+      "kind": "skill",
+      "asset_class": "portable",
+      "title": "Project Compass",
+      "summary": "Reconcile changing product truth with planned, implemented, and verified outcomes while tracking honest MVP and complete-product progress.",
+      "maturity": "experimental",
+      "capabilities": ["product-direction", "progress", "scope-drift", "reorientation", "checkpointing", "conversation-continuity", "change-surface-routing"],
+      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot", "gemini", "antigravity"],
+      "entrypoints": ["skills/project-compass/SKILL.md"],
+      "files": [
+        "skills/project-compass/SKILL.md",
+        "skills/project-compass/agents/openai.yaml",
+        "skills/project-compass/change-surface-matrix.json",
+        "skills/project-compass/references/continuity.schema.json",
+        "skills/project-compass/references/contract.schema.json",
+        "skills/project-compass/scripts/project_compass.py",
+        "skills/project-compass/scripts/test_project_compass.py"
+      ],
+      "dependencies": [],
+      "provenance": {
+        "status": "authored",
+        "source": "first-party-authored-project-compass",
+        "license_status": "MIT-compatible",
+        "redistribution": "allowed"
+      },
+      "evidence": [
+        "skills/project-compass/scripts/test_project_compass.py",
+        "fixtures/change-matrix/project-compass-add.json",
+        "fixtures/change-matrix/project-compass-change.json",
+        "fixtures/change-matrix/project-compass-remove.json"
+      ],
+      "install": {
+        "mode": "copy",
+        "destination": "skills/project-compass"
+      }
+    },
+    {
+      "id": "project-partner",
+      "kind": "skill",
+      "asset_class": "portable",
+      "title": "Project Partner",
+      "summary": "Provide candid, codebase-aware conversation that pressure-tests ideas and existing PRDs without turning exploration into a requirements interview.",
+      "maturity": "experimental",
+      "capabilities": ["product-conversation", "idea-exploration", "prd-discussion", "codebase-awareness", "tradeoffs", "decision-hygiene"],
+      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot", "gemini", "antigravity"],
+      "entrypoints": ["skills/project-partner/SKILL.md"],
+      "files": [
+        "skills/project-partner/SKILL.md",
+        "skills/project-partner/agents/openai.yaml"
+      ],
+      "dependencies": [],
+      "provenance": {
+        "status": "authored",
+        "source": "first-party-authored-project-partner",
+        "license_status": "MIT-compatible",
+        "redistribution": "allowed"
+      },
+      "evidence": [
+        "skills/project-partner/SKILL.md"
+      ],
+      "install": {
+        "mode": "copy",
+        "destination": "skills/project-partner"
+      }
+    },
+    {
       "id": "reference-agent-eval-contract",
       "kind": "reference",
       "asset_class": "external",
@@ -509,6 +768,31 @@
       "install": {
         "mode": "manual",
         "manual_review": "Read the external contract and adapt only the fields required by the host workflow."
+      }
+    },
+    {
+      "id": "reference-agent-eval-runtime",
+      "kind": "reference",
+      "asset_class": "external",
+      "title": "Agent evaluation runtime",
+      "summary": "External report-only runtime for agent evaluation, comparison, and benchmark evidence.",
+      "maturity": "reference",
+      "capabilities": ["evaluation", "comparison", "benchmarks", "evidence"],
+      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "entrypoints": [],
+      "files": [],
+      "dependencies": [],
+      "provenance": {
+        "status": "external-reference",
+        "source": "https://github.com/jakyeamos/agent-eval-runtime",
+        "license_status": "reference-only",
+        "redistribution": "reference-only"
+      },
+      "external_links": ["https://github.com/jakyeamos/agent-eval-runtime"],
+      "evidence": ["docs/external-references.md"],
+      "install": {
+        "mode": "manual",
+        "manual_review": "Use the external runtime for execution and comparison; this repository contains only portable evaluation boundaries."
       }
     },
     {
@@ -600,15 +884,71 @@
       "dependencies": [],
       "provenance": {
         "status": "external-reference",
-        "source": "quality-runner-external-project",
+        "source": "https://github.com/jakyeamos/quality-runner",
         "license_status": "reference-only",
         "redistribution": "reference-only"
       },
-      "external_links": [],
-      "evidence": ["docs/case-studies/governed-execution.md"],
+      "external_links": ["https://github.com/jakyeamos/quality-runner"],
+      "evidence": [
+        "docs/case-studies/governed-execution.md",
+        "docs/external-references.md"
+      ],
       "install": {
         "mode": "manual",
         "manual_review": "Use the external quality system when available; this package provides only portable evidence guidance."
+      }
+    },
+    {
+      "id": "reference-pre-cr-suite",
+      "kind": "reference",
+      "asset_class": "external",
+      "title": "Pre-CR Suite reference",
+      "summary": "External project-local readiness reference where one .pre-cr.json contract feeds editor clients and a headless changed-line gate.",
+      "maturity": "reference",
+      "capabilities": ["quality", "coverage", "project-contract", "client-parity"],
+      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "entrypoints": [],
+      "files": [],
+      "dependencies": [],
+      "provenance": {
+        "status": "external-reference",
+        "source": "https://github.com/jakyeamos/pre-cr-suite",
+        "license_status": "reference-only",
+        "redistribution": "reference-only"
+      },
+      "external_links": ["https://github.com/jakyeamos/pre-cr-suite"],
+      "evidence": [
+        "docs/external-references.md",
+        "docs/mining/2026-07-workflow-multiplier-audit.md"
+      ],
+      "install": {
+        "mode": "manual",
+        "manual_review": "Use Pre-CR as an optional project-local verifier; this repository does not vendor its CLI, editor clients, or package runtime."
+      }
+    },
+    {
+      "id": "reference-pronto",
+      "kind": "reference",
+      "asset_class": "external",
+      "title": "Pronto reference",
+      "summary": "External local-first portfolio command center for repository discovery, quality evidence, provider-neutral snapshots, and read-only remediation previews.",
+      "maturity": "reference",
+      "capabilities": ["portfolio", "repository-discovery", "quality-evidence", "read-only-previews"],
+      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "entrypoints": [],
+      "files": [],
+      "dependencies": [],
+      "provenance": {
+        "status": "external-reference",
+        "source": "https://github.com/jakyeamos/pronto",
+        "license_status": "reference-only",
+        "redistribution": "reference-only"
+      },
+      "external_links": ["https://github.com/jakyeamos/pronto"],
+      "evidence": ["docs/external-references.md"],
+      "install": {
+        "mode": "manual",
+        "manual_review": "Use Pronto for its own local-first application surface; this repository does not copy its desktop runtime, database, or private feed consumers."
       }
     },
     {

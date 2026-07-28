@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Compass"
+  short_description: "Reconcile product truth and real progress"
+  default_prompt: "Use $project-compass to reorient this project while preserving established conversation decisions and reconciling them with MVP, implementation, and verified project truth."

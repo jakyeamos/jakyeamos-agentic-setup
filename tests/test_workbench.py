@@ -132,6 +132,30 @@ class WorkbenchCliTests(unittest.TestCase):
             self.assertEqual(json.loads(reference.stdout)["status"], "manual-review")
             self.assertFalse(reference_target.exists())
 
+    def test_external_reference_map_is_linked_without_installable_runtime(self) -> None:
+        manifest = json.loads(
+            (REPO / "catalog/manifest.json").read_text(encoding="utf-8")
+        )
+        assets = {asset["id"]: asset for asset in manifest["assets"]}
+        expected_links = {
+            "reference-tmcp": "https://github.com/jakyeamos/tmcp",
+            "reference-pronto": "https://github.com/jakyeamos/pronto",
+            "reference-pre-cr-suite": "https://github.com/jakyeamos/pre-cr-suite",
+            "reference-quality-runner": "https://github.com/jakyeamos/quality-runner",
+        }
+        for asset_id, link in expected_links.items():
+            asset = assets[asset_id]
+            self.assertEqual(asset["asset_class"], "external")
+            self.assertEqual(asset["install"]["mode"], "manual")
+            self.assertEqual(asset["external_links"], [link])
+
+        self.assertTrue(
+            (REPO / "docs/adoption-guide.md").is_file()
+        )
+        self.assertTrue(
+            (REPO / "docs/workflow-multipliers/documentation-as-principles.md").is_file()
+        )
+
     def test_catalog_validation_reports_duplicate_and_unsupported_assets(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

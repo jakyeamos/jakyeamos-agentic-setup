@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.project-compass/continuity.schema.json",
+  "title": "Project Compass Truth Continuity",
+  "type": "object",
+  "required": ["schema_version", "revision", "commitments", "reconciliations", "updated_at"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "const": 1 },
+    "revision": { "type": "integer", "minimum": 1 },
+    "commitments": {"type": "array", "items": {"$ref": "#/$defs/commitment"}},
+    "reconciliations": {"type": "array", "items": {"$ref": "#/$defs/reconciliation"}},
+    "updated_at": {"type": "string", "format": "date-time"}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "source": {
+      "type": "object",
+      "required": ["ref", "observed_at"],
+      "additionalProperties": false,
+      "properties": {
+        "ref": {"type": "string", "minLength": 1},
+        "note": {"type": "string"},
+        "observed_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "commitment": {
+      "type": "object",
+      "required": ["id", "kind", "statement", "status", "source"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "kind": {"enum": ["goal", "constraint", "decision", "rationale", "open-question"]},
+        "statement": {"type": "string", "minLength": 1},
+        "status": {"enum": ["active", "unresolved", "superseded", "retired"]},
+        "source": {"$ref": "#/$defs/source"}
+      }
+    },
+    "strings": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "uniqueItems": true
+    },
+    "reconciliation": {
+      "type": "object",
+      "required": [
+        "id", "observed_at", "source", "classification", "materiality",
+        "incoming", "project_evidence", "preserved", "changed", "contradicted",
+        "deferred", "left_behind", "unknown", "disposition", "question"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "observed_at": {"type": "string", "format": "date-time"},
+        "source": {"$ref": "#/$defs/source"},
+        "classification": {"enum": ["additive", "clarifying", "corrective", "conflicting", "superseding"]},
+        "materiality": {"enum": ["low", "medium", "high"]},
+        "incoming": {"type": "string", "minLength": 1},
+        "project_evidence": {"type": "array", "items": {"$ref": "#/$defs/source"}},
+        "preserved": {"$ref": "#/$defs/strings"},
+        "changed": {"$ref": "#/$defs/strings"},
+        "contradicted": {"$ref": "#/$defs/strings"},
+        "deferred": {"$ref": "#/$defs/strings"},
+        "left_behind": {"$ref": "#/$defs/strings"},
+        "unknown": {"$ref": "#/$defs/strings"},
+        "disposition": {"enum": ["proceed", "proceed-with-preservation", "pending-question", "recorded-supersession"]},
+        "question": {"type": "string"},
+        "reason": {"type": "string", "minLength": 1},
+        "user_decision": {"type": "string", "minLength": 1},
+        "decision_source": {"$ref": "#/$defs/source"}
+      }
+    }
+  }
+}
