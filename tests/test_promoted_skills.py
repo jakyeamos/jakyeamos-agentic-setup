@@ -38,7 +38,7 @@ class PromotedSkillTests(unittest.TestCase):
     def test_each_promoted_skill_has_trigger_and_non_trigger_forward_cases(self) -> None:
         payload = json.loads(FORWARD_CASES.read_text(encoding="utf-8"))
         cases = payload["cases"]
-        self.assertEqual(len(cases), 13)
+        self.assertEqual(len(cases), 14)
         skills = {case["skill"] for case in cases}
         self.assertEqual(len(skills), len(cases))
         for case in cases:
@@ -77,6 +77,31 @@ class PromotedSkillTests(unittest.TestCase):
             )
             private_markers = ("/" + "Users/", "/" + "home/", "~" + "/", "." + "env")
             self.assertTrue(all(marker not in combined_text for marker in private_markers))
+
+    def test_consequence_closure_keeps_mapping_and_completion_distinct(self) -> None:
+        skill = (
+            REPO / "skills/consequence-closure/SKILL.md"
+        ).read_text(encoding="utf-8")
+        workflow = (
+            REPO / "workflows/consequence-closure/WORKFLOW.md"
+        ).read_text(encoding="utf-8")
+        template = (REPO / "templates/AGENTS.md").read_text(encoding="utf-8")
+
+        for disposition in (
+            "required",
+            "conditional",
+            "leverage",
+            "optional",
+            "blocked",
+        ):
+            self.assertIn(f"`{disposition}`", skill)
+        for promotion in ("strengthen", "companion", "reference", "defer", "exclude"):
+            self.assertIn(f"`{promotion}`", skill)
+        self.assertIn("whole owning feature", skill)
+        self.assertIn("impact receipt", skill)
+        self.assertIn("pre-edit advisory discovery", workflow)
+        self.assertIn("exact blocker or next promotion gate", workflow)
+        self.assertIn("`consequence-closure` skill", template)
 
 
 if __name__ == "__main__":

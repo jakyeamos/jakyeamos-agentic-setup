@@ -50,6 +50,7 @@ No relationship in the tables below is a prescribed order or stack.
 | [`repo-behavior-spec-loop`](../skills/repo-behavior-spec-loop/SKILL.md) | Expected behavior is implicit and fixes are judged by code presence alone. | A mature repository needs source-derived acceptance and regression evidence. | `evaluation-evidence`, `review-gated-verified-fix` |
 | [`review-gated-verified-fix`](../skills/review-gated-verified-fix/SKILL.md) | A remediation can silently cross from proposed fix into accepted change. | A fix needs isolation, verification, and explicit human acceptance. | `safe-tool-guards`, `repo-behavior-spec-loop` |
 | [`evidence-backed-change-surface-mapping`](../skills/evidence-backed-change-surface-mapping/SKILL.md) | Impact analysis turns into confident guesses about downstream files or systems. | A change may cross ownership, runtime, or repository boundaries. | `repo-behavior-spec-loop`, `evaluation-evidence` |
+| [`consequence-closure`](../skills/consequence-closure/SKILL.md) | An implementation stops at its direct diff while downstream truth, conditional maturity, agent evidence, or reusable advantages remain unresolved. | Live implementation evidence exposes a material cross-surface consequence. | `evidence-backed-change-surface-mapping`, `skill-harvest-and-promotion` |
 | [`environment-legibility-audit`](../workflows/environment-legibility-audit/WORKFLOW.md) | A repository has code but does not make its identity, commands, context, or readiness legible to an agent. | Onboarding, maintenance, or fleet work needs bounded remediation evidence. | Pre-CR Suite, Quality Runner, `repo-aware-context` |
 
 ## Documentation and sharing
@@ -109,6 +110,8 @@ These are examples of useful relationships, not recipes:
   `review-gated-verified-fix`.
 - **Uncertain impact:** `evidence-backed-change-surface-mapping` +
   `repo-behavior-spec-loop` + `evaluation-evidence`.
+- **Impact through completion:** `evidence-backed-change-surface-mapping` +
+  `consequence-closure` + `skill-harvest-and-promotion`.
 - **Reusable practice:** `operating-language` +
   `skill-harvest-and-promotion`.
 - **Skill refinement:** `skill-harvest-and-promotion` +

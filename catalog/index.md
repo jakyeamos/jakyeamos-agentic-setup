@@ -61,12 +61,13 @@ unsupported runtimes, and unsafe paths remain blocked.
 | `repo-behavior-spec-loop` | Cited behavior ledger, bounded fix loop, and regression report | beta | copy |
 | `review-gated-verified-fix` | Isolated remediation with evidence handoff and human acceptance | beta | copy |
 | `evidence-backed-change-surface-mapping` | Bounded downstream surface mapping with provenance and freshness | beta | copy |
+| `consequence-closure` | Material consequence closure, conditional maturity, machine-readable evidence, and candidate escalation | experimental | copy |
 | `agentized-task-packet` | Bounded task packet for routed, verifiable agent execution | beta | copy |
 | `durable-agent-workflows` | Durable goals, artifacts, steering, queueing, and resume state | beta | copy |
 | `divergent-strategy` | Explicit portfolio search and evidence-based promotion | beta | copy |
 | `operating-language` | Compact vocabulary with triggers, decisions, and completion evidence | beta | copy |
 
-The thirteen additive skills above were mined from first-party authored workflow
+The fourteen additive skills above were mined from first-party authored workflow
 patterns and sanitized for portable redistribution. Their logical provenance
 and deferred or excluded source classes are recorded in the
 [public mining report](../docs/mining/2026-07-public-skill-mining.md).

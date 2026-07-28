@@ -1203,6 +1203,36 @@
       }
     },
     {
+      "id": "consequence-closure",
+      "kind": "skill",
+      "asset_class": "portable",
+      "title": "Consequence closure",
+      "summary": "Close material downstream consequences, evaluate conditional maturity, expose machine-readable evidence, and raise reusable candidates with exact blockers.",
+      "maturity": "experimental",
+      "capabilities": ["change-impact", "conditional-maturity", "recurrence-reduction", "machine-readable-evidence", "candidate-promotion"],
+      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "entrypoints": [
+        "skills/consequence-closure/SKILL.md",
+        "workflows/consequence-closure/WORKFLOW.md"
+      ],
+      "files": [
+        "skills/consequence-closure/SKILL.md",
+        "workflows/consequence-closure/WORKFLOW.md"
+      ],
+      "dependencies": [],
+      "provenance": {
+        "status": "sanitized-derived",
+        "source": "consequence-closure-agent-policy",
+        "license_status": "MIT-compatible",
+        "redistribution": "allowed"
+      },
+      "evidence": ["docs/mining/2026-07-public-skill-mining.md"],
+      "install": {
+        "mode": "copy",
+        "destination": "skills/consequence-closure"
+      }
+    },
+    {
       "id": "agentized-task-packet",
       "kind": "skill",
       "asset_class": "portable",

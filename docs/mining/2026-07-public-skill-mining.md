@@ -29,6 +29,9 @@ workflow/reference material:
   explicit gates, acceptance evidence, and human review handoff.
 - `evidence-backed-change-surface-mapping` — bounded advisory impact mapping
   that preserves unknown paths, freshness, ownership, and provenance.
+- `consequence-closure` — implementation-time closure of material downstream
+  impacts, conditional maturity, UI-only machine-evidence gaps, and reusable
+  candidates with explicit promotion blockers.
 - `agentized-task-packet` — compilation of an ambiguous request into targeted
   context, constraints, verification, acceptance, and handoff fields.
 - `durable-agent-workflows` — durable goals, workspaces, artifacts, steering,

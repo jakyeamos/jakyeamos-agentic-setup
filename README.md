@@ -104,6 +104,9 @@ not prescribe one universal operating model.
 - `review-gated-verified-fix` - isolated, evidence-backed remediation handoff.
 - `evidence-backed-change-surface-mapping` - bounded downstream surface
   discovery with explicit uncertainty.
+- `consequence-closure` - close material downstream impacts, preserve
+  conditional maturity, expose relevant UI-only evidence to agents, and raise
+  reusable candidates with exact blockers.
 - `agentized-task-packet` - targeted context, boundaries, verification, and
   handoff packet for delegated work.
 - `durable-agent-workflows` - resumable goals, artifacts, steering, and

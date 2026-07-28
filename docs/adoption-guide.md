@@ -15,6 +15,7 @@ asset, and keep or replace it according to the evidence from your own setup.
 | Branch consolidation may erase uncertain work | [`safe-canonical-branch-folding`](../skills/safe-canonical-branch-folding/SKILL.md) | The local branch policy requires a separate review or release step |
 | A vague problem is hardening decisions too early | [`unknowns-first-exploration`](../skills/unknowns-first-exploration/SKILL.md) | The resulting map needs delegation or a durable decision record |
 | A repeated personal routine is trapped in one setup | [`recurring-loop-authorship`](../skills/recurring-loop-authorship/SKILL.md) | The routine needs durable receipts, retries, or explicit side-effect gates |
+| A completed diff leaves downstream truth or reusable advantages unresolved | [`consequence-closure`](../skills/consequence-closure/SKILL.md) | Pre-edit discovery first needs a bounded evidence-backed impact map |
 | A skill sounds good but its behavior is unproven | [`evidence-based-skill-improvement`](workflow-multipliers/evidence-based-skill-improvement.md) | The candidate needs public-safety promotion or repository-derived regression cases |
 | Repository quality claims are hard to verify | [`evaluation-evidence`](../workflows/evaluation-evidence/WORKFLOW.md) | A local quality runner or project contract already exists |
 | A useful practice needs to become shareable | [`skill-harvest-and-promotion`](../skills/skill-harvest-and-promotion/SKILL.md) | The behavior has passed clean-room and non-trigger checks |
@@ -49,6 +50,7 @@ Examples:
 | Recover from context loss | `repo-aware-context` | `context-budget-governor` | A checkpoint before the context boundary is reached |
 | Make a risky change reviewable | `safe-tool-guards` | `review-gated-verified-fix` | Verification and explicit human acceptance |
 | Turn uncertainty into an actionable plan | `unknowns-first-exploration` | `agentized-task-packet` | A bounded handoff after the user reacts to the map |
+| Carry an impact map through implementation | `evidence-backed-change-surface-mapping` | `consequence-closure` | Required closure, conditional maturity, machine-readable parity, and candidate escalation |
 | Refine a recurring skill | `evidence-based-skill-improvement` | `repo-behavior-spec-loop` | Repository-derived cases and regression evidence |
 
 These examples are optional combinations, not recipes. Substitute a local

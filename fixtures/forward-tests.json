@@ -37,6 +37,13 @@
       "expected_non_trigger": "do-not-invoke"
     },
     {
+      "skill": "consequence-closure",
+      "trigger": "Implementation reveals a downstream projection, conditional maturity claim, UI-only evidence surface, or reusable agent advantage that must be resolved or raised with an exact blocker.",
+      "non_trigger": "A localized implementation has no material consumer, projection, distribution, maturity, machine-evidence, or recurrence consequence.",
+      "expected_trigger": "invoke-skill",
+      "expected_non_trigger": "do-not-invoke"
+    },
+    {
       "skill": "agentized-task-packet",
       "trigger": "An ambiguous multi-step request must be handed to an agent with explicit context, boundaries, and acceptance.",
       "non_trigger": "A one-sentence single-file generation task already has complete inputs and verification.",
