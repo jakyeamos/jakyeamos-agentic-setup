@@ -22,8 +22,8 @@ Produce a packet containing:
 - targeted context sources and relevant skills;
 - allowed surfaces and explicit boundaries;
 - standards, verification commands, acceptance criteria, and stopping rules;
-- deliverables, handoff format, truth-file requirements, and learning/writeback
-  proposal when applicable.
+- deliverables, handoff format, optional project-note updates, and
+  learning/writeback proposal when applicable.
 
 Build the verification plan before execution starts. Explain why any
 sub-agent or model split adds value; otherwise keep the work single-threaded.

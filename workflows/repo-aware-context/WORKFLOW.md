@@ -10,8 +10,8 @@ recommends an installation.
    remote when present, record its common Git directory, and distinguish each
    checkout or linked worktree state.
 3. Read the nearest operating instructions and local context index.
-4. Read the live truth file if one exists; treat it as a snapshot, not a
-   historical log.
+4. Read maintained project notes if they exist; treat them as optional context,
+   not a completion gate or historical log.
 5. Search for an existing implementation before adding a helper or surface.
 6. Select only the context needed for the current task.
 7. State assumptions when a missing artifact could change the design.
