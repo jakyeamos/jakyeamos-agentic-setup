@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "revision": 1,
+  "project": {
+    "name": "jakyeamos-agent-skills",
+    "identity": "A public, vendor-neutral Portable Agentic Workbench catalog and setup engine for reusable context, safety, evaluation, and handoff workflows.",
+    "audience": "Agent developers and operators who need reusable workflows that can be inspected, validated, dry-run, and deliberately adopted across hosts.",
+    "core_loop": "Capture a recurring workflow need, package a reviewed contract and skill, validate it, dry-run installation or setup, adopt it deliberately, and maintain its evidence and compatibility.",
+    "north_star": "Reusable agent workflows travel across supported hosts without turning private context, unreviewed instructions, or hidden side effects into a product dependency.",
+    "not_this": ["A private unreviewed instruction dump", "Automatic host registration without consent", "A claim of provider parity without trigger and behavior evidence"]
+  },
+  "targets": {
+    "mvp": {"definition": "The catalog can package and validate a small set of portable workflows and show their setup effects through dry-run or explicit apply paths."},
+    "complete_product": {"definition": "The workbench supports a maintained, provider-neutral catalog with compatibility evidence, safe setup, lifecycle updates, and recoverable adoption across supported hosts."}
+  },
+  "pillars": [
+    {"id": "portable-workflow-contracts", "name": "Portable workflow contracts", "outcomes": [{"id": "validated-reuse", "name": "A workflow can be reused because its inputs, effects, triggers, and compatibility boundaries are explicit and validated.", "targets": ["mvp", "complete_product"], "maturity": 50, "confidence": "medium", "layers": {"intended": "Operators can adopt useful workflows without importing hidden private state or unsafe assumptions.", "planned": "The public repository defines a catalog and setup engine with dry-run and apply modes.", "implemented": "The repository contains portable workflow packages and setup machinery.", "verified": "Repository docs establish the catalog scope; broad host trigger and behavior parity was not executed here."}, "evidence": [{"ref": "README.md", "note": "Defines the Portable Agentic Workbench catalog and setup engine.", "observed_at": "2026-08-02T13:25:04Z"}, {"ref": "AGENTS.md", "note": "Defines repository workflow and public-scope constraints.", "observed_at": "2026-08-02T13:25:04Z"}], "blockers": [{"kind": "verification", "summary": "Provider-host trigger, loaded-context, and behavior parity evidence remains incomplete."}]}]},
+    {"id": "consented-adoption", "name": "Consented adoption", "outcomes": [{"id": "dry-run-before-effects", "name": "Users can inspect setup changes before applying them and retain a clear boundary between catalog evidence and host state.", "targets": ["complete_product"], "maturity": 50, "confidence": "medium", "layers": {"intended": "Adoption is deliberate, recoverable, and safe for public and private environments.", "planned": "The project explicitly supports dry-run and apply flows.", "implemented": "Setup and validation surfaces exist in the repository.", "verified": "No fresh host installation or rollback was performed in this bootstrap."}, "evidence": [{"ref": "README.md", "note": "Documents dry-run/apply setup behavior.", "observed_at": "2026-08-02T13:25:04Z"}], "blockers": [{"kind": "external", "summary": "Host-specific installation, permissions, and rollback behavior remain dependent on the operator and supported provider environments."}]}]}
+  ],
+  "source_layers": {"intended": [{"ref": "README.md", "note": "Public product identity and audience.", "observed_at": "2026-08-02T13:25:04Z"}], "planned": [{"ref": "README.md", "note": "Catalog and setup-engine scope.", "observed_at": "2026-08-02T13:25:04Z"}], "implemented": [{"ref": "README.md", "note": "Current package and setup surfaces.", "observed_at": "2026-08-02T13:25:04Z"}], "verified": [{"ref": "README.md", "note": "Documented claims; no host installation or parity run here.", "observed_at": "2026-08-02T13:25:04Z"}]},
+  "drift": [{"kind": "verification-gap", "summary": "The reusable workflow outcome depends on provider and host trigger/behavior evidence that the public catalog alone cannot establish.", "status": "open", "observed_at": "2026-08-02T13:25:04Z", "evidence": [{"ref": "README.md", "note": "Defines the public setup surface without host-wide proof.", "observed_at": "2026-08-02T13:25:04Z"}]}],
+  "updated_at": "2026-08-02T13:25:04Z"
+}
