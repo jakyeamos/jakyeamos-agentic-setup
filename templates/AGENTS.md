@@ -9,6 +9,11 @@ Load the matching route only when the task needs it.
 - Close material consequences beyond the direct diff. Trace affected behavior,
   consumers, projections, maturity evidence, distribution, and machine-readable
   access; raise reusable candidates with their disposition and exact blocker.
+- Disposition every failure surfaced by a required validation gate before
+  completion. `Pre-existing` and `unrelated` are provenance, not a reason to
+  stop. Fix clear, local, reversible failures in the same turn when verification
+  is bounded and no ownership or safety boundary is crossed; otherwise name the
+  exact blocker and keep completion partial.
 - Never copy credentials, private paths, transcripts, caches, or host-managed state.
 - Never overwrite an existing target or delete an unknown live member.
 - Keep unresolved conflicts visible; `AUDIT_COMPLETE` precedes

@@ -38,8 +38,8 @@
     },
     {
       "skill": "consequence-closure",
-      "trigger": "Implementation reveals a downstream projection, conditional maturity claim, UI-only evidence surface, or reusable agent advantage that must be resolved or raised with an exact blocker.",
-      "non_trigger": "A localized implementation has no material consumer, projection, distribution, maturity, machine-evidence, or recurrence consequence.",
+      "trigger": "Implementation or a required validation gate reveals an unresolved failure, downstream projection, conditional maturity claim, UI-only evidence surface, or reusable agent advantage that must be resolved or raised with an exact blocker.",
+      "non_trigger": "A localized implementation passes its required validation and has no material consumer, projection, distribution, maturity, machine-evidence, or recurrence consequence.",
       "expected_trigger": "invoke-skill",
       "expected_non_trigger": "do-not-invoke"
     },

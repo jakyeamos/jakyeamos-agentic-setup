@@ -17,21 +17,28 @@ fixed hop count, while stopping before unrelated improvement.
 2. Record each material finding with its owner, causal relationship, condition,
    evidence and freshness, required action, verification, and disposition:
    `required`, `conditional`, `leverage`, `optional`, or `blocked`.
-3. Resolve required impacts and high-leverage recurrence reductions when
+3. Treat every failure surfaced by a required validation gate as completion
+   evidence until dispositioned. `Pre-existing` and `unrelated` describe
+   provenance, not a reason to stop. Fix the failure in the same turn when the
+   expected behavior is clear, the correction is local and reversible,
+   verification is bounded, and no ownership or safety boundary is crossed.
+   Otherwise preserve the affected work, name the exact blocker, and keep
+   completion partial when the gate is required.
+4. Resolve required impacts and high-leverage recurrence reductions when
    ownership and existing authority permit. Do not treat candidate detection as
    permission to mutate another owner or publish an artifact.
-4. Preserve conditional truth:
+5. Preserve conditional truth:
    - `true` makes the finding required;
    - `false` makes it not applicable without reducing maturity;
    - `unknown` blocks the affected claim or lowers confidence.
-5. Evaluate hosting, public distribution, provider projection, behavioral
+6. Evaluate hosting, public distribution, provider projection, behavioral
    parity, intended audience, and real-use availability separately. Source
    identity and structural presence do not prove behavioral parity.
-6. If a relevant governance or verification fact exists only in a UI, inspect
+7. If a relevant governance or verification fact exists only in a UI, inspect
    the whole owning feature for machine-useful evidence and add read-only,
    backward-compatible CLI or API parity from the same persisted source. Keep
    the expansion feature-bounded.
-7. Check whether the change creates a reusable advantage. Give it one
+8. Check whether the change creates a reusable advantage. Give it one
    disposition: `strengthen`, `companion`, `reference`, `defer`, or `exclude`.
    Raise every `strengthen`, `companion`, and `defer` candidate to the user with
    the proposed owner, advantage, evidence, and exact blocker or promotion gate.
@@ -44,7 +51,8 @@ publication, or external-effect boundaries to close an impact.
 Return a concise impact receipt covering affected owners, evaluated conditions,
 cross-repository changes, evidence added, promotion candidates, and unresolved
 blockers with the action that clears each one. Completion remains partial or
-blocked while a required or leverage finding is unresolved.
+blocked while a required or leverage finding, including a required validation
+failure, is unresolved.
 
 Use the
 [consequence-closure workflow](../../workflows/consequence-closure/WORKFLOW.md)

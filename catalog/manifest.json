@@ -1217,7 +1217,8 @@
       ],
       "files": [
         "skills/consequence-closure/SKILL.md",
-        "workflows/consequence-closure/WORKFLOW.md"
+        "workflows/consequence-closure/WORKFLOW.md",
+        "fixtures/consequence-closure/validation-failure-disposition.json"
       ],
       "dependencies": [],
       "provenance": {
@@ -1229,7 +1230,10 @@
       "evidence": ["docs/mining/2026-07-public-skill-mining.md"],
       "install": {
         "mode": "copy",
-        "destination": "skills/consequence-closure"
+        "destination": "skills/consequence-closure",
+        "path_map": {
+          "fixtures/consequence-closure/validation-failure-disposition.json": "references/validation-failure-disposition.json"
+        }
       }
     },
     {

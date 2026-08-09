@@ -42,7 +42,27 @@ Evaluate hosting, public distribution, provider projection, behavioral parity,
 intended audience, and real-use availability independently. A UI badge, file
 hash, copied source, or passing structural test proves only its own observation.
 
-## 4. Close required and leverage findings
+## 4. Disposition required validation failures
+
+Treat every failure emitted by a required validation gate as part of the
+completion evidence, even when the failure predates the direct diff. Record
+`pre-existing` or `unrelated` only as provenance, then choose an action:
+
+| Observed condition | Required action |
+| --- | --- |
+| Expected behavior is clear; the fix is local, reversible, ownership-safe, and boundedly verifiable | Fix it in the same turn and rerun the gate |
+| The failure crosses an ownership, credential, security, destructive, publication, deployment, submission, or external-effect boundary | Preserve it, name the exact blocker and owner, and keep completion partial or blocked |
+| The intended contract is ambiguous | Inspect the authoritative owner and nearby contract; if uncertainty remains, request direction or report the exact unknown instead of guessing |
+
+Do not use a time estimate as the decision boundary, and do not expand from a
+repository gate into unrelated fleet cleanup merely because adjacent failures
+were reported.
+
+Use the deterministic positive, negative, and ambiguous cases in
+`references/validation-failure-disposition.json` when this skill is installed,
+or the canonical fixture under `fixtures/consequence-closure/` in this catalog.
+
+## 5. Close required and leverage findings
 
 Implement each required impact and high-leverage recurrence reduction when the
 owner is known and the current request already authorizes the work. Re-read
@@ -58,7 +78,7 @@ unknown states. Add parity tests against that shared source.
 Do not turn this rule into a whole-product parity audit. Stop at the owning
 feature unless another causal dependency is demonstrated.
 
-## 5. Raise reusable candidates and exact blockers
+## 6. Raise reusable candidates and exact blockers
 
 For new or changed agent rules, skills, workflows, evaluators, and evidence
 contracts, choose one promotion disposition:
@@ -77,7 +97,7 @@ advantage, supporting evidence, and exact blocker or next promotion gate.
 Candidate detection alone does not authorize downstream mutation or
 publication.
 
-## 6. Verify and hand off
+## 7. Verify and hand off
 
 Verify the direct behavior, each applicable downstream correction, the complete
 evidence projection, and the reassessed maturity claim. Return an impact receipt:
@@ -88,6 +108,10 @@ evidence projection, and the reassessed maturity claim. Return an impact receipt
 - verification and machine-readable evidence added;
 - candidate dispositions and promotion gates;
 - unresolved blockers and the exact action required to clear each.
+
+For every failed required gate, include whether it was fixed, blocked by a
+named boundary, or left conditional on an unresolved contract. Provenance alone
+is not a disposition.
 
 Do not call the work complete while a required or leverage finding remains
 unresolved. Keep publication, deployment, credentials, security changes,

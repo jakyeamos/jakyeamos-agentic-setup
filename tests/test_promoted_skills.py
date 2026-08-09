@@ -9,6 +9,10 @@ from scripts.catalog_validation import load_manifest
 
 REPO = Path(__file__).resolve().parents[1]
 FORWARD_CASES = REPO / "fixtures/forward-tests.json"
+VALIDATION_FAILURE_CASES = (
+    REPO
+    / "fixtures/consequence-closure/validation-failure-disposition.json"
+)
 
 
 class PromotedSkillTests(unittest.TestCase):
@@ -101,7 +105,44 @@ class PromotedSkillTests(unittest.TestCase):
         self.assertIn("impact receipt", skill)
         self.assertIn("pre-edit advisory discovery", workflow)
         self.assertIn("exact blocker or next promotion gate", workflow)
+        self.assertIn("Provenance alone\nis not a disposition", workflow)
+        self.assertIn("`Pre-existing` and `unrelated` describe", skill)
         self.assertIn("`consequence-closure` skill", template)
+
+    def test_consequence_closure_dispositions_required_validation_failures(self) -> None:
+        payload = json.loads(VALIDATION_FAILURE_CASES.read_text(encoding="utf-8"))
+        self.assertEqual(payload["schema_version"], "1.0")
+        self.assertEqual(payload["skill"], "consequence-closure")
+        cases = {case["id"]: case for case in payload["cases"]}
+        self.assertEqual(
+            cases["clear-local-stale-expectation"]["expected_action"],
+            "fix-and-rerun-required-gate",
+        )
+        self.assertEqual(
+            cases["unsafe-or-other-owned-failure"]["expected_action"],
+            "preserve-name-blocker-and-mark-partial",
+        )
+        self.assertEqual(
+            cases["ambiguous-product-contract"]["expected_action"],
+            "inspect-owner-then-request-direction-or-report-unknown",
+        )
+        for case in cases.values():
+            self.assertTrue(case["scenario"])
+            self.assertTrue(case["must_not"])
+
+        manifest = load_manifest(REPO)
+        asset = next(
+            item for item in manifest["assets"]
+            if item["id"] == "consequence-closure"
+        )
+        fixture_path = (
+            "fixtures/consequence-closure/validation-failure-disposition.json"
+        )
+        self.assertIn(fixture_path, asset["files"])
+        self.assertEqual(
+            asset["install"]["path_map"][fixture_path],
+            "references/validation-failure-disposition.json",
+        )
 
 
 if __name__ == "__main__":
