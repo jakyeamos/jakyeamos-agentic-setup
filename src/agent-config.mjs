@@ -5,8 +5,9 @@ import { bootstrapRuntimes, runtimeAvailability, smokeRuntimes } from "./runtime
 import { defaultManifestPath, expandPath, loadManifest, parseManifestText, validateManifest } from "./manifest.mjs";
 import { detectRouteCycle, lintAlwaysLoaded } from "./routing.mjs";
 import { compareSnapshots, discoverScope, displayPath, entryPaths, entryReport, loadBaselines, saveBaselines, snapshotPath, statOrNull } from "./snapshots.mjs";
+import { installPrivateOverlay, resolvePrivateOverlay } from "./overlay.mjs";
 
-export { bootstrapRuntimes, compareSnapshots, defaultManifestPath, detectRouteCycle, discoverScope, expandPath, lintAlwaysLoaded, loadManifest, parseManifestText, smokeRuntimes, snapshotPath, validateManifest };
+export { bootstrapRuntimes, compareSnapshots, defaultManifestPath, detectRouteCycle, discoverScope, expandPath, installPrivateOverlay, lintAlwaysLoaded, loadManifest, parseManifestText, resolvePrivateOverlay, smokeRuntimes, snapshotPath, validateManifest };
 
 function canApply(entry, report, availability) {
   if (entry.sync_direction === "none" || entry.sync_direction === "report-only") return { action: "report-only", reason: "manifest is read-only" };

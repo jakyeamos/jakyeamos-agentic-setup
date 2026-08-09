@@ -30,7 +30,7 @@ Unknown live members and missing targets are preserved as visible findings.
 ## Commands
 
 ```text
-agent-config audit|drift|doctor|sync|install|bootstrap|smoke
+agent-config audit|drift|doctor|sync|install|bootstrap|smoke|overlay|overlay-install
 ```
 
 Commands are report-only by default. `sync` and `install` require both an
@@ -38,3 +38,29 @@ explicit manifest and `--apply`; the full preflight must be clear, and writes
 are allowed only to missing explicit targets. `--allow-broad-scan` is required
 for a scope rooted at `$HOME`. No command handles credentials, login, CAPTCHA,
 MFA, or GUI-only setup.
+
+## Private companion overlay
+
+`agent-config overlay --overlay <path>` resolves a private
+`jas-private-overlay/v1` or `jas-private-overlay/v2` file against the public
+catalog. The file is kept outside the repository. v1 contains references to
+eligible public `portable` or `adapter` assets; v2 may also contain sanitized
+private asset metadata and relative package paths. The package bytes are never
+embedded in the overlay and are supplied separately through `--private-root`.
+Absolute host paths, parent traversal, home shorthands, unknown assets,
+unsupported target mappings, and non-redistributable catalog classes are
+rejected.
+
+The command is report-only and does not edit `catalog/manifest.json`, the
+overlay, or live target files. Normal `agent-config` commands without an
+overlay operate on the public base; `agent-config overlay --overlay <path>` is
+the personal-base-plus-overlay mode. The overlay contract is defined in
+[`schemas/jas-private-overlay.schema.json`](../schemas/jas-private-overlay.schema.json).
+
+`agent-config overlay-install --overlay <path> --private-root <path> --root
+<disposable-target>` builds the installation plan for enabled public and
+private assets. It is report-only by default. `--apply` is allowed only after
+the full plan is clear; any existing target or missing source blocks the whole
+plan, and the command never overwrites files. `$HOME` destinations are mapped
+inside the explicit target root, so the command does not write to the running
+machine's home directory.

@@ -33,4 +33,27 @@ Promote only when the candidate has a reusable trigger, clear non-triggers, a de
 
 Author a concise `SKILL.md`, a supporting workflow or reference, and a fixture when the contract benefits from structured validation. Forward-test one triggering and one non-triggering scenario. Run the public safety scan, manifest validation, link checks, and a disposable install. The result is not promoted until every referenced file exists and no private provenance leaks.
 
+## 6. Admit leverage candidates
+
+When the source is `ai-workflow-leverage`, keep the private
+`leverage-promotion-candidate/v1` packet separate from the JAS package. A
+portable candidate uses a sanitized `jas-promotion-projection/v1` with only
+public asset metadata. A private-only candidate must carry the sanitized
+`private_package` descriptor and use `jas-promotion-projection/v2`; its
+projection contains only the private asset's safe metadata, artifact reference,
+relative package paths, and symbolic install destination. Run
+`pnpm promotion-admission validate` and `plan`. After human review, run
+`admit` with a `jas-promotion-approval/v1` document. The command emits either a
+manifest-review plan or a private-overlay review plan and never edits
+`catalog/manifest.json` or writes an overlay file itself.
+
+For a private-only result, review the emitted `jas-private-overlay/v2`, keep it
+outside this repository, and resolve it with `pnpm agent-config overlay`. To
+stage the actual sanitized package into a disposable target, run
+`pnpm agent-config overlay-install --overlay <path> --private-root <path>
+--root <disposable-target> --dry-run`, then repeat with `--apply` only after
+review. The installer requires every declared package file, blocks on existing
+targets, and never overwrites. A v1 private-overlay projection remains a
+legacy blocked form rather than silently becoming public parity.
+
 See [the skill contract](../../skills/skill-harvest-and-promotion/SKILL.md) and the [sanitized mining report](../../docs/mining/2026-07-public-skill-mining.md).

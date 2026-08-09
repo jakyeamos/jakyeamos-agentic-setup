@@ -17,6 +17,7 @@
     "config-install": "node bin/agent-config.mjs install",
     "bootstrap": "node bin/agent-config.mjs bootstrap",
     "smoke": "node bin/agent-config.mjs smoke",
+    "promotion-admission": "python3 scripts/promotion_admission.py",
     "lint": "python3 scripts/validate_repository.py",
     "typecheck": "node scripts/check_javascript.mjs",
     "build": "python3 scripts/validate_catalog.py",

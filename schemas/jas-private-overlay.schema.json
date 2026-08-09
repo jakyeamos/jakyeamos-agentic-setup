@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/jakyeamos/jakyeamos-agentic-setup/schemas/jas-private-overlay.schema.json",
+  "title": "JAS private companion overlay",
+  "description": "A private selection of public catalog assets and sanitized private packages for one personal setup.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "visibility", "overlay_id", "base_workbench_id", "references"],
+  "properties": {
+    "schema_version": {"type": "string", "enum": ["jas-private-overlay/v1", "jas-private-overlay/v2"]},
+    "visibility": {"const": "private-overlay"},
+    "overlay_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$"},
+    "base_workbench_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$"},
+    "references": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/reference"}},
+    "private_assets": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/private_asset"}}
+  },
+  "oneOf": [
+    {"$ref": "#/$defs/v1"},
+    {"$ref": "#/$defs/v2"}
+  ],
+  "$defs": {
+    "target": {"type": "string", "enum": ["generic", "codex", "claude", "gemini", "cursor", "antigravity", "copilot"]},
+    "reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "asset_id", "enabled", "targets"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$"},
+        "asset_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$"},
+        "enabled": {"type": "boolean"},
+        "targets": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/target"}},
+        "destination": {"type": "string", "pattern": "^\\$(?:\\{[A-Za-z_][A-Za-z0-9_]*\\}|[A-Za-z_][A-Za-z0-9_]*)(?:/[A-Za-z0-9._-]+)*$"}
+      }
+    },
+    "private_asset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "title", "summary", "maturity", "supported_targets", "package_ref", "package_dir", "entrypoints", "files", "install"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$"},
+        "kind": {"type": "string", "enum": ["skill", "workflow", "prompt", "advice", "guardrail", "adapter", "other"]},
+        "title": {"type": "string", "minLength": 1},
+        "summary": {"type": "string", "minLength": 1},
+        "maturity": {"type": "string", "enum": ["experimental", "beta", "stable", "reference"]},
+        "supported_targets": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/target"}},
+        "package_ref": {"type": "string", "pattern": "^artifact:[a-z0-9][a-z0-9:_-]*$"},
+        "package_dir": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[^\\\\]+$"},
+        "entrypoints": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/relative_path"}},
+        "files": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/relative_path"}},
+        "install": {"$ref": "#/$defs/private_install"}
+      }
+    },
+    "private_install": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "destination"],
+      "properties": {
+        "mode": {"type": "string", "enum": ["copy", "stage"]},
+        "destination": {"type": "string", "pattern": "^\\$(?:\\{HOME\\}|HOME)(?:/[A-Za-z0-9._-]+)*$"}
+      }
+    },
+    "relative_path": {"type": "string", "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[^\\\\]+$"},
+    "common": {
+      "type": "object",
+      "required": ["schema_version", "visibility", "overlay_id", "base_workbench_id", "references"],
+      "properties": {
+        "schema_version": {"type": "string"},
+        "visibility": {"const": "private-overlay"},
+        "overlay_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$"},
+        "base_workbench_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$"},
+        "references": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/reference"}}
+      }
+    },
+    "v1": {
+      "allOf": [
+        {"$ref": "#/$defs/common"},
+        {"type": "object", "properties": {"schema_version": {"const": "jas-private-overlay/v1"}}, "not": {"required": ["private_assets"]}}
+      ]
+    },
+    "v2": {
+      "allOf": [
+        {"$ref": "#/$defs/common"},
+        {"type": "object", "required": ["private_assets"], "properties": {"schema_version": {"const": "jas-private-overlay/v2"}, "private_assets": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/private_asset"}}}}
+      ]
+    }
+  }
+}

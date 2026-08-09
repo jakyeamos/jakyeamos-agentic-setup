@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import path from "node:path";
 import {
   bootstrapRuntimes,
   collectAudit,
@@ -12,9 +13,10 @@ import {
   syncManifest,
   writeAuditReports
 } from "../src/agent-config.mjs";
+import { installPrivateOverlay, resolvePrivateOverlay } from "../src/overlay.mjs";
 
 function parseArgs(argv) {
-  const args = { command: argv[0] ?? "help", json: false, apply: false, allowBroadScan: false };
+  const args = { command: argv[0] ?? "help", json: false, apply: false, allowBroadScan: false, allowHome: false };
   if (args.command === "--help" || args.command === "-h") args.command = "help";
   for (let index = 1; index < argv.length; index += 1) {
     const value = argv[index];
@@ -22,9 +24,22 @@ function parseArgs(argv) {
     else if (value === "--apply") args.apply = true;
     else if (value === "--dry-run") args.apply = false;
     else if (value === "--allow-broad-scan") args.allowBroadScan = true;
+    else if (value === "--allow-home") args.allowHome = true;
     else if (value === "--manifest") {
       args.manifest = argv[++index];
       if (!args.manifest) throw new Error("--manifest requires a path");
+    } else if (value === "--overlay") {
+      args.overlay = argv[++index];
+      if (!args.overlay) throw new Error("--overlay requires a path");
+    } else if (value === "--catalog") {
+      args.catalog = argv[++index];
+      if (!args.catalog) throw new Error("--catalog requires a path");
+    } else if (value === "--private-root") {
+      args.privateRoot = argv[++index];
+      if (!args.privateRoot) throw new Error("--private-root requires a path");
+    } else if (value === "--root") {
+      args.root = argv[++index];
+      if (!args.root) throw new Error("--root requires a path");
     } else if (value === "--help" || value === "-h") args.command = "help";
     else throw new Error(`unknown option ${value}`);
   }
@@ -36,7 +51,7 @@ function print(value, json) {
 }
 
 function help() {
-  return `Usage: agent-config <audit|drift|doctor|sync|install|bootstrap|smoke> [options]
+  return `Usage: agent-config <audit|drift|doctor|sync|install|bootstrap|smoke|overlay|overlay-install> [options]
 
 Commands are read-only by default.
   audit   inventory surfaces, lint always-loaded files, and write audit reports
@@ -46,10 +61,17 @@ Commands are read-only by default.
   install preview the same safe manifest install path; use --apply to write
   bootstrap report known CLI recipes and verify available commands
   smoke   run non-destructive --help checks for available runtimes
+  overlay resolve a private companion overlay against the public catalog
+  overlay-install plan or apply an overlay into an explicit disposable root
 
 Options:
   --manifest <path>       manifest path (default: repository manifest.yaml)
+  --overlay <path>        private companion overlay for the overlay command
+  --catalog <path>        public catalog path (default: catalog/manifest.json)
+  --private-root <path>   private package root for jas-private-overlay/v2
+  --root <path>           disposable target root for overlay-install
   --allow-broad-scan      permit an explicitly requested home inventory scan
+  --allow-home            permit the explicit Pronto promotion path to target the real home
   --apply                 allow safe writes after the full preflight passes
   --dry-run               force report-only behavior (the default)
   --json                  emit machine-readable output`;
@@ -62,6 +84,37 @@ function main(argv) {
     return 0;
   }
   const { manifest, manifestRoot } = loadManifest(args.manifest ?? defaultManifestPath());
+  if (args.command === "overlay") {
+    if (!args.overlay) throw new Error("overlay requires --overlay <path>");
+    if (args.apply) throw new Error("overlay is report-only; remove --apply");
+    const result = resolvePrivateOverlay({
+      overlayPath: args.overlay,
+      catalogPath: args.catalog ?? path.join(manifestRoot, "catalog", "manifest.json"),
+      baseManifest: manifest,
+      manifestRoot
+    });
+    print(args.json ? result : `${result.status}\noverlay: ${result.overlay_id}\nassets: ${result.assets.map((asset) => asset.id).join(", ") || "none"}\nmutated: ${result.mutated}`, args.json);
+    return 0;
+  }
+  if (args.command === "overlay-install") {
+    if (!args.overlay) throw new Error("overlay-install requires --overlay <path>");
+    if (!args.root) throw new Error("overlay-install requires --root <path>");
+    if (args.allowHome && path.resolve(args.root) !== path.resolve(process.env.HOME ?? "")) {
+      throw new Error("--allow-home requires --root to be the real home directory");
+    }
+    const result = installPrivateOverlay({
+      overlayPath: args.overlay,
+      catalogPath: args.catalog ?? path.join(manifestRoot, "catalog", "manifest.json"),
+      baseManifest: manifest,
+      manifestRoot,
+      privateRoot: args.privateRoot,
+      targetRoot: args.root,
+      apply: args.apply,
+      allowHome: args.allowHome
+    });
+    print(args.json ? result : `${result.status}${args.apply ? " (applied)" : " (dry run)"}\nroot: ${result.root}\nactions: ${result.actions.length}\nmutated: ${result.mutated}`, args.json);
+    return result.status === "OVERLAY_INSTALL_BLOCKED" ? 2 : 0;
+  }
   if (args.command === "audit") {
     const result = collectAudit(manifest, manifestRoot, { allowBroadScan: args.allowBroadScan });
     writeAuditReports(result, manifestRoot);

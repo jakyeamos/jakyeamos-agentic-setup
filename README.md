@@ -60,6 +60,135 @@ does not overwrite existing targets, delete unknown live members, resolve
 unresolved conflicts, or handle credentials, login, CAPTCHA, MFA, or GUI-only
 setup.
 
+## Promotion admission from `ai-workflow-leverage`
+
+`ai-workflow-leverage` owns private discovery, testing, quantification, and the
+`leverage-promotion-candidate/v1` packet. JAS consumes that packet only at an
+admission boundary. A separate sanitized projection supplies the public asset
+metadata; private source references, evidence, paths, and runtime details are
+never copied into the catalog plan.
+
+There are two promotion destinations. A portable candidate uses the v1 public
+projection and produces a manifest-review plan. A private-only candidate must
+also carry a sanitized `private_package` descriptor with an artifact reference,
+relative package files, entrypoints, and redaction status. Its v2 projection
+produces a private-overlay review plan; the package content stays in a private
+root supplied at install time and never enters this repository.
+
+Use the report-only admission commands from the JAS root:
+
+```bash
+pnpm promotion-admission validate \
+  --candidate /path/to/leverage-candidate.json \
+  --projection /path/to/jas-public-projection.json \
+  --json
+pnpm promotion-admission plan \
+  --candidate /path/to/leverage-candidate.json \
+  --projection /path/to/jas-public-projection.json \
+  --json
+pnpm promotion-admission admit \
+  --candidate /path/to/leverage-candidate.json \
+  --projection /path/to/jas-public-projection.json \
+  --approval /path/to/jas-approval.json \
+  --json
+```
+
+`validate` and `plan` report whether the candidate is eligible. `admit` still
+requires explicit human approval and emits `ready_for_manifest_review`; all
+three commands report `mutated: false`. The catalog is not edited implicitly,
+so a reviewer can inspect the emitted asset and source-map entry before making
+the normal manifest change. A v2 `private-overlay` projection also reports
+`mutated: false`, requires the same explicit approval, and emits a sanitized
+overlay object for review. It does not edit `catalog/manifest.json` or write
+the overlay file for you. The v1 private-overlay projection remains a legacy
+blocked form; use v2 for a private-only package.
+
+The explicit apply boundary is used by Pronto after the owner accepts a
+complete candidate in its Promotion tab:
+
+```bash
+pnpm promotion-admission apply \
+  --candidate /path/to/leverage-candidate.json \
+  --approval /path/to/jas-approval.json \
+  --mode public \
+  --root /absolute/path/to/jakyeamos-agentic-setup \
+  --apply --json
+```
+
+The candidate may carry its sanitized projection inline; otherwise pass it with
+`--projection`. `apply` still requires the separate approval artifact and the
+explicit `--apply` flag. It validates and preflights before changing the public
+catalog, private overlay, or private package install target, reports
+`JAS_APPLIED` or `JAS_ALREADY_APPLIED`, and is idempotent. `defer` and `reject`
+never reach this command. Pronto records the sanitized result back into AWL so
+refreshing the inbox does not lose the admission state.
+
+## Public base and private personal overlay
+
+The public JAS base is the friend-to-friend distribution target: use the
+catalog and the normal manifest commands without an overlay. A personal
+machine can add a separate JSON file kept outside this repository. v1 overlays
+contain only public asset IDs, target mappings, and symbolic destinations. v2
+overlays may additionally contain sanitized private asset metadata, relative
+package paths, and artifact references; the actual package content is supplied
+through `--private-root` at install time. Neither form contains private
+evidence, host paths, credentials, or unresolved runtime state. The contract is
+[`schemas/jas-private-overlay.schema.json`](schemas/jas-private-overlay.schema.json).
+
+Example private file:
+
+```json
+{
+  "schema_version": "jas-private-overlay/v1",
+  "visibility": "private-overlay",
+  "overlay_id": "personal-agentic-setup",
+  "base_workbench_id": "portable-agentic-workbench",
+  "references": [
+    {
+      "id": "codex-context-budget",
+      "asset_id": "context-budget-governor",
+      "enabled": true,
+      "targets": ["codex"],
+      "destination": "$HOME/.codex/workbench/context-budget-governor"
+    }
+  ]
+}
+```
+
+Resolve it report-only against the public base:
+
+```bash
+pnpm agent-config overlay \
+  --overlay "$HOME/.config/jas/private-overlay.json" --json
+```
+
+The resolver checks the public workbench identity, asset eligibility, target
+support, and symbolic path safety. It never edits the catalog or the private
+file. For a v2 overlay containing private-only packages, the one-step install
+path is still explicit and disposable:
+
+```bash
+pnpm agent-config overlay-install \
+  --overlay "$HOME/.config/jas/private-overlay.json" \
+  --private-root "$HOME/.config/jas/private-packages" \
+  --root /tmp/jas-target --dry-run --json
+
+pnpm agent-config overlay-install \
+  --overlay "$HOME/.config/jas/private-overlay.json" \
+  --private-root "$HOME/.config/jas/private-packages" \
+  --root /tmp/jas-target --apply --json
+```
+
+The target root represents the destination machine during review; `$HOME`
+destinations in the overlay are mapped inside that root. The installer refuses
+the real home directory for ordinary manual installation; the narrow Pronto
+promotion path can explicitly authorize the exact real home target after the
+JAS admission checks. It still refuses missing sources, existing targets,
+unsafe symlinks, and partial preflight plans, and never overwrites an existing
+file. The v2
+projection contract is documented in
+[`schemas/jas-promotion-projection.schema.json`](schemas/jas-promotion-projection.schema.json).
+
 ## Curated surfaces
 
 These are independent workflow multipliers. Adopt them standalone, combine

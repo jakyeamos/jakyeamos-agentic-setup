@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/jakyeamos/jakyeamos-agentic-setup/schemas/jas-promotion-projection.schema.json",
+  "title": "JAS sanitized promotion projection",
+  "description": "The public-safe v1 projection or private-only v2 projection produced from a leverage candidate.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"type": "string", "enum": ["jas-promotion-projection/v1", "jas-promotion-projection/v2"]},
+    "visibility": {"type": "string", "enum": ["public", "private-overlay"]},
+    "candidate_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]+$"},
+    "asset": {"type": "object"},
+    "private_asset": {"$ref": "#/$defs/private_asset"}
+  },
+  "oneOf": [
+    {"$ref": "#/$defs/public"},
+    {"$ref": "#/$defs/private"}
+  ],
+  "$defs": {
+    "target": {
+      "type": "string",
+      "enum": ["generic", "codex", "claude", "gemini", "cursor", "antigravity", "copilot"]
+    },
+    "relative_path": {
+      "type": "string",
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))[^\\\\]+$"
+    },
+    "private_asset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "title", "summary", "maturity", "supported_targets", "package_ref", "package_dir", "entrypoints", "files", "install"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]+$"},
+        "kind": {"type": "string", "enum": ["skill", "workflow", "prompt", "advice", "guardrail", "adapter", "other"]},
+        "title": {"type": "string", "minLength": 1},
+        "summary": {"type": "string", "minLength": 1},
+        "maturity": {"type": "string", "enum": ["experimental", "beta", "stable", "reference"]},
+        "supported_targets": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/target"}},
+        "package_ref": {"type": "string", "pattern": "^artifact:[a-z0-9][a-z0-9:_-]*$"},
+        "package_dir": {"$ref": "#/$defs/relative_path"},
+        "entrypoints": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/relative_path"}},
+        "files": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/relative_path"}},
+        "install": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode", "destination"],
+          "properties": {
+            "mode": {"type": "string", "enum": ["copy", "stage"]},
+            "destination": {"type": "string", "pattern": "^\\$(?:\\{HOME\\}|HOME)(?:/[A-Za-z0-9._-]+)*$"}
+          }
+        }
+      }
+    },
+    "public": {
+      "type": "object",
+      "required": ["schema_version", "visibility", "candidate_id", "asset"],
+      "properties": {
+        "schema_version": {"const": "jas-promotion-projection/v1"},
+        "visibility": {"enum": ["public", "private-overlay"]},
+        "candidate_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]+$"},
+        "asset": {"type": "object"}
+      }
+    },
+    "private": {
+      "type": "object",
+      "required": ["schema_version", "visibility", "candidate_id", "private_asset"],
+      "properties": {
+        "schema_version": {"const": "jas-promotion-projection/v2"},
+        "visibility": {"const": "private-overlay"},
+        "candidate_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9_-]+$"},
+        "private_asset": {"$ref": "#/$defs/private_asset"}
+      }
+    }
+  }
+}
