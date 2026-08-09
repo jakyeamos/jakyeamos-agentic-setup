@@ -1,0 +1,145 @@
+{
+  "schema": "agent-usability/v1",
+  "reviewed_at": "2026-08-09",
+  "applicability": "applicable",
+  "tools": [
+    {
+      "id": "agent-skills-library",
+      "kind": "skill-distribution-cli",
+      "documentation": [
+        ".agents/context/commands.md"
+      ],
+      "skills": [
+        "agentized-task-packet",
+        "consequence-closure",
+        "divergent-strategy",
+        "durable-agent-workflows",
+        "evidence-backed-change-surface-mapping",
+        "execution-reassessment",
+        "low-always-loaded-instruction-migration",
+        "operating-language",
+        "project-compass",
+        "project-partner",
+        "recurring-loop-authorship",
+        "repo-behavior-spec-loop",
+        "research-domain-writing",
+        "review-gated-verified-fix",
+        "safe-canonical-branch-folding",
+        "skill-harvest-and-promotion",
+        "terrace",
+        "unknowns-first-exploration"
+      ],
+      "behavior_evidence": []
+    }
+  ],
+  "skills": [
+    {
+      "id": "agentized-task-packet",
+      "family": "agentized-task",
+      "source": "hosted",
+      "contract_path": "skills/agentized-task-packet/SKILL.md"
+    },
+    {
+      "id": "consequence-closure",
+      "family": "consequence-closure",
+      "source": "hosted",
+      "contract_path": "skills/consequence-closure/SKILL.md"
+    },
+    {
+      "id": "divergent-strategy",
+      "family": "divergent-strategy",
+      "source": "hosted",
+      "contract_path": "skills/divergent-strategy/SKILL.md"
+    },
+    {
+      "id": "durable-agent-workflows",
+      "family": "durable-agent",
+      "source": "hosted",
+      "contract_path": "skills/durable-agent-workflows/SKILL.md"
+    },
+    {
+      "id": "evidence-backed-change-surface-mapping",
+      "family": "evidence-backed",
+      "source": "hosted",
+      "contract_path": "skills/evidence-backed-change-surface-mapping/SKILL.md"
+    },
+    {
+      "id": "execution-reassessment",
+      "family": "execution-reassessment",
+      "source": "hosted",
+      "contract_path": "skills/execution-reassessment/SKILL.md"
+    },
+    {
+      "id": "low-always-loaded-instruction-migration",
+      "family": "low-always",
+      "source": "hosted",
+      "contract_path": "skills/low-always-loaded-instruction-migration/SKILL.md"
+    },
+    {
+      "id": "operating-language",
+      "family": "operating-language",
+      "source": "hosted",
+      "contract_path": "skills/operating-language/SKILL.md"
+    },
+    {
+      "id": "project-compass",
+      "family": "project-compass",
+      "source": "hosted",
+      "contract_path": "skills/project-compass/SKILL.md"
+    },
+    {
+      "id": "project-partner",
+      "family": "project-partner",
+      "source": "hosted",
+      "contract_path": "skills/project-partner/SKILL.md"
+    },
+    {
+      "id": "recurring-loop-authorship",
+      "family": "recurring-loop",
+      "source": "hosted",
+      "contract_path": "skills/recurring-loop-authorship/SKILL.md"
+    },
+    {
+      "id": "repo-behavior-spec-loop",
+      "family": "repo-behavior",
+      "source": "hosted",
+      "contract_path": "skills/repo-behavior-spec-loop/SKILL.md"
+    },
+    {
+      "id": "research-domain-writing",
+      "family": "research-domain",
+      "source": "hosted",
+      "contract_path": "skills/research-domain-writing/SKILL.md"
+    },
+    {
+      "id": "review-gated-verified-fix",
+      "family": "review-gated",
+      "source": "hosted",
+      "contract_path": "skills/review-gated-verified-fix/SKILL.md"
+    },
+    {
+      "id": "safe-canonical-branch-folding",
+      "family": "safe-canonical",
+      "source": "hosted",
+      "contract_path": "skills/safe-canonical-branch-folding/SKILL.md"
+    },
+    {
+      "id": "skill-harvest-and-promotion",
+      "family": "skill-harvest",
+      "source": "hosted",
+      "contract_path": "skills/skill-harvest-and-promotion/SKILL.md"
+    },
+    {
+      "id": "terrace",
+      "family": "terrace",
+      "source": "hosted",
+      "contract_path": "skills/terrace/SKILL.md"
+    },
+    {
+      "id": "unknowns-first-exploration",
+      "family": "unknowns-first",
+      "source": "hosted",
+      "contract_path": "skills/unknowns-first-exploration/SKILL.md"
+    }
+  ]
+}
