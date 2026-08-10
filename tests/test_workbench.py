@@ -94,6 +94,69 @@ class WorkbenchCliTests(unittest.TestCase):
             self.assertEqual(overwrite.returncode, 1)
             self.assertEqual(installed.read_bytes(), original)
 
+    def test_consequence_closure_installs_validation_reference_into_clean_room(
+        self,
+    ) -> None:
+        source = REPO / "fixtures/consequence-closure/validation-failure-disposition.json"
+        expected_files = {
+            "skills/consequence-closure/SKILL.md",
+            "skills/consequence-closure/WORKFLOW.md",
+            "skills/consequence-closure/references/validation-failure-disposition.json",
+        }
+
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory) / "clean-room-target"
+            dry_run = self.run_cli(
+                "install",
+                "consequence-closure",
+                "--target",
+                "generic",
+                "--root",
+                str(target),
+                "--dry-run",
+                "--json",
+            )
+            self.assertEqual(dry_run.returncode, 0)
+            self.assertFalse(target.exists())
+            dry_payload = json.loads(dry_run.stdout)
+            self.assertTrue(dry_payload["dry_run"])
+            self.assertEqual(
+                {
+                    Path(action["destination"])
+                    .resolve()
+                    .relative_to(target.resolve())
+                    .as_posix()
+                    for action in dry_payload["actions"]
+                },
+                expected_files,
+            )
+
+            applied = self.run_cli(
+                "install",
+                "consequence-closure",
+                "--target",
+                "generic",
+                "--root",
+                str(target),
+                "--apply",
+                "--json",
+            )
+            self.assertEqual(applied.returncode, 0)
+            applied_payload = json.loads(applied.stdout)
+            self.assertFalse(applied_payload["dry_run"])
+            self.assertTrue(all(action["status"] == "copied" for action in applied_payload["actions"]))
+
+            installed = target / "skills/consequence-closure/references/validation-failure-disposition.json"
+            self.assertEqual(installed.read_bytes(), source.read_bytes())
+            self.assertEqual(
+                {
+                    path.relative_to(target).as_posix()
+                    for path in target.rglob("*")
+                    if path.is_file()
+                },
+                expected_files,
+            )
+
     def test_adapter_staging_is_manual_and_external_references_do_not_copy(
         self,
     ) -> None:

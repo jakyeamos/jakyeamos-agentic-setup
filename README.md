@@ -68,12 +68,16 @@ admission boundary. A separate sanitized projection supplies the public asset
 metadata; private source references, evidence, paths, and runtime details are
 never copied into the catalog plan.
 
-There are two promotion destinations. A portable candidate uses the v1 public
-projection and produces a manifest-review plan. A private-only candidate must
-also carry a sanitized `private_package` descriptor with an artifact reference,
-relative package files, entrypoints, and redaction status. Its v2 projection
-produces a private-overlay review plan; the package content stays in a private
-root supplied at install time and never enters this repository.
+There are three admission outcomes. A portable or adapter candidate uses the v1
+public projection and produces an installable manifest-review plan. A
+reference-only candidate also uses the v1 public projection, but must project
+as an `external` asset with at least one public URL; JAS records the link and
+manual-review boundary without copying or installing the external runtime. A
+private-only candidate must carry a sanitized `private_package` descriptor with
+an artifact reference, relative package files, entrypoints, and redaction
+status. Its v2 projection produces a private-overlay review plan; the package
+content stays in a private root supplied at install time and never enters this
+repository.
 
 Use the report-only admission commands from the JAS root:
 
@@ -94,10 +98,11 @@ pnpm promotion-admission admit \
 ```
 
 `validate` and `plan` report whether the candidate is eligible. `admit` still
-requires explicit human approval and emits `ready_for_manifest_review`; all
-three commands report `mutated: false`. The catalog is not edited implicitly,
-so a reviewer can inspect the emitted asset and source-map entry before making
-the normal manifest change. A v2 `private-overlay` projection also reports
+requires explicit human approval and emits `ready_for_manifest_review` for
+portable, adapter, or external-reference projections; all three commands
+report `mutated: false`. The catalog is not edited implicitly, so a reviewer
+can inspect the emitted asset and source-map entry before making the normal
+manifest change. A v2 `private-overlay` projection also reports
 `mutated: false`, requires the same explicit approval, and emits a sanitized
 overlay object for review. It does not edit `catalog/manifest.json` or write
 the overlay file for you. The v1 private-overlay projection remains a legacy

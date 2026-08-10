@@ -70,6 +70,41 @@ def _projection(candidate_id: str, *, visibility: str = "public") -> dict[str, o
     }
 
 
+def _external_candidate() -> dict[str, object]:
+    candidate = _candidate()
+    candidate["candidate_id"] = "candidate-external-reference"
+    candidate["title"] = "Public project reference"
+    candidate["asset_kind"] = "reference"
+    candidate.pop("portable_artifact_refs")
+    candidate["portability"] = "reference-only"
+    return candidate
+
+
+def _external_projection(candidate_id: str) -> dict[str, object]:
+    manifest = load_manifest(ROOT)
+    assets = cast(list[dict[str, object]], manifest["assets"])
+    asset = copy.deepcopy(
+        next(item for item in assets if item["id"] == "reference-aios")
+    )
+    asset["id"] = candidate_id
+    asset["title"] = "Public project reference"
+    asset["summary"] = "A separately owned public project reference."
+    asset["provenance"] = {
+        "status": "sanitized-derived",
+        "source": "leverage-promotion-candidate",
+        "license_status": "reference-only",
+        "redistribution": "reference-only",
+    }
+    asset["external_links"] = ["https://github.com/jakyeamos/mac-control"]
+    asset["evidence"] = ["docs/external-references.md"]
+    return {
+        "schema_version": "jas-promotion-projection/v1",
+        "visibility": "public",
+        "candidate_id": candidate_id,
+        "asset": asset,
+    }
+
+
 def _private_candidate() -> dict[str, object]:
     candidate = _candidate()
     candidate["candidate_id"] = "candidate-admission-private"
@@ -220,6 +255,141 @@ class PromotionAdmissionTests(unittest.TestCase):
             self.assertFalse(admitted["mutated"])
             self.assertNotIn("private-source-marker", output)
             self.assertNotIn("private-evidence-marker", output)
+
+    def test_reference_only_candidate_emits_external_manifest_plan(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            candidate = _external_candidate()
+            candidate_id = str(candidate["candidate_id"])
+            candidate_path = root / "candidate.json"
+            projection_path = root / "projection.json"
+            approval_path = root / "approval.json"
+            candidate_path.write_text(json.dumps(candidate), encoding="utf-8")
+            projection_path.write_text(
+                json.dumps(_external_projection(candidate_id)), encoding="utf-8"
+            )
+            approval_path.write_text(json.dumps(_approval(candidate_id)), encoding="utf-8")
+
+            result, pending, _ = self._run(
+                [
+                    "plan",
+                    "--candidate",
+                    str(candidate_path),
+                    "--projection",
+                    str(projection_path),
+                ]
+            )
+            self.assertEqual(result, 0)
+            self.assertEqual(pending["status"], "review_required")
+            self.assertEqual(pending["target"], "catalog/manifest.json")
+            self.assertEqual(
+                cast(dict[str, object], pending["source_map_entry"])["class"],
+                "external",
+            )
+
+            result, admitted, _ = self._run(
+                [
+                    "admit",
+                    "--candidate",
+                    str(candidate_path),
+                    "--projection",
+                    str(projection_path),
+                    "--approval",
+                    str(approval_path),
+                ]
+            )
+            self.assertEqual(result, 0)
+            self.assertEqual(admitted["status"], "ready_for_manifest_review")
+            self.assertFalse(admitted["mutated"])
+            self.assertEqual(
+                cast(dict[str, object], admitted["asset"])["asset_class"],
+                "external",
+            )
+
+    def test_external_projection_requires_reference_only_candidate(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            candidate = _candidate()
+            candidate_id = str(candidate["candidate_id"])
+            candidate_path = root / "candidate.json"
+            projection_path = root / "projection.json"
+            candidate_path.write_text(json.dumps(candidate), encoding="utf-8")
+            projection_path.write_text(
+                json.dumps(_external_projection(candidate_id)), encoding="utf-8"
+            )
+
+            result, payload, _ = self._run(
+                [
+                    "validate",
+                    "--candidate",
+                    str(candidate_path),
+                    "--projection",
+                    str(projection_path),
+                ]
+            )
+            self.assertEqual(result, 2)
+            self.assertEqual(payload["status"], "blocked")
+            self.assertIn(
+                "external public projection requires a reference-only candidate",
+                str(payload["error"]),
+            )
+
+    def test_reference_only_candidate_requires_external_projection(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            candidate = _external_candidate()
+            candidate_id = str(candidate["candidate_id"])
+            candidate_path = root / "candidate.json"
+            projection_path = root / "projection.json"
+            candidate_path.write_text(json.dumps(candidate), encoding="utf-8")
+            projection_path.write_text(
+                json.dumps(_projection(candidate_id)), encoding="utf-8"
+            )
+
+            result, payload, _ = self._run(
+                [
+                    "validate",
+                    "--candidate",
+                    str(candidate_path),
+                    "--projection",
+                    str(projection_path),
+                ]
+            )
+            self.assertEqual(result, 2)
+            self.assertEqual(payload["status"], "blocked")
+            self.assertIn(
+                "reference-only candidate requires an external public projection",
+                str(payload["error"]),
+            )
+
+    def test_external_projection_requires_a_public_url(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            candidate = _external_candidate()
+            candidate_id = str(candidate["candidate_id"])
+            projection = _external_projection(candidate_id)
+            asset = cast(dict[str, object], projection["asset"])
+            asset["external_links"] = []
+            candidate_path = root / "candidate.json"
+            projection_path = root / "projection.json"
+            candidate_path.write_text(json.dumps(candidate), encoding="utf-8")
+            projection_path.write_text(json.dumps(projection), encoding="utf-8")
+
+            result, payload, _ = self._run(
+                [
+                    "validate",
+                    "--candidate",
+                    str(candidate_path),
+                    "--projection",
+                    str(projection_path),
+                ]
+            )
+            self.assertEqual(result, 2)
+            self.assertEqual(payload["status"], "blocked")
+            self.assertIn(
+                "external public projection requires at least one public URL",
+                str(payload["error"]),
+            )
 
     def test_private_overlay_requires_a_catalog_asset_reference(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -440,6 +610,45 @@ class PromotionAdmissionTests(unittest.TestCase):
             self.assertEqual(
                 (root / "catalog" / "manifest.json").read_bytes(), after_first_apply
             )
+
+    def test_reference_only_public_apply_updates_catalog_without_installing_files(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = self._copy_repo_for_catalog_apply(temporary)
+            candidate = _external_candidate()
+            candidate_id = str(candidate["candidate_id"])
+            candidate["promotion_projection"] = _external_projection(candidate_id)
+            candidate_path = Path(temporary) / "candidate.json"
+            approval_path = Path(temporary) / "approval.json"
+            candidate_path.write_text(json.dumps(candidate), encoding="utf-8")
+            approval_path.write_text(json.dumps(_approval(candidate_id)), encoding="utf-8")
+
+            result, applied, _ = self._run_at(
+                root,
+                [
+                    "apply",
+                    "--candidate",
+                    str(candidate_path),
+                    "--approval",
+                    str(approval_path),
+                    "--mode",
+                    "public",
+                    "--apply",
+                ],
+            )
+
+            self.assertEqual(result, 0)
+            self.assertEqual(applied["status"], "JAS_APPLIED")
+            self.assertTrue(applied["mutated"])
+            manifest = load_manifest(root)
+            assets = cast(list[dict[str, object]], manifest["assets"])
+            admitted = next(asset for asset in assets if asset["id"] == candidate_id)
+            self.assertEqual(admitted["asset_class"], "external")
+            self.assertEqual(
+                admitted["external_links"],
+                ["https://github.com/jakyeamos/mac-control"],
+            )
+            self.assertEqual(admitted["files"], [])
+            self.assertFalse((root / "workbench" / candidate_id).exists())
 
     def test_private_apply_installs_the_private_package_and_is_idempotent(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:

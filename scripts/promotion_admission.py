@@ -13,6 +13,7 @@ import sys
 import tempfile
 from pathlib import Path
 from typing import Any, Mapping, cast
+from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
@@ -49,7 +50,7 @@ PRIVATE_STRING_PATTERN = re.compile(
     + r"|Authorization:|Bearer )"
 )
 ASSET_CLASSES = {"portable", "adapter", "case-study", "external", "excluded"}
-PUBLIC_ASSET_CLASSES = {"portable", "adapter"}
+PUBLIC_ASSET_CLASSES = {"portable", "adapter", "external"}
 VISIBILITIES = {"public", "private-overlay"}
 PRIVATE_ASSET_KINDS = {
     "skill",
@@ -237,8 +238,33 @@ def validate_projection(
         raise AdmissionError("projection asset class is invalid")
     if visibility == "public" and asset_class not in PUBLIC_ASSET_CLASSES:
         raise AdmissionError(
-            "public projection must use a portable or adapter asset class"
+            "public projection must use a portable, adapter, or external asset class"
         )
+    if visibility == "public" and candidate_result is not None:
+        portability = candidate_result.get("portability")
+        if asset_class == "external" and portability != "reference-only":
+            raise AdmissionError(
+                "external public projection requires a reference-only candidate"
+            )
+        if portability == "reference-only" and asset_class != "external":
+            raise AdmissionError(
+                "reference-only candidate requires an external public projection"
+            )
+    if visibility == "public" and asset_class == "external":
+        external_links = asset.get("external_links")
+        if (
+            not isinstance(external_links, list)
+            or not external_links
+            or not all(
+                isinstance(link, str)
+                and urlparse(link).scheme in {"http", "https"}
+                and bool(urlparse(link).netloc)
+                for link in external_links
+            )
+        ):
+            raise AdmissionError(
+                "external public projection requires at least one public URL"
+            )
     private_values = _private_value_present(projection)
     if private_values:
         raise AdmissionError("projection contains a private or credential-shaped value")
@@ -863,8 +889,14 @@ def apply_admission(
     if mode in {"public", "both"}:
         if visibility != "public":
             raise AdmissionError(f"{mode} admission requires a public projection")
-        if candidate_result.get("portability") != "portable":
-            raise AdmissionError(f"{mode} admission requires a portable candidate")
+        portability = candidate_result.get("portability")
+        if mode == "public":
+            if portability not in {"portable", "reference-only"}:
+                raise AdmissionError(
+                    "public admission requires a portable or reference-only candidate"
+                )
+        elif portability != "portable":
+            raise AdmissionError("both admission requires a portable candidate")
         asset = cast(dict[str, object], projection_result["asset"])
         if mode == "public":
             return _apply_public_admission(root, candidate_id, asset)

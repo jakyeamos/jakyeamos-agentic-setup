@@ -37,8 +37,11 @@ Author a concise `SKILL.md`, a supporting workflow or reference, and a fixture w
 
 When the source is `ai-workflow-leverage`, keep the private
 `leverage-promotion-candidate/v1` packet separate from the JAS package. A
-portable candidate uses a sanitized `jas-promotion-projection/v1` with only
-public asset metadata. A private-only candidate must carry the sanitized
+portable or adapter candidate uses a sanitized `jas-promotion-projection/v1`
+with public asset metadata. A reference-only candidate may use the same v1
+projection when it is represented as an `external` asset with at least one
+public URL; JAS records the relationship and manual-review boundary without
+copying the external runtime. A private-only candidate must carry the sanitized
 `private_package` descriptor and use `jas-promotion-projection/v2`; its
 projection contains only the private asset's safe metadata, artifact reference,
 relative package paths, and symbolic install destination. Run

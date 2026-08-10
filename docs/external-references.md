@@ -4,6 +4,12 @@ This page links the public projects that inform or complement the workbench.
 They remain separately owned systems: this repository does not vendor their
 runtimes, generated outputs, credentials, private state, or host registration.
 
+AWL may promote a separately owned public project here as a reference-only JAS
+asset when the project explains a meaningful part of the author's workflow or
+developed advantage. The admission record must remain link-only and manual
+review; portable behavioral patterns can be promoted separately when they pass
+the normal evidence and redaction gates.
+
 | Project | Reusable advantage | Use it when… | Boundary |
 | --- | --- | --- | --- |
 | [TMCP](https://github.com/jakyeamos/tmcp) | Compiles a natural-language objective into a task-specific packet, routes from current skills and evidence, recompiles as the task changes, and leaves an audit trail. | You want adaptive packet composition or workflow routing around the portable contracts. | TMCP runs from its own project or package; the workbench keeps only portable boundary patterns. |
