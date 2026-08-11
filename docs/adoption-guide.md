@@ -4,6 +4,10 @@ This repository is a menu of workflow multipliers, not a workflow profile to
 install wholesale. Start with one recurring friction, try the smallest useful
 asset, and keep or replace it according to the evidence from your own setup.
 
+Browse the complete generated [multiplier catalog](../catalog/index.md). The
+[catalog model](catalog-model.md) distinguishes entry type, topic, use case,
+and invocation style.
+
 ## Start with the friction
 
 | If your recurring problem is… | Start with… | Add another surface only when… |
@@ -79,18 +83,19 @@ External references and adapters are not part of the portable core:
 See the [external reference map](external-references.md) for TMCP, Pronto,
 Pre-CR Suite, Quality Runner, and the other related projects.
 
-## Invocation types
+## Invocation styles
 
-Use the type that matches how the asset enters a workflow:
+Use the style that matches how the asset enters a workflow. This is separate
+from its catalog type such as skill, playbook, or tool:
 
-| Type | Meaning | Typical catalog surface |
+| Style | Meaning | Typical catalog surface |
 | --- | --- | --- |
 | User-invoked | A person chooses the asset for a known problem | A skill or workflow copied into a host |
 | Agent-routed | A host or router selects the asset from the task | A workflow contract or router-shaped skill |
 | Setup/configuration | The asset audits or stages local configuration | `agent-config` and adapters |
 | Reference | A person studies the pattern or uses another project's runtime | External projects and portable references |
 
-The type describes entry into the workflow, not authority to perform side
+The style describes entry into the workflow, not authority to perform side
 effects. Approval, verification, and human-acceptance boundaries remain local
 to the asset and the adopter's host.
 

@@ -2,8 +2,13 @@
 
 - Use Node ESM with explicit imports and standard-library APIs in the runtime.
 - Use Python 3 with annotations and deterministic, sorted validator output.
-- Treat `catalog/manifest.json` as the machine-readable asset source of truth;
-  keep `catalog/index.md` and README examples aligned with it.
+- Treat `catalog/manifest.json` as the machine-readable entry and installation
+  source of truth and `catalog/taxonomy.json` as the source of truth for entry
+  types and curated collections.
+- Generate `catalog/index.md` with `workbench.py index --write`; do not maintain
+  a second catalog roster in README or other prose.
+- Put newly authored entries in `library/<type>/<slug>/`. Keep topics and use
+  cases in metadata because they are many-to-many.
 - Preserve stable asset IDs, schema versions, provenance classes, supported
   targets, and install modes. Changes to those fields require fixture coverage.
 - Keep always-loaded files limited to invariants and routing pointers. Put

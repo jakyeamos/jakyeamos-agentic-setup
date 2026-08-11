@@ -110,7 +110,7 @@ export function validateContract(rootInput = DEFAULT_ROOT, asOfInput = new Date(
   const errors = [];
   const asOf = dateOnly(asOfInput);
   if (asOf === null) errors.push("invalid --as-of date");
-  for (const required of ["AGENTS.md", "README.md", "SECURITY.md", "package.json", "catalog/manifest.json", "scripts/validate_repository.py", "scripts/check_javascript.mjs"]) {
+  for (const required of ["AGENTS.md", "README.md", "SECURITY.md", "package.json", "catalog/manifest.json", "catalog/taxonomy.json", "library/README.md", "scripts/validate_repository.py", "scripts/check_javascript.mjs"]) {
     if (!existsSync(path.join(root, required))) errors.push(`missing required surface: ${required}`);
   }
   checkContext(root, errors, asOf);

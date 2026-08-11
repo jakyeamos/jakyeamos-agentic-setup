@@ -43,10 +43,54 @@ class WorkbenchCliTests(unittest.TestCase):
             ["context-budget-governor"],
         )
 
+    def test_entry_projection_filters_and_collections(self) -> None:
+        skills = self.run_cli("list", "--type", "skill", "--json")
+        self.assertEqual(skills.returncode, 0)
+        skills_payload = json.loads(skills.stdout)
+        self.assertEqual(skills_payload["count"], 18)
+        self.assertTrue(
+            all(asset["entry"]["type"] == "skill" for asset in skills_payload["assets"])
+        )
+
+        safety = self.run_cli("list", "--topic", "safety", "--json")
+        self.assertEqual(safety.returncode, 0)
+        safety_payload = json.loads(safety.stdout)
+        self.assertTrue(safety_payload["assets"])
+        self.assertTrue(
+            all("safety" in asset["entry"]["topics"] for asset in safety_payload["assets"])
+        )
+
+        featured = self.run_cli("list", "--featured", "--json")
+        self.assertEqual(featured.returncode, 0)
+        self.assertEqual(
+            [asset["id"] for asset in json.loads(featured.stdout)["assets"]],
+            [
+                "consequence-closure",
+                "repo-aware-context",
+                "research-domain-writing",
+                "safe-tool-guards",
+            ],
+        )
+
+        unknown = self.run_cli("list", "--type", "not-a-type", "--json")
+        self.assertEqual(unknown.returncode, 2)
+        self.assertIn("unknown entry type", unknown.stderr)
+
+    def test_generated_index_matches_canonical_catalog(self) -> None:
+        checked = self.run_cli("index", "--check")
+        self.assertEqual(checked.returncode, 0, checked.stderr)
+        rendered = self.run_cli("index")
+        self.assertEqual(rendered.returncode, 0)
+        self.assertEqual(
+            rendered.stdout,
+            (REPO / "catalog/index.md").read_text(encoding="utf-8"),
+        )
+
     def test_show_and_install_preserve_the_target_boundary(self) -> None:
         shown = self.run_cli("show", "context-budget-governor", "--json")
         self.assertEqual(shown.returncode, 0)
         self.assertEqual(json.loads(shown.stdout)["id"], "context-budget-governor")
+        self.assertEqual(json.loads(shown.stdout)["entry"]["type"], "playbook")
 
         with tempfile.TemporaryDirectory() as directory:
             target = Path(directory) / "target"
@@ -223,6 +267,11 @@ class WorkbenchCliTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             (root / "catalog").mkdir()
+            (root / "library").mkdir()
+            (root / "catalog/taxonomy.json").write_text(
+                (REPO / "catalog/taxonomy.json").read_text(encoding="utf-8"),
+                encoding="utf-8",
+            )
             (root / "payload.md").write_text("payload\n", encoding="utf-8")
             (root / "bad.md").write_text(
                 "[broken](missing-link.md)\n", encoding="utf-8"
@@ -247,6 +296,7 @@ class WorkbenchCliTests(unittest.TestCase):
                 },
                 "evidence": ["payload.md"],
                 "install": {"mode": "copy", "destination": "sample"},
+                "editorial": {"type": "unknown", "topics": ["Bad Topic"]},
             }
             manifest = {
                 "schema_version": 1,
@@ -291,6 +341,8 @@ class WorkbenchCliTests(unittest.TestCase):
             self.assertTrue(
                 any("invalid provenance status" in error for error in errors)
             )
+            self.assertTrue(any("editorial type" in error for error in errors))
+            self.assertTrue(any("lowercase slugs" in error for error in errors))
 
     def test_public_safety_scanner_rejects_unsafe_fixture(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

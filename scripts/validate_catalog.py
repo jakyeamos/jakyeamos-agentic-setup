@@ -12,12 +12,14 @@ if not __package__:
 
 # Direct script execution bootstraps the repository root before this import.
 from scripts.catalog_validation import validate_manifest  # noqa: E402
+from scripts.catalog_index import validate_index  # noqa: E402
 
 
 def main() -> int:
     """Validate the catalog in the current checkout."""
 
     errors = validate_manifest(ROOT)
+    errors.extend(validate_index(ROOT))
     if errors:
         for error in errors:
             print(error)

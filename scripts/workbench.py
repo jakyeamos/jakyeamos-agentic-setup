@@ -4,7 +4,6 @@
 from __future__ import annotations
 
 import argparse
-import copy
 import json
 import shutil
 import sys
@@ -18,6 +17,12 @@ if not __package__:
 
 # Direct script execution bootstraps the repository root before package imports.
 from scripts.catalog_validation import load_manifest, validate_manifest  # noqa: E402
+from scripts.catalog_entries import (  # noqa: E402
+    featured_ids,
+    load_taxonomy,
+    project_entry,
+)
+from scripts.catalog_index import INDEX_RELATIVE_PATH, render_index, validate_index  # noqa: E402
 from scripts.public_safety_check import scan_repository  # noqa: E402
 from scripts.validate_prevention_pack import validate_prevention_pack  # noqa: E402
 from scripts.validate_skills import validate_skill  # noqa: E402
@@ -67,28 +72,68 @@ def _search_text(asset: dict[str, Any]) -> str:
         "maturity",
         "capabilities",
         "supported_targets",
+        "entry",
     ):
         value = asset.get(key)
         if isinstance(value, list):
             fields.extend(str(item) for item in value)
+        elif isinstance(value, dict):
+            for nested in value.values():
+                if isinstance(nested, list):
+                    fields.extend(str(item) for item in nested)
+                elif nested is not None:
+                    fields.append(str(nested))
         elif value is not None:
             fields.append(str(value))
     return " ".join(fields).casefold().replace("-", " ")
 
 
-def _list_assets(root: Path) -> dict[str, Any]:
+def _list_assets(
+    root: Path,
+    entry_type_filter: str | None = None,
+    topic: str | None = None,
+    featured: bool = False,
+) -> dict[str, Any]:
     manifest = load_manifest(root)
+    taxonomy = load_taxonomy(root)
+    assets = [_public_asset(asset, taxonomy) for asset in _manifest_assets(root)]
+    valid_types = {
+        item.get("id")
+        for item in taxonomy.get("types", [])
+        if isinstance(item, dict)
+    }
+    if entry_type_filter is not None:
+        if entry_type_filter not in valid_types:
+            raise WorkbenchError(f"unknown entry type: {entry_type_filter}")
+        assets = [
+            asset
+            for asset in assets
+            if asset["entry"]["type"] == entry_type_filter
+        ]
+    if topic is not None:
+        assets = [asset for asset in assets if topic in asset["entry"]["topics"]]
+    if featured:
+        selected = featured_ids(taxonomy)
+        assets = [asset for asset in assets if asset["id"] in selected]
     return {
         "schema_version": manifest.get("schema_version"),
         "workbench_version": manifest.get("workbench", {}).get("version"),
-        "assets": [_public_asset(asset) for asset in _manifest_assets(root)],
+        "filters": {
+            "type": entry_type_filter,
+            "topic": topic,
+            "featured": featured,
+        },
+        "count": len(assets),
+        "assets": assets,
     }
 
 
-def _public_asset(asset: dict[str, Any]) -> dict[str, Any]:
-    """Return a stable copy of an asset record."""
+def _public_asset(
+    asset: dict[str, Any], taxonomy: dict[str, Any] | None = None
+) -> dict[str, Any]:
+    """Return a stable asset copy with its editorial entry projection."""
 
-    return copy.deepcopy(asset)
+    return project_entry(asset, taxonomy or load_taxonomy(ROOT))
 
 
 def _search_assets(root: Path, query: str) -> dict[str, Any]:
@@ -96,10 +141,10 @@ def _search_assets(root: Path, query: str) -> dict[str, Any]:
     if not normalized:
         raise WorkbenchError("search query must not be empty")
     tokens = normalized.replace("-", " ").split()
+    taxonomy = load_taxonomy(root)
+    projected = [_public_asset(asset, taxonomy) for asset in _manifest_assets(root)]
     matches = [
-        _public_asset(asset)
-        for asset in _manifest_assets(root)
-        if all(token in _search_text(asset) for token in tokens)
+        asset for asset in projected if all(token in _search_text(asset) for token in tokens)
     ]
     return {"query": query, "count": len(matches), "assets": matches}
 
@@ -241,6 +286,7 @@ def _apply_install(root: Path, plan: dict[str, Any]) -> dict[str, Any]:
 
 def _run_validation(root: Path) -> list[str]:
     errors = validate_manifest(root)
+    errors.extend(validate_index(root))
     errors.extend(scan_repository(root))
     if root.resolve() == ROOT.resolve():
         errors.extend(validate_prevention_pack(root))
@@ -258,6 +304,11 @@ def _parser() -> argparse.ArgumentParser:
     list_parser = subparsers.add_parser("list", help="list catalog assets")
     list_parser.add_argument(
         "--json", action="store_true", help="emit deterministic JSON"
+    )
+    list_parser.add_argument("--type", dest="entry_type", help="filter by entry type")
+    list_parser.add_argument("--topic", help="filter by exact topic slug")
+    list_parser.add_argument(
+        "--featured", action="store_true", help="show entries in curated collections"
     )
 
     search_parser = subparsers.add_parser("search", help="search catalog metadata")
@@ -295,6 +346,16 @@ def _parser() -> argparse.ArgumentParser:
     validate_parser.add_argument(
         "--json", action="store_true", help="emit deterministic JSON"
     )
+    index_parser = subparsers.add_parser(
+        "index", help="render, check, or update the generated human catalog"
+    )
+    index_mode = index_parser.add_mutually_exclusive_group()
+    index_mode.add_argument(
+        "--check", action="store_true", help="fail when catalog/index.md is stale"
+    )
+    index_mode.add_argument(
+        "--write", action="store_true", help="update catalog/index.md"
+    )
     return parser
 
 
@@ -304,9 +365,14 @@ def main(argv: list[str] | None = None) -> int:
     args = _parser().parse_args(argv)
     try:
         if args.command == "list":
-            payload = _list_assets(ROOT)
+            payload = _list_assets(
+                ROOT,
+                entry_type_filter=args.entry_type,
+                topic=args.topic,
+                featured=args.featured,
+            )
             human = [
-                f"{asset['id']}\t{asset['title']}\t{asset['asset_class']}"
+                f"{asset['id']}\t{asset['title']}\t{asset['entry']['type']}"
                 for asset in payload["assets"]
             ]
             _emit(payload, args.json, human)
@@ -317,7 +383,7 @@ def main(argv: list[str] | None = None) -> int:
             _emit(payload, args.json, human)
             return 0
         if args.command == "show":
-            asset = _public_asset(_find_asset(ROOT, args.asset_id))
+            asset = _public_asset(_find_asset(ROOT, args.asset_id), load_taxonomy(ROOT))
             _emit(
                 asset, args.json, [f"{asset['id']}: {asset['title']}", asset["summary"]]
             )
@@ -346,6 +412,21 @@ def main(argv: list[str] | None = None) -> int:
                 human.append(f"manual review: {plan['manual_review']}")
             _emit(plan, args.json, human)
             return 1 if plan["status"].startswith("blocked") else 0
+        if args.command == "index":
+            rendered = render_index(ROOT)
+            if args.write:
+                (ROOT / INDEX_RELATIVE_PATH).write_text(rendered, encoding="utf-8")
+                print(f"updated {INDEX_RELATIVE_PATH}")
+                return 0
+            if args.check:
+                errors = validate_index(ROOT)
+                if errors:
+                    print("\n".join(errors), file=sys.stderr)
+                    return 1
+                print("catalog index is current")
+                return 0
+            print(rendered, end="")
+            return 0
         if args.command == "validate":
             errors = _run_validation(ROOT)
             payload = {

@@ -5,10 +5,11 @@ It is a menu, not a reference architecture: people may use an asset alone,
 combine it with other assets, adapt the idea to another tool, or treat it as
 inspiration for a different workflow.
 
-The manifest remains the source of truth for asset identity, provenance,
-dependencies, supported targets, and installation. This page adds the human
-question the manifest cannot answer by itself: what recurring friction does an
-asset remove, and why might that change the quality of agent work?
+The generated [catalog index](../catalog/index.md) is the complete browse
+surface; the manifest remains the source of truth for entry identity,
+provenance, dependencies, supported targets, and installation. This page is an
+editorial guide to recurring friction and useful combinations, not a second
+inventory. An omitted entry is not absent from the catalog.
 
 For the practical adoption decision, see the [adoption guide](adoption-guide.md).
 For separately owned systems that complement these patterns, see the

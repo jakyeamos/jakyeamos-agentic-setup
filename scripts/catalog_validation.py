@@ -5,9 +5,16 @@ from __future__ import annotations
 
 import json
 import re
+import sys
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from scripts.catalog_entries import entry_type, load_taxonomy  # noqa: E402
 
 MANIFEST_RELATIVE_PATH = Path("catalog/manifest.json")
 ALLOWED_ASSET_CLASSES = {"portable", "adapter", "case-study", "external", "excluded"}
@@ -26,6 +33,7 @@ SOURCE_ID_PATTERN = re.compile(r"^[a-z0-9][a-z0-9-]+$")
 PRIVATE_REFERENCE_PATTERN = re.compile(
     r"(?:/(?:Users|home|private/var)/|~/(?:\.ssh|Library|\.config))"
 )
+EDITORIAL_TEXT_FIELDS = {"why", "use_when", "avoid_when"}
 
 
 def load_manifest(root: Path) -> dict[str, Any]:
@@ -112,7 +120,178 @@ def _validate_dependency(path_label: str, dependency: Any) -> list[str]:
     return errors
 
 
-def _validate_asset(root: Path, asset: Any, seen_ids: set[str]) -> list[str]:
+def _validate_slug_list(path_label: str, value: Any) -> list[str]:
+    if not isinstance(value, list):
+        return [f"{path_label}: must be a list"]
+    errors: list[str] = []
+    if len(value) != len(set(item for item in value if isinstance(item, str))):
+        errors.append(f"{path_label}: contains duplicate values")
+    for item in value:
+        if not isinstance(item, str) or not SOURCE_ID_PATTERN.fullmatch(item):
+            errors.append(f"{path_label}: values must be lowercase slugs")
+    return errors
+
+
+def _validate_taxonomy(root: Path, asset_ids: set[str]) -> tuple[list[str], dict[str, Any]]:
+    errors: list[str] = []
+    try:
+        taxonomy = load_taxonomy(root)
+    except ValueError as exc:
+        return [str(exc)], {}
+    if taxonomy.get("schema_version") != 1:
+        errors.append("catalog/taxonomy.json: schema_version must be 1")
+    if taxonomy.get("human_name") != "multiplier":
+        errors.append("catalog/taxonomy.json: human_name must be multiplier")
+    if taxonomy.get("record_name") != "entry":
+        errors.append("catalog/taxonomy.json: record_name must be entry")
+    if taxonomy.get("physical_layout") != "library/<type>/<slug>/":
+        errors.append(
+            "catalog/taxonomy.json: physical_layout must be library/<type>/<slug>/"
+        )
+
+    types = taxonomy.get("types")
+    type_ids: set[str] = set()
+    directories: set[str] = set()
+    if not isinstance(types, list) or not types:
+        errors.append("catalog/taxonomy.json: types must be a non-empty list")
+    else:
+        for index, item in enumerate(types):
+            label = f"catalog/taxonomy.json types[{index}]"
+            if not isinstance(item, dict):
+                errors.append(f"{label}: must be an object")
+                continue
+            type_id = item.get("id")
+            directory = item.get("directory")
+            if not isinstance(type_id, str) or not SOURCE_ID_PATTERN.fullmatch(type_id):
+                errors.append(f"{label}: id must be a lowercase slug")
+            elif type_id in type_ids:
+                errors.append(f"{label}: duplicate type id {type_id}")
+            else:
+                type_ids.add(type_id)
+            if not isinstance(directory, str) or not SOURCE_ID_PATTERN.fullmatch(directory):
+                errors.append(f"{label}: directory must be a lowercase slug")
+            elif directory in directories:
+                errors.append(f"{label}: duplicate directory {directory}")
+            else:
+                directories.add(directory)
+            for key in ("label", "purpose"):
+                if not isinstance(item.get(key), str) or not item.get(key):
+                    errors.append(f"{label}: {key} must be a non-empty string")
+
+    defaults = taxonomy.get("kind_defaults")
+    if not isinstance(defaults, dict) or set(defaults) != ALLOWED_KINDS:
+        errors.append(
+            "catalog/taxonomy.json: kind_defaults must map every supported asset kind"
+        )
+    elif any(value not in type_ids for value in defaults.values()):
+        errors.append("catalog/taxonomy.json: kind_defaults references an unknown type")
+
+    seen_collections: set[str] = set()
+    collections = taxonomy.get("collections")
+    if not isinstance(collections, list):
+        errors.append("catalog/taxonomy.json: collections must be a list")
+    else:
+        for index, collection in enumerate(collections):
+            label = f"catalog/taxonomy.json collections[{index}]"
+            if not isinstance(collection, dict):
+                errors.append(f"{label}: must be an object")
+                continue
+            collection_id = collection.get("id")
+            if (
+                not isinstance(collection_id, str)
+                or not SOURCE_ID_PATTERN.fullmatch(collection_id)
+            ):
+                errors.append(f"{label}: id must be a lowercase slug")
+            elif collection_id in seen_collections:
+                errors.append(f"{label}: duplicate collection id {collection_id}")
+            else:
+                seen_collections.add(collection_id)
+            for key in ("title", "summary"):
+                if not isinstance(collection.get(key), str) or not collection.get(key):
+                    errors.append(f"{label}: {key} must be a non-empty string")
+            entries = collection.get("entries")
+            errors.extend(_validate_slug_list(f"{label} entries", entries))
+            if isinstance(entries, list):
+                for asset_id in entries:
+                    if isinstance(asset_id, str) and asset_id not in asset_ids:
+                        errors.append(f"{label}: unknown entry {asset_id}")
+    return errors, taxonomy
+
+
+def _validate_editorial(
+    label: str, asset: dict[str, Any], taxonomy: dict[str, Any]
+) -> list[str]:
+    editorial = asset.get("editorial")
+    if editorial is None:
+        return []
+    if not isinstance(editorial, dict):
+        return [f"{label}: editorial must be an object"]
+    errors: list[str] = []
+    allowed = EDITORIAL_TEXT_FIELDS | {"type", "topics", "use_cases"}
+    unknown = set(editorial) - allowed
+    if unknown:
+        errors.append(f"{label}: unsupported editorial fields {sorted(unknown)}")
+    type_ids = {
+        item.get("id")
+        for item in taxonomy.get("types", [])
+        if isinstance(item, dict)
+    }
+    if "type" in editorial and editorial.get("type") not in type_ids:
+        errors.append(f"{label}: editorial type is not in the taxonomy")
+    for field in ("topics", "use_cases"):
+        if field in editorial:
+            errors.extend(
+                _validate_slug_list(f"{label} editorial {field}", editorial[field])
+            )
+    for field in EDITORIAL_TEXT_FIELDS:
+        if field in editorial and (
+            not isinstance(editorial[field], str) or not editorial[field].strip()
+        ):
+            errors.append(f"{label}: editorial {field} must be a non-empty string")
+    return errors
+
+
+def _validate_library(root: Path, assets: list[Any], taxonomy: dict[str, Any]) -> list[str]:
+    library = root / "library"
+    if not library.is_dir():
+        return ["library/: missing entry library"]
+    by_id = {
+        asset.get("id"): asset
+        for asset in assets
+        if isinstance(asset, dict) and isinstance(asset.get("id"), str)
+    }
+    directory_types = {
+        item["directory"]: item["id"]
+        for item in taxonomy.get("types", [])
+        if isinstance(item, dict)
+        and isinstance(item.get("directory"), str)
+        and isinstance(item.get("id"), str)
+    }
+    errors: list[str] = []
+    for type_dir in sorted(path for path in library.iterdir() if path.is_dir()):
+        expected_type = directory_types.get(type_dir.name)
+        if expected_type is None:
+            errors.append(f"library/{type_dir.name}: directory is not in the taxonomy")
+            continue
+        for entry_dir in sorted(path for path in type_dir.iterdir() if path.is_dir()):
+            asset = by_id.get(entry_dir.name)
+            if asset is None:
+                errors.append(
+                    f"library/{type_dir.name}/{entry_dir.name}: missing manifest entry"
+                )
+            elif entry_type(asset, taxonomy) != expected_type:
+                errors.append(
+                    f"library/{type_dir.name}/{entry_dir.name}: manifest type does not match directory"
+                )
+    return errors
+
+
+def _validate_asset(
+    root: Path,
+    asset: Any,
+    seen_ids: set[str],
+    taxonomy: dict[str, Any] | None = None,
+) -> list[str]:
     errors: list[str] = []
     if not isinstance(asset, dict):
         return ["assets: each asset must be an object"]
@@ -153,6 +332,7 @@ def _validate_asset(root: Path, asset: Any, seen_ids: set[str]) -> list[str]:
     maturity = asset.get("maturity")
     if maturity not in ALLOWED_MATURITIES:
         errors.append(f"{label}: unsupported maturity {maturity!r}")
+    errors.extend(_validate_editorial(label, asset, taxonomy or {}))
 
     for key in (
         "capabilities",
@@ -329,12 +509,24 @@ def validate_manifest(root: Path) -> list[str]:
             )
 
     assets = manifest.get("assets")
+    asset_ids = (
+        {
+            asset.get("id")
+            for asset in assets
+            if isinstance(asset, dict) and isinstance(asset.get("id"), str)
+        }
+        if isinstance(assets, list)
+        else set()
+    )
+    taxonomy_errors, taxonomy = _validate_taxonomy(root, asset_ids)
+    errors.extend(taxonomy_errors)
     if not isinstance(assets, list) or not assets:
         errors.append("catalog/manifest.json: assets must be a non-empty list")
     else:
         seen_ids: set[str] = set()
         for asset in assets:
-            errors.extend(_validate_asset(root, asset, seen_ids))
+            errors.extend(_validate_asset(root, asset, seen_ids, taxonomy))
+        errors.extend(_validate_library(root, assets, taxonomy))
 
     for path in sorted(root.rglob("*.md")):
         if any(

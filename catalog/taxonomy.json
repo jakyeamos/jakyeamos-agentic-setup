@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "human_name": "multiplier",
+  "record_name": "entry",
+  "physical_layout": "library/<type>/<slug>/",
+  "types": [
+    {
+      "id": "prompt",
+      "label": "Prompts",
+      "directory": "prompts",
+      "purpose": "Reusable language for a bounded task or interaction."
+    },
+    {
+      "id": "skill",
+      "label": "Skills",
+      "directory": "skills",
+      "purpose": "Agent behavior that should trigger for a recognizable class of work."
+    },
+    {
+      "id": "playbook",
+      "label": "Playbooks",
+      "directory": "playbooks",
+      "purpose": "A repeatable multi-step workflow with checkpoints and verification."
+    },
+    {
+      "id": "setup",
+      "label": "Setups",
+      "directory": "setups",
+      "purpose": "Configuration and host-specific wiring that makes a workflow usable."
+    },
+    {
+      "id": "tool",
+      "label": "Tools",
+      "directory": "tools",
+      "purpose": "Executable software that performs or verifies part of the work."
+    },
+    {
+      "id": "brief",
+      "label": "Briefs",
+      "directory": "briefs",
+      "purpose": "A scoped idea, specification, or task packet ready to hand to an agent."
+    },
+    {
+      "id": "reference",
+      "label": "References",
+      "directory": "references",
+      "purpose": "A useful external project, example, case study, fixture, or pattern to inspect."
+    }
+  ],
+  "kind_defaults": {
+    "adapter": "setup",
+    "case-study": "reference",
+    "cli": "tool",
+    "fixture": "reference",
+    "reference": "reference",
+    "skill": "skill",
+    "workflow": "playbook"
+  },
+  "collections": [
+    {
+      "id": "start-here",
+      "title": "Start here",
+      "summary": "A small cross-section of the catalog that shows how context, safety, writing, and completion fit together.",
+      "entries": [
+        "repo-aware-context",
+        "safe-tool-guards",
+        "research-domain-writing",
+        "consequence-closure"
+      ]
+    }
+  ]
+}

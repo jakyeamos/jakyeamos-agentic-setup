@@ -11,6 +11,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from scripts.catalog_validation import validate_manifest  # noqa: E402
+from scripts.catalog_index import validate_index  # noqa: E402
 from scripts.public_safety_check import scan_repository  # noqa: E402
 from scripts.validate_prevention_pack import validate_prevention_pack  # noqa: E402
 from scripts.validate_skills import validate_skill  # noqa: E402
@@ -20,6 +21,7 @@ def validate_repository(root: Path = ROOT) -> list[str]:
     """Return all public catalog validation findings in stable order."""
 
     errors = list(validate_manifest(root))
+    errors.extend(validate_index(root))
     errors.extend(f"public safety: {finding}" for finding in scan_repository(root))
     errors.extend(validate_prevention_pack(root))
     skills_root = root / "skills"

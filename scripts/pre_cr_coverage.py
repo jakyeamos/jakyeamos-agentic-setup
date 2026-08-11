@@ -20,6 +20,8 @@ COVERED_FILES = (
     ROOT / "scripts" / "validate_skills.py",
     ROOT / "scripts" / "validate_prevention_pack.py",
     ROOT / "scripts" / "catalog_validation.py",
+    ROOT / "scripts" / "catalog_entries.py",
+    ROOT / "scripts" / "catalog_index.py",
     ROOT / "scripts" / "public_safety_check.py",
     ROOT / "scripts" / "validate_catalog.py",
     ROOT / "scripts" / "workbench.py",
@@ -70,8 +72,11 @@ def _run_workbench_smoke() -> None:
             raise RuntimeError("prevention-pack validation failed during coverage smoke")
         commands = (
             ["list", "--json"],
+            ["list", "--type", "skill", "--json"],
+            ["list", "--topic", "safety", "--json"],
             ["search", "--query", "long context", "--json"],
             ["show", "context-budget-governor", "--json"],
+            ["index", "--check"],
         )
         for command in commands:
             if workbench.main(command) != 0:

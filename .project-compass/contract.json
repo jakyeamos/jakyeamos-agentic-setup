@@ -3,10 +3,10 @@
   "revision": 1,
   "project": {
     "name": "jakyeamos-agent-skills",
-    "identity": "A public, vendor-neutral Portable Agentic Workbench catalog and setup engine for reusable context, safety, evaluation, and handoff workflows.",
-    "audience": "Agent developers and operators who need reusable workflows that can be inspected, validated, dry-run, and deliberately adopted across hosts.",
-    "core_loop": "Capture a recurring workflow need, package a reviewed contract and skill, validate it, dry-run installation or setup, adopt it deliberately, and maintain its evidence and compatibility.",
-    "north_star": "Reusable agent workflows travel across supported hosts without turning private context, unreviewed instructions, or hidden side effects into a product dependency.",
+    "identity": "A public, vendor-neutral magazine and workbench for prompts, skills, playbooks, setups, tools, briefs, and references that multiply useful agent work.",
+    "audience": "People and agent developers who want to discover reusable workflow multipliers by type or use case, inspect their evidence, and adopt them deliberately across hosts.",
+    "core_loop": "Capture a recurring workflow advantage, classify and package it as a catalog entry, validate and publish the generated browse surface, then inspect, dry-run, adopt, and maintain it deliberately.",
+    "north_star": "A growing collection stays easy to browse and safe to adopt without duplicating inventories, destabilizing existing install paths, or turning private context and hidden side effects into product dependencies.",
     "not_this": ["A private unreviewed instruction dump", "Automatic host registration without consent", "A claim of provider parity without trigger and behavior evidence"]
   },
   "targets": {
@@ -19,5 +19,5 @@
   ],
   "source_layers": {"intended": [{"ref": "README.md", "note": "Public product identity and audience.", "observed_at": "2026-08-02T13:25:04Z"}], "planned": [{"ref": "README.md", "note": "Catalog and setup-engine scope.", "observed_at": "2026-08-02T13:25:04Z"}], "implemented": [{"ref": "README.md", "note": "Current package and setup surfaces.", "observed_at": "2026-08-02T13:25:04Z"}], "verified": [{"ref": "README.md", "note": "Documented claims; no host installation or parity run here.", "observed_at": "2026-08-02T13:25:04Z"}]},
   "drift": [{"kind": "verification-gap", "summary": "The reusable workflow outcome depends on provider and host trigger/behavior evidence that the public catalog alone cannot establish.", "status": "open", "observed_at": "2026-08-02T13:25:04Z", "evidence": [{"ref": "README.md", "note": "Defines the public setup surface without host-wide proof.", "observed_at": "2026-08-02T13:25:04Z"}]}],
-  "updated_at": "2026-08-02T13:25:04Z"
+  "updated_at": "2026-08-10T16:00:00Z"
 }

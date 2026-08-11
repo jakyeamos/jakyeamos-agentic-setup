@@ -30,8 +30,12 @@ executable through `scripts/check_environment_contract.mjs` and required by
   [`docs/agent-config-conflicts.md`](docs/agent-config-conflicts.md).
 - Public mining or promotion: read [`docs/mining.md`](docs/mining.md) and load
   the `skill-harvest-and-promotion` skill/workflow on demand.
-- Catalog asset work: start at [`catalog/manifest.json`](catalog/manifest.json)
-  and load only the matching asset entrypoint.
+- Catalog entry or taxonomy work: start at
+  [`docs/catalog-model.md`](docs/catalog-model.md), then update the canonical
+  manifest or taxonomy and regenerate `catalog/index.md`.
+- Existing asset behavior: start at
+  [`catalog/manifest.json`](catalog/manifest.json) and load only the matching
+  entrypoint.
 
 The Python catalog surface remains available for catalog inspection. The
 manifest-aware Node setup surface is routed through `agent-config`; see the

@@ -360,6 +360,14 @@
       "summary": "Research -> packet -> draft -> QA -> style workflow for domain-specific writing.",
       "maturity": "stable",
       "capabilities": ["research", "grounding", "domain-writing", "qa"],
+      "editorial": {
+        "type": "skill",
+        "topics": ["research", "grounded-writing", "quality-assurance"],
+        "use_cases": ["write-domain-specific-content", "build-a-cited-knowledge-packet"],
+        "why": "Turn a domain-writing request into a researched, cited, reviewed deliverable instead of an unsupported draft.",
+        "use_when": "Use when factual grounding, source provenance, and a repeatable writing pipeline matter.",
+        "avoid_when": "Avoid for casual copy edits or tasks that do not need research and source-backed claims."
+      },
       "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
       "entrypoints": ["skills/research-domain-writing/SKILL.md"],
       "files": [
@@ -410,6 +418,14 @@
       "summary": "A repository-first context selection discipline that keeps instructions, source maps, and live truth separate.",
       "maturity": "beta",
       "capabilities": ["repo-awareness", "routing", "context-selection", "scope-control"],
+      "editorial": {
+        "type": "playbook",
+        "topics": ["repository-context", "routing", "scope-control"],
+        "use_cases": ["orient-an-agent-in-a-repository", "select-minimum-relevant-context"],
+        "why": "Give an agent the right repository identity and context without collapsing instructions, source maps, and live state together.",
+        "use_when": "Use before repository work where nested guidance, freshness, and ownership boundaries affect the answer.",
+        "avoid_when": "Avoid for self-contained tasks that do not depend on repository state or local instructions."
+      },
       "supported_targets": ["generic", "codex", "claude", "cursor", "copilot", "gemini", "antigravity"],
       "entrypoints": ["workflows/repo-aware-context/WORKFLOW.md"],
       "files": ["workflows/repo-aware-context/WORKFLOW.md"],
@@ -984,6 +1000,14 @@
       "summary": "A vendor-neutral contract for classifying, previewing, approving, and recording tool actions before execution.",
       "maturity": "beta",
       "capabilities": ["safety", "shell", "tool-guards", "dry-run", "audit"],
+      "editorial": {
+        "type": "playbook",
+        "topics": ["tool-safety", "approval-boundaries", "auditability"],
+        "use_cases": ["guard-shell-actions", "design-a-reviewable-tool-boundary"],
+        "why": "Classify and preview tool actions so destructive, credentialed, or externally visible work crosses an explicit approval boundary.",
+        "use_when": "Use when an agent can mutate files, systems, accounts, or external services.",
+        "avoid_when": "Avoid adding it to read-only reasoning that has no meaningful execution or mutation risk."
+      },
       "supported_targets": ["generic", "codex", "claude", "cursor", "copilot", "gemini", "antigravity"],
       "entrypoints": ["workflows/safe-tool-guards/WORKFLOW.md"],
       "files": [
@@ -1210,6 +1234,14 @@
       "summary": "Close material downstream consequences, evaluate conditional maturity, expose machine-readable evidence, and raise reusable candidates with exact blockers.",
       "maturity": "experimental",
       "capabilities": ["change-impact", "conditional-maturity", "recurrence-reduction", "machine-readable-evidence", "candidate-promotion"],
+      "editorial": {
+        "type": "skill",
+        "topics": ["change-impact", "verification", "recurrence-reduction"],
+        "use_cases": ["close-downstream-consequences", "surface-reusable-follow-up-work"],
+        "why": "Trace a change beyond its diff to affected consumers, evidence surfaces, maturity claims, and reusable follow-up opportunities.",
+        "use_when": "Use after implementation evidence reveals downstream consumers, conditional claims, or repeatable improvements.",
+        "avoid_when": "Avoid when the work is a truly isolated edit with no downstream behavior, contract, or evidence surface."
+      },
       "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
       "entrypoints": [
         "skills/consequence-closure/SKILL.md",
