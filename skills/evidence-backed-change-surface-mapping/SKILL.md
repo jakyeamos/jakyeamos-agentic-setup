@@ -28,4 +28,10 @@ Return matched surfaces, suggested reads, validation commands, owners, unknown
 paths, unresolved dependencies, freshness state, evidence references, and the
 confidence-limited next action.
 
+## Completion
+
+Complete when every reported surface has provenance and freshness, every
+inferred edge has a confidence and removal condition, scan truncation and
+unknown paths remain explicit, and no repository content was mutated.
+
 See the [change-surface workflow](../../workflows/evidence-backed-change-surface-mapping/WORKFLOW.md).

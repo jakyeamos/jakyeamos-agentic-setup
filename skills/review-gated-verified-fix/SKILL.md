@@ -31,4 +31,11 @@ Dirty or unverifiable baselines, missing gates, missing acceptance checks,
 network or secret access outside policy, unexpected paths, timeouts, and any
 request to merge or publish without explicit review.
 
+## Completion
+
+Complete when the isolated patch stays inside allowed paths, quality and
+independent acceptance evidence are recorded, rollback is identified, and the
+packet ends in exactly one terminal state: `proposed`, `rejected`, `blocked`, or
+`accepted-for-review`. This skill never completes a merge or publication.
+
 See the [verified-fix workflow](../../workflows/review-gated-verified-fix/WORKFLOW.md).

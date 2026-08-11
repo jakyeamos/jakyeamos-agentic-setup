@@ -43,4 +43,12 @@ route graph, provenance results, drift state, apply plan, verification results,
 and the exact remaining manual step. Use `AUDIT_COMPLETE` before
 `MIGRATION_COMPLETE`.
 
+## Completion
+
+`AUDIT_COMPLETE` requires a bounded inventory, an acyclic validated route
+graph, explicit ownership and conflict dispositions, and a report-only receipt.
+`MIGRATION_COMPLETE` additionally requires an approved apply, post-apply doctor
+and drift checks, and an empty unresolved-conflict ledger. Otherwise stop with
+the exact blocker and remaining manual step.
+
 See the [migration workflow](../../workflows/low-always-loaded-instruction-migration/WORKFLOW.md).

@@ -25,6 +25,13 @@ terrace doctor
 
 If the CLI is missing, tell the user to install Terrace from the Terrace project documentation. Do not invent install commands in this skill.
 
+## Completion
+
+Complete only when the selected Terrace command returns a successful state, its
+generated files and next-command output have been inspected, and every blocker
+or warning has an explicit disposition. If Terrace reports a blocker, stop with
+that blocker and the exact next action instead of claiming success.
+
 ## Command Reference
 
 Read `references/commands.md` when routing a named Terrace action.

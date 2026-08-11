@@ -45,6 +45,12 @@ rdw batch plan examples/batch-tasks.yaml --out .rdw-runs/<slug>
 
 The CLI does not replace the agent. The agent still performs the research, writing, QA, and final application work.
 
+## Completion
+
+Complete only when the draft is bounded by the assembled evidence packet,
+domain QA passes for facts, terminology, uncertainty and audience fit, style is
+applied after QA, and any remaining unsupported claim or stale source is named.
+
 ## References
 
 - `references/limitations.md`

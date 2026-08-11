@@ -21,4 +21,10 @@ is a behavioral control surface, not a glossary of every project noun.
 
 Reject words that sound good but do not change what an agent does.
 
+## Completion
+
+Complete when every admitted control term has one canonical meaning, trigger,
+completion criterion, relationship and observable verification signal; rejected
+or migrated synonyms are recorded; and no unresolved overload remains hidden.
+
 See the [operating-language workflow](../../workflows/operating-language/WORKFLOW.md).

@@ -170,6 +170,14 @@ When asked to create a PRD or handoff:
 The resulting artifact should feel like the natural conclusion of a good
 conversation, not a transcript or questionnaire dump.
 
+## Completion
+
+Ordinary exploration is complete when the current synthesis, unresolved
+questions and next useful decision are explicit. Graduation is complete only
+when the requested artifact reflects ratified decisions, follows repository
+conventions, passes its available contract validation, and leaves implementation
+unstarted unless the user separately requested it.
+
 ## Tone
 
 - Sound like a thoughtful coworker, not a facilitator script.
