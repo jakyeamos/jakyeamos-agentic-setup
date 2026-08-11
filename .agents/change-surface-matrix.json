@@ -1,0 +1,11 @@
+{
+  "schema_version": "change-surface-matrix/v1",
+  "subject": {"kind": "repository", "id": "jakyeamos-agent-skills"},
+  "owner": "repository-owner",
+  "last_reviewed": "2026-08-11",
+  "surfaces": [
+    {"id": "catalog-and-library", "scope": "local", "path": "skills/, catalog/, scripts/, and tests/", "owner": "repository-owner", "condition": "catalog, skill contract, installer, or validation behavior changes", "operations": ["add", "change", "remove"], "validation": ["pnpm lint", "pnpm test", "pnpm check"], "status": "applicable"},
+    {"id": "provider-projections", "scope": "external", "path": "installed provider projections", "owner": "projection-owner", "condition": "a distributed skill, workflow, route, or install mapping changes", "operations": ["add", "change", "remove"], "validation": ["pnpm audit", "pnpm doctor", "pnpm smoke"], "status": "applicable"}
+  ],
+  "unresolved_surfaces": []
+}
