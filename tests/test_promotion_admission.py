@@ -70,6 +70,21 @@ def _projection(candidate_id: str, *, visibility: str = "public") -> dict[str, o
     }
 
 
+def _editorial_projection(candidate_id: str) -> dict[str, object]:
+    projection = _projection(candidate_id)
+    projection["schema_version"] = "jas-promotion-projection/v3"
+    asset = cast(dict[str, object], projection["asset"])
+    asset["editorial"] = {
+        "type": "setup",
+        "topics": ["agent-configuration", "host-adapters"],
+        "use_cases": ["prepare-agent-host"],
+        "why": "Prepare a portable workbench for one supported agent host.",
+        "use_when": "Use when a host needs explicit, reviewable setup metadata.",
+        "avoid_when": "Avoid when the host is unsupported or no installation is needed.",
+    }
+    return projection
+
+
 def _external_candidate() -> dict[str, object]:
     candidate = _candidate()
     candidate["candidate_id"] = "candidate-external-reference"
@@ -211,6 +226,84 @@ class PromotionAdmissionTests(unittest.TestCase):
             self.assertFalse(payload["mutated"])
             self.assertNotIn("private-source-marker", output)
             self.assertNotIn("private-evidence-marker", output)
+
+    def test_v3_projection_carries_complete_editorial_metadata_into_the_plan(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            candidate_path = root / "candidate.json"
+            projection_path = root / "projection.json"
+            candidate_path.write_text(json.dumps(_candidate()), encoding="utf-8")
+            projection_path.write_text(
+                json.dumps(_editorial_projection("candidate-admission-fixture")),
+                encoding="utf-8",
+            )
+
+            result, payload, _ = self._run(
+                [
+                    "plan",
+                    "--candidate",
+                    str(candidate_path),
+                    "--projection",
+                    str(projection_path),
+                ]
+            )
+
+            self.assertEqual(result, 0)
+            self.assertEqual(payload["schema_version"], "jas-promotion-projection/v3")
+            asset = cast(dict[str, object], payload["asset"])
+            editorial = cast(dict[str, object], asset["editorial"])
+            self.assertEqual(editorial["type"], "setup")
+            self.assertEqual(editorial["use_cases"], ["prepare-agent-host"])
+
+    def test_v3_projection_rejects_incomplete_editorial_metadata(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            candidate_path = root / "candidate.json"
+            projection_path = root / "projection.json"
+            projection = _editorial_projection("candidate-admission-fixture")
+            asset = cast(dict[str, object], projection["asset"])
+            editorial = cast(dict[str, object], asset["editorial"])
+            editorial["use_cases"] = []
+            candidate_path.write_text(json.dumps(_candidate()), encoding="utf-8")
+            projection_path.write_text(json.dumps(projection), encoding="utf-8")
+
+            result, payload, _ = self._run(
+                [
+                    "validate",
+                    "--candidate",
+                    str(candidate_path),
+                    "--projection",
+                    str(projection_path),
+                ]
+            )
+
+            self.assertEqual(result, 2)
+            self.assertEqual(payload["status"], "blocked")
+            self.assertIn("non-empty list", str(payload["error"]))
+
+    def test_v3_projection_cannot_enter_the_private_overlay_lane(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            candidate_path = root / "candidate.json"
+            projection_path = root / "projection.json"
+            projection = _editorial_projection("candidate-admission-fixture")
+            projection["visibility"] = "private-overlay"
+            candidate_path.write_text(json.dumps(_candidate()), encoding="utf-8")
+            projection_path.write_text(json.dumps(projection), encoding="utf-8")
+
+            result, payload, _ = self._run(
+                [
+                    "validate",
+                    "--candidate",
+                    str(candidate_path),
+                    "--projection",
+                    str(projection_path),
+                ]
+            )
+
+            self.assertEqual(result, 2)
+            self.assertEqual(payload["status"], "blocked")
+            self.assertIn("requires public visibility", str(payload["error"]))
 
     def test_admit_requires_explicit_approval_and_emits_manifest_plan(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
@@ -563,7 +656,7 @@ class PromotionAdmissionTests(unittest.TestCase):
             root = self._copy_repo_for_catalog_apply(temporary)
             candidate = _candidate()
             candidate_id = str(candidate["candidate_id"])
-            candidate["promotion_projection"] = _projection(candidate_id)
+            candidate["promotion_projection"] = _editorial_projection(candidate_id)
             candidate_path = Path(temporary) / "candidate.json"
             approval_path = Path(temporary) / "approval.json"
             candidate_path.write_text(json.dumps(candidate), encoding="utf-8")
@@ -589,6 +682,10 @@ class PromotionAdmissionTests(unittest.TestCase):
             self.assertEqual(
                 sum(1 for asset in assets if asset["id"] == candidate_id), 1
             )
+            admitted = next(asset for asset in assets if asset["id"] == candidate_id)
+            editorial = cast(dict[str, object], admitted["editorial"])
+            self.assertEqual(editorial["type"], "setup")
+            self.assertEqual(editorial["use_cases"], ["prepare-agent-host"])
             source_map = cast(list[dict[str, object]], manifest["source_map"])
             self.assertEqual(
                 sum(

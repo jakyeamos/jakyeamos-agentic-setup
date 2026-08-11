@@ -24,10 +24,16 @@ from scripts.catalog_validation import (  # noqa: E402
     load_manifest,
     validate_manifest,
 )
+from scripts.catalog_entries import load_taxonomy  # noqa: E402
 
 CANDIDATE_SCHEMA_VERSION = "leverage-promotion-candidate/v1"
 PROJECTION_SCHEMA_VERSION = "jas-promotion-projection/v1"
 PRIVATE_PROJECTION_SCHEMA_VERSION = "jas-promotion-projection/v2"
+EDITORIAL_PROJECTION_SCHEMA_VERSION = "jas-promotion-projection/v3"
+PUBLIC_PROJECTION_SCHEMA_VERSIONS = {
+    PROJECTION_SCHEMA_VERSION,
+    EDITORIAL_PROJECTION_SCHEMA_VERSION,
+}
 APPROVAL_SCHEMA_VERSION = "jas-promotion-approval/v1"
 PRIVATE_PACKAGE_SCHEMA_VERSION = "leverage-private-package/v1"
 PRIVATE_OVERLAY_SCHEMA_VERSION = "jas-private-overlay/v2"
@@ -220,8 +226,11 @@ def validate_projection(
             "asset_id": str(private_asset["id"]),
             "private_asset": private_asset,
         }
-    _required_exact(projection, "schema_version", PROJECTION_SCHEMA_VERSION)
+    if schema_version not in PUBLIC_PROJECTION_SCHEMA_VERSIONS:
+        raise AdmissionError("projection schema_version is unsupported")
     visibility = _required_enum(projection, "visibility", VISIBILITIES)
+    if schema_version == EDITORIAL_PROJECTION_SCHEMA_VERSION and visibility != "public":
+        raise AdmissionError("v3 public projection requires public visibility")
     if _required_text(projection, "candidate_id") != candidate_id:
         raise AdmissionError("projection candidate_id does not match candidate")
     asset = projection.get("asset")
@@ -268,15 +277,38 @@ def validate_projection(
     private_values = _private_value_present(projection)
     if private_values:
         raise AdmissionError("projection contains a private or credential-shaped value")
-    errors = _validate_asset(root, asset, set())
+    try:
+        taxonomy = load_taxonomy(root)
+    except ValueError as exc:
+        raise AdmissionError("unable to load the JAS catalog taxonomy") from exc
+    errors = _validate_asset(root, asset, set(), taxonomy)
     if errors:
         raise AdmissionError("projection asset fails the JAS catalog contract")
+    if schema_version == EDITORIAL_PROJECTION_SCHEMA_VERSION:
+        _validate_complete_editorial(asset)
     return {
         "schema_version": schema_version,
         "visibility": visibility,
         "asset_id": asset_id,
         "asset": asset,
     }
+
+
+def _validate_complete_editorial(asset: Mapping[str, object]) -> None:
+    """Require the browse metadata expected from new public promotions."""
+
+    editorial = asset.get("editorial")
+    if not isinstance(editorial, Mapping):
+        raise AdmissionError("v3 public projection requires complete editorial metadata")
+    required = {"type", "topics", "use_cases", "why", "use_when", "avoid_when"}
+    if set(editorial) != required:
+        raise AdmissionError("v3 public projection requires complete editorial metadata")
+    for field in ("topics", "use_cases"):
+        value = editorial.get(field)
+        if not isinstance(value, list) or not value:
+            raise AdmissionError(
+                f"v3 public projection editorial {field} must be a non-empty list"
+            )
 
 
 def validate_approval(
@@ -349,7 +381,7 @@ def build_plan(
         approval_result = validate_approval(approval, candidate_id)
         status = "ready_for_manifest_review"
     return {
-        "schema_version": PROJECTION_SCHEMA_VERSION,
+        "schema_version": projection_result["schema_version"],
         "status": status,
         "candidate_id": candidate_id,
         "asset_id": projection_result["asset_id"],

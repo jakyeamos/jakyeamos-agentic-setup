@@ -23,7 +23,9 @@ preference that has no observable behavior, verifier, or safety boundary.
 5. Classify every candidate as promote, strengthen, reference, defer, or
    exclude with a reason.
 6. Author a concise triggerable skill plus supporting workflow material.
-7. Forward-test trigger and non-trigger scenarios, then promote only when the
+7. For a public JAS handoff, provide complete editorial metadata: multiplier
+   type, topics, use cases, why it matters, when to use it, and when not to.
+8. Forward-test trigger and non-trigger scenarios, then promote only when the
    package is portable and objectively verifiable.
 
 ## Promotion gate
