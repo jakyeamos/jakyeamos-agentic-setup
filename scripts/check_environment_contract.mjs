@@ -2,6 +2,7 @@ import { execFileSync } from "node:child_process";
 import { existsSync, lstatSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { validateAgentUsability } from "./check_agent_usability.mjs";
 
 const DEFAULT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const PACKETS = [
@@ -110,10 +111,12 @@ export function validateContract(rootInput = DEFAULT_ROOT, asOfInput = new Date(
   const errors = [];
   const asOf = dateOnly(asOfInput);
   if (asOf === null) errors.push("invalid --as-of date");
-  for (const required of ["AGENTS.md", "README.md", "SECURITY.md", "package.json", "catalog/manifest.json", "catalog/taxonomy.json", "library/README.md", "scripts/validate_repository.py", "scripts/check_javascript.mjs"]) {
+  for (const required of ["AGENTS.md", "README.md", "SECURITY.md", "package.json", "catalog/manifest.json", "catalog/taxonomy.json", "library/README.md", ".agents/agent-usability.json", "scripts/validate_repository.py", "scripts/check_agent_usability.mjs", "scripts/check_javascript.mjs"]) {
     if (!existsSync(path.join(root, required))) errors.push(`missing required surface: ${required}`);
   }
   checkContext(root, errors, asOf);
+  const agentUsability = validateAgentUsability(root);
+  errors.push(...agentUsability.errors);
 
   try {
     const packageJson = readJson(path.join(root, "package.json"));
@@ -168,7 +171,8 @@ export function validateContract(rootInput = DEFAULT_ROOT, asOfInput = new Date(
       quality_commands: QUALITY_COMMANDS.length,
       tracked_secret_paths: errors.filter((error) => error.startsWith("secret-like tracked path:")).length,
       strict_javascript_syntax: true,
-      required_pre_cr_adapter: !errors.some((error) => error.includes("quality adapter"))
+      required_pre_cr_adapter: !errors.some((error) => error.includes("quality adapter")),
+      agent_usability: agentUsability
     }
   };
 }

@@ -60,6 +60,10 @@ python3 scripts/workbench.py index --check
 The repository validator fails if the generated index is stale or a library
 folder disagrees with its manifest type.
 
+`pnpm check` also validates the environment and agent-usability contracts. An
+applicable usability contract must point every declared tool to behavior
+evidence; run `node scripts/check_agent_usability.mjs` for that focused check.
+
 ## Adopt deliberately
 
 Inspect an entry before installing it:

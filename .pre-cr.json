@@ -34,8 +34,10 @@
   "surfaces": {
     "covered": [
       "AGENTS.md",
+      ".agents/agent-usability.json",
       ".agents/context/**",
       "package.json",
+      "scripts/check_agent_usability.mjs",
       "scripts/check_environment_contract.mjs",
       "scripts/check_javascript.mjs",
       "scripts/validate_repository.py",

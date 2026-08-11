@@ -16,7 +16,10 @@ python3 scripts/pre_cr_coverage.py
 `pnpm typecheck` syntax-checks every tracked JavaScript module. `pnpm build`
 validates the catalog as the packaging surface. `pnpm check` validates the
 environment contract, including routed packets, freshness, strict scripts,
-the required Pre-CR adapter, and tracked secret-like paths.
+the required Pre-CR adapter, tracked secret-like paths, and the agent-usability
+contract. An applicable agent-usability contract must provide at least one
+existing behavior-evidence file for every declared tool. The focused validator
+is also executable with `node scripts/check_agent_usability.mjs`.
 
 The report-only CLI commands are `pnpm audit`, `pnpm doctor`, `pnpm drift`, and
 `pnpm smoke`. `sync`, `install`, and `bootstrap` remain dry-run/manual-review

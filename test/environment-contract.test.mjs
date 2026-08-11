@@ -27,13 +27,30 @@ const QUALITY_COMMANDS = [
 function writeFixture(root, indexSuffix = "") {
   fs.mkdirSync(path.join(root, ".agents", "context"), { recursive: true });
   fs.mkdirSync(path.join(root, "catalog"), { recursive: true });
+  fs.mkdirSync(path.join(root, "docs"), { recursive: true });
   fs.mkdirSync(path.join(root, "scripts"), { recursive: true });
   fs.writeFileSync(path.join(root, "AGENTS.md"), "# Router\n");
   fs.writeFileSync(path.join(root, "README.md"), "# Fixture\n");
   fs.writeFileSync(path.join(root, "SECURITY.md"), "# Security\n");
   fs.writeFileSync(path.join(root, "catalog", "manifest.json"), "{}\n");
   fs.writeFileSync(path.join(root, "scripts", "validate_repository.py"), "# validator\n");
+  fs.writeFileSync(path.join(root, "scripts", "check_agent_usability.mjs"), "// checker\n");
   fs.writeFileSync(path.join(root, "scripts", "check_javascript.mjs"), "// checker\n");
+  fs.writeFileSync(path.join(root, "docs", "fixture-behavior.json"), "{}\n");
+  fs.writeFileSync(
+    path.join(root, ".agents", "agent-usability.json"),
+    JSON.stringify({
+      schema: "agent-usability/v1",
+      reviewed_at: "2026-07-25",
+      applicability: "applicable",
+      tools: [
+        {
+          id: "fixture-tool",
+          behavior_evidence: [{ path: "docs/fixture-behavior.json" }]
+        }
+      ]
+    })
+  );
   fs.writeFileSync(path.join(root, ".gitignore"), ".env\n.env.*\nnode_modules/\n.pre-cr/\naudit/\n.aios/\n.quality-runner/\n");
   fs.writeFileSync(
     path.join(root, "package.json"),
@@ -92,6 +109,23 @@ test("the contract rejects missing routed packets", () => {
     const result = validateContract(root, "2026-07-25", ["AGENTS.md"]);
     assert.equal(result.status, "fail");
     assert.ok(result.errors.includes("missing context packet: security.md"));
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("the environment contract rejects applicable tools with no behavior evidence", () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "environment-contract-usability-"));
+  try {
+    writeFixture(root);
+    const usabilityPath = path.join(root, ".agents", "agent-usability.json");
+    const usability = JSON.parse(fs.readFileSync(usabilityPath, "utf8"));
+    usability.tools[0].behavior_evidence = [];
+    fs.writeFileSync(usabilityPath, JSON.stringify(usability));
+
+    const result = validateContract(root, "2026-07-25", ["AGENTS.md"]);
+    assert.equal(result.status, "fail");
+    assert.ok(result.errors.includes("agent-usability tool fixture-tool: no behavior evidence declared"));
   } finally {
     fs.rmSync(root, { recursive: true, force: true });
   }
