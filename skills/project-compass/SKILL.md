@@ -240,11 +240,17 @@ The deterministic helper can start, advance, and inspect a session:
 
 ```bash
 python3 <skill-dir>/scripts/project_compass.py quiz start <repo> --mode greenfield --json
+python3 <skill-dir>/scripts/project_compass.py quiz start <repo> \
+  --mode greenfield --compass-id playback --scope-kind subsystem --json
 python3 <skill-dir>/scripts/project_compass.py quiz answer <repo> \
   --session-id <id> --question-id <id> --value "..." --json
 python3 <skill-dir>/scripts/project_compass.py quiz status <repo> \
   --session-id <id> --json
 ```
+
+Use `--scope-kind subsystem` to onboard a new child compass before its child
+contract exists. Realignment still requires the selected compass to exist so
+the agent can compare the answer against an established boundary.
 
 Do not dump the question bank as a requirements form. Select the smallest set
 of questions that resolves the material unknown, preserve tentative answers as

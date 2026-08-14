@@ -308,6 +308,21 @@ class CompassTests(unittest.TestCase):
             )
             self.assertEqual(skipped["answer_statuses"]["desired-purpose"], "skipped")
 
+    def test_subsystem_greenfield_quiz_can_start_before_child_contract(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            repo = Path(directory)
+            status = start_quiz(
+                repo,
+                "greenfield",
+                compass_id="playback",
+                scope_kind="subsystem",
+                session_id="greenfield-playback",
+                now="2026-08-14T12:00:00+00:00",
+            )
+            self.assertEqual(status["scope_kind"], "subsystem")
+            self.assertEqual(status["next_question"]["id"], "purpose")
+            self.assertTrue(status["draft_only"])
+
     def test_subsystem_realignment_quiz_uses_child_scope(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             repo = Path(directory)

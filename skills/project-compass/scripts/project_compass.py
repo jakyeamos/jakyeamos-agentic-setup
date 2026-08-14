@@ -632,6 +632,7 @@ def _parser() -> argparse.ArgumentParser:
     start.add_argument("repo", type=Path)
     start.add_argument("--mode", choices=sorted(QUIZ_MODES), required=True)
     start.add_argument("--compass-id", default="project")
+    start.add_argument("--scope-kind", choices=sorted(COMPASS_KINDS))
     start.add_argument("--session-id")
     start.add_argument("--now")
     start.add_argument("--json", action="store_true")
@@ -675,6 +676,7 @@ def main(argv: list[str] | None = None) -> int:
                     compass_id=args.compass_id,
                     session_id=args.session_id,
                     now=args.now,
+                    scope_kind=args.scope_kind,
                 )
             elif args.quiz_command == "answer":
                 result = answer_quiz(

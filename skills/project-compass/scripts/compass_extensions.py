@@ -451,19 +451,52 @@ def _quiz_questions(mode: str, scope_kind: str) -> list[dict[str, str]]:
     ]
 
 
-def _quiz_scope_kind(repo: Path, mode: str, compass_id: str) -> str:
+def _quiz_scope_kind(
+    repo: Path,
+    mode: str,
+    compass_id: str,
+    requested_scope_kind: str | None = None,
+) -> str:
     _require(mode in QUIZ_MODES, f"quiz mode is invalid: {mode}")
+    _require(
+        isinstance(compass_id, str) and ID_PATTERN.fullmatch(compass_id),
+        "quiz compass_id must be hyphen-case",
+    )
+    if requested_scope_kind is not None:
+        _require(
+            requested_scope_kind in COMPASS_KINDS,
+            f"quiz scope kind is invalid: {requested_scope_kind}",
+        )
     contract_path = _dependency("contract_path")(repo)
     if not contract_path.exists():
         _require(
-            mode in {"greenfield", "brownfield"} and compass_id == "project",
-            "a missing contract only supports a project greenfield or brownfield quiz",
+            mode in {"greenfield", "brownfield"},
+            "a missing contract only supports a greenfield or brownfield quiz",
+        )
+        if requested_scope_kind == "subsystem":
+            _require(
+                compass_id != "project",
+                "a subsystem quiz needs a non-project compass_id",
+            )
+            return "subsystem"
+        _require(
+            compass_id == "project",
+            "a root quiz without a contract must use compass_id project",
         )
         return "root"
     family = load_compass_family(repo)
-    _require(compass_id in family["contracts"],
-             f"compass not found: {compass_id}")
+    if compass_id not in family["contracts"]:
+        _require(
+            requested_scope_kind == "subsystem"
+            and mode in {"greenfield", "brownfield"},
+            f"compass not found: {compass_id}",
+        )
+        return "subsystem"
     entry = next(item for item in family["entries"] if item["id"] == compass_id)
+    _require(
+        requested_scope_kind is None or requested_scope_kind == entry["kind"],
+        f"compass {compass_id} is a {entry['kind']} compass, not a {requested_scope_kind}",
+    )
     return entry["kind"]
 
 
@@ -524,9 +557,12 @@ def start_quiz(
     compass_id: str = "project",
     session_id: str | None = None,
     now: str | None = None,
+    scope_kind: str | None = None,
 ) -> dict[str, Any]:
     started_at = _timestamp(now)
-    scope_kind = _quiz_scope_kind(repo, mode, compass_id)
+    resolved_scope_kind = _quiz_scope_kind(
+        repo, mode, compass_id, requested_scope_kind=scope_kind
+    )
     if session_id is None:
         suffix = datetime.fromisoformat(
             started_at.replace("Z", "+00:00")
@@ -552,9 +588,9 @@ def start_quiz(
         "id": session_id,
         "mode": mode,
         "compass_id": compass_id,
-        "scope_kind": scope_kind,
+        "scope_kind": resolved_scope_kind,
         "status": "active",
-        "questions": _quiz_questions(mode, scope_kind),
+        "questions": _quiz_questions(mode, resolved_scope_kind),
         "answers": [],
         "started_at": started_at,
         "updated_at": started_at,
