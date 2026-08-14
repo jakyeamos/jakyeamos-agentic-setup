@@ -28,6 +28,10 @@ Required behavior:
   side effect of installing a portable asset.
 - The result records `status`, `actions`, `verification`, and any
   `partial_failures`.
+- A dry-run result is explicitly `planned` or `unknown`, never `pass` or
+  `fail`; it records the proposed command and its scope without claiming that
+  the guarded behavior occurred. Only a later authorized execution may emit
+  `pass` or `fail` (or the applicable blocked/unavailable/timeout outcome).
 - Credentials are resolved only from an approved keychain or environment
   surface and never appear in arguments, prompts, logs, transcripts, diffs, or
   artifacts.

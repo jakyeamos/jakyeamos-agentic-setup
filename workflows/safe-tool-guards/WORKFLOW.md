@@ -6,7 +6,9 @@ calls a tool with side effects.
 1. Classify the action as read-only, reversible write, external mutation, or
    destructive operation.
 2. Resolve the exact target paths and arguments.
-3. Check the repository or tool's dry-run surface.
+3. Check the repository or tool's dry-run surface. A dry-run may report only
+   `planned` or `unknown`; it must not claim a pass/fail result or write
+   verification evidence.
 4. Present or record the proposed action when approval is required.
 5. Execute only the approved scope.
 6. Verify the result and record any partial failure.
@@ -52,8 +54,10 @@ host-specific hook or guard is unavailable.
 Adapters may translate this contract to a host's pre-tool or shell-hook
 surface, but they must be staged for manual review. Every promoted guard rule
 must name an owner, executable validation, supported targets, and a removal condition.
-The shared result taxonomy includes `pass`, `fail`, `blocked`, `unavailable`,
-and `timeout`; preserve those distinctions when translating to a host surface.
+The shared execution result taxonomy includes `pass`, `fail`, `blocked`,
+`unavailable`, and `timeout`; preserve those distinctions when translating to a
+host surface. Keep dry-run `planned`/`unknown` separate from execution
+outcomes until an approved command actually runs.
 This package does not ship a guard binary or silently edit host configuration.
 
 A Pre-CR quality adapter is a changed-scope translation of this contract. It

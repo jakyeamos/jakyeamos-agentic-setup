@@ -291,6 +291,8 @@ def _validate_asset(
     asset: Any,
     seen_ids: set[str],
     taxonomy: dict[str, Any] | None = None,
+    *,
+    snapshot: bool = False,
 ) -> list[str]:
     errors: list[str] = []
     if not isinstance(asset, dict):
@@ -362,7 +364,7 @@ def _validate_asset(
                 errors.append(f"{label}: invalid file path {file_value!r}")
                 continue
             file_path = root / file_value
-            if not file_path.is_file():
+            if not snapshot and not file_path.is_file():
                 errors.append(f"{label}: missing file {file_value}")
 
     entrypoints = asset.get("entrypoints", [])
@@ -406,7 +408,7 @@ def _validate_asset(
         for evidence_ref in evidence:
             if not isinstance(evidence_ref, str) or not evidence_ref:
                 errors.append(f"{label}: evidence references must be strings")
-            elif (
+            elif not snapshot and (
                 not _is_url(evidence_ref)
                 and not (root / evidence_ref.split("#", 1)[0]).is_file()
             ):
@@ -458,8 +460,15 @@ def _validate_asset(
     return errors
 
 
-def validate_manifest(root: Path) -> list[str]:
-    """Return catalog validation errors for a repository root."""
+def validate_manifest(root: Path, *, snapshot: bool = False) -> list[str]:
+    """Return catalog validation errors for a repository root.
+
+    ``snapshot=True`` validates only the supplied manifest/taxonomy shape and
+    safe relative-reference syntax. Filesystem-dependent existence, library
+    completeness, and local Markdown-link checks are intentionally omitted;
+    callers must report those dimensions as unknown rather than treating a
+    snapshot-limited pass as a full repository pass.
+    """
 
     errors: list[str] = []
     try:
@@ -525,18 +534,38 @@ def validate_manifest(root: Path) -> list[str]:
     else:
         seen_ids: set[str] = set()
         for asset in assets:
-            errors.extend(_validate_asset(root, asset, seen_ids, taxonomy))
-        errors.extend(_validate_library(root, assets, taxonomy))
+            errors.extend(
+                _validate_asset(root, asset, seen_ids, taxonomy, snapshot=snapshot)
+            )
+        if not snapshot:
+            errors.extend(_validate_library(root, assets, taxonomy))
 
-    for path in sorted(root.rglob("*.md")):
-        if any(
-            part
-            in {".git", ".pre-cr", ".quality-runner", ".aios", ".tmcp", "__pycache__"}
-            for part in path.parts
-        ):
-            continue
-        errors.extend(_validate_markdown_links(root, path))
+    if not snapshot:
+        for path in sorted(root.rglob("*.md")):
+            if any(
+                part
+                in {".git", ".pre-cr", ".quality-runner", ".aios", ".tmcp", "__pycache__"}
+                for part in path.parts
+            ):
+                continue
+            errors.extend(_validate_markdown_links(root, path))
     return errors
+
+
+def validate_manifest_snapshot(root: Path) -> dict[str, Any]:
+    """Return a bounded result that keeps omitted checks explicitly unknown."""
+
+    errors = validate_manifest(root, snapshot=True)
+    return {
+        "status": "pass" if not errors else "fail",
+        "validation_scope": "snapshot-limited",
+        "errors": errors,
+        "unknown_checks": [
+            "filesystem file and evidence existence",
+            "library directory completeness and type alignment",
+            "local Markdown link resolution",
+        ],
+    }
 
 
 def main() -> int:

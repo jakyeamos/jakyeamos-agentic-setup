@@ -15,7 +15,10 @@ select one implementation.
 
 1. Classify the decision and select a bounded exploration mode.
 2. Generate a candidate portfolio with explicit assumptions and failure modes.
-3. Judge candidates against named criteria with rationale and uncertainty.
+3. Judge candidates against named criteria with rationale and uncertainty. When
+   the decision supplies measurable criteria (for example time, cost, risk,
+   or coverage), score every supplied criterion for every candidate; do not
+   silently replace it with a convenient proxy or invented weighting.
 4. Select a portfolio or recommendation, not merely an attractive first idea.
 5. Record entropy, rejected options, and unresolved product or environment
    questions.

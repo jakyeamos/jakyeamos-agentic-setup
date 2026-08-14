@@ -42,7 +42,10 @@ Walk one stage at a time and keep the map visible:
    load-bearing finding immediately. If the territory is not available, remain
    at this stage and ask one exact scope or access question, or show a clearly
    labeled proposed scan manifest; do not report future inspection as the
-   user's reaction.
+   user's reaction. End this stage with exactly one concrete, high-blast-radius
+   user-reaction question about who will use the result, where it runs, or what
+   counts as done. Do not advance until that reaction is answered; do not
+   replace it with several broad questions or a generic offer.
 2. **Known unknowns.** Inventory the questions that can block the task. Resolve
    one at a time in descending architectural blast radius, with a recommended
    answer and short options. Close each in front of the user as answered by

@@ -34,3 +34,12 @@ vendor them.
 Never claim a performance improvement from a clean exit code or a smaller
 checkpoint alone. A performance claim needs a measured baseline, comparable
 inputs, and a recorded method.
+
+## Comparable rerun checklist
+
+For a before/after claim, rerun the same workload on the same hardware and
+software/runtime, with the same dataset, warmup policy, command/configuration,
+sample count, and measurement method. Retain raw measurements (or a bounded
+summary such as count, median, and spread) plus the output-equality check.
+Different hardware, data, warmup, commands, or missing raw measurements make
+the comparison a hypothesis or limitation, not a measured improvement.

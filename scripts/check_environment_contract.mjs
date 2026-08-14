@@ -160,6 +160,31 @@ export function validateContract(rootInput = DEFAULT_ROOT, asOfInput = new Date(
       if (SECRET_NAME_PATTERN.test(file)) errors.push(`secret-like tracked path: ${file}`);
     }
   }
+  const contextErrors = errors.filter((error) =>
+    error.startsWith("missing .agents/context/") ||
+    error.startsWith("context index") ||
+    error.startsWith("context packet") ||
+    error.startsWith("broken context link")
+  );
+  const contextIndex = path.join(root, ".agents", "context", "README.md");
+  let contextFreshnessDays = null;
+  if (existsSync(contextIndex) && !lstatSync(contextIndex).isSymbolicLink()) {
+    const reviewed = readFileSync(contextIndex, "utf8").match(REVIEW_PATTERN);
+    if (reviewed && asOf !== null) {
+      const reviewedDate = dateOnly(`${reviewed[1]}T00:00:00Z`);
+      if (reviewedDate !== null) {
+        contextFreshnessDays = Math.floor((asOf - reviewedDate) / (24 * 60 * 60 * 1000));
+      }
+    }
+  }
+  const contextDimensions = {
+    ownership: contextErrors.some((error) => error.includes("must not be a symlink") || error.includes("missing .agents/context/README.md")) ? "fail" : "pass",
+    freshness: contextErrors.some((error) => error.startsWith("context index")) ? "fail" : (contextFreshnessDays === null ? "unknown" : "pass"),
+    links: contextErrors.some((error) => error.startsWith("broken context link")) ? "fail" : "pass",
+    packets: contextErrors.some((error) => error.startsWith("missing context packet") || error.startsWith("context packet must not")) ? "fail" : "pass",
+    freshness_days: contextFreshnessDays,
+    freshness_limit_days: 35
+  };
   return {
     schema_version: "environment-contract/v1",
     as_of: new Date(asOfInput).toISOString(),
@@ -168,6 +193,7 @@ export function validateContract(rootInput = DEFAULT_ROOT, asOfInput = new Date(
     checks: {
       context_packets: PACKETS.filter((packet) => existsSync(path.join(root, ".agents/context", packet))).length,
       context_packets_required: PACKETS.length,
+      context_dimensions: contextDimensions,
       quality_commands: QUALITY_COMMANDS.length,
       tracked_secret_paths: errors.filter((error) => error.startsWith("secret-like tracked path:")).length,
       strict_javascript_syntax: true,

@@ -100,6 +100,8 @@ def validate_candidate(candidate: Mapping[str, object]) -> dict[str, object]:
     """Validate the leverage candidate without exposing its private evidence."""
 
     _required_exact(candidate, "schema_version", CANDIDATE_SCHEMA_VERSION)
+    if _private_value_present(candidate):
+        raise AdmissionError("candidate contains a private or credential-shaped value")
     _required_exact(candidate, "visibility", "private")
     candidate_id = _required_text(candidate, "candidate_id")
     if not CANDIDATE_ID_PATTERN.fullmatch(candidate_id):
@@ -1229,10 +1231,26 @@ def main(argv: list[str] | None = None) -> int:
         root = args.root.expanduser().resolve()
         candidate = load_json(args.candidate.expanduser().resolve())
         candidate_result = validate_candidate(candidate)
-        projection = _projection_from_candidate(
-            candidate,
-            None if args.projection is None else args.projection.expanduser().resolve(),
-        )
+        try:
+            projection = _projection_from_candidate(
+                candidate,
+                None if args.projection is None else args.projection.expanduser().resolve(),
+            )
+        except AdmissionError as exc:
+            if args.command == "validate" and args.projection is None and "no embedded sanitized promotion projection" in str(exc):
+                payload = {
+                    "status": "review_required",
+                    "candidate_id": candidate_result["candidate_id"],
+                    "asset_id": None,
+                    "visibility": "private",
+                    "schema_version": None,
+                    "reason": "promotion_projection_missing",
+                    "target": None,
+                    "mutated": False,
+                }
+                print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
+                return 0
+            raise
         projection_result = validate_projection(
             projection,
             root,

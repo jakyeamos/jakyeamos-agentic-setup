@@ -16,7 +16,7 @@ import {
 import { installPrivateOverlay, resolvePrivateOverlay } from "../src/overlay.mjs";
 
 function parseArgs(argv) {
-  const args = { command: argv[0] ?? "help", json: false, apply: false, allowBroadScan: false, allowHome: false };
+  const args = { command: argv[0] ?? "help", json: false, apply: false, allowBroadScan: false, allowHome: false, provider: null };
   if (args.command === "--help" || args.command === "-h") args.command = "help";
   for (let index = 1; index < argv.length; index += 1) {
     const value = argv[index];
@@ -40,6 +40,9 @@ function parseArgs(argv) {
     } else if (value === "--root") {
       args.root = argv[++index];
       if (!args.root) throw new Error("--root requires a path");
+    } else if (value === "--provider") {
+      args.provider = argv[++index];
+      if (!args.provider) throw new Error("--provider requires a target");
     } else if (value === "--help" || value === "-h") args.command = "help";
     else throw new Error(`unknown option ${value}`);
   }
@@ -70,6 +73,7 @@ Options:
   --catalog <path>        public catalog path (default: catalog/manifest.json)
   --private-root <path>   private package root for jas-private-overlay/v2
   --root <path>           disposable target root for overlay-install
+  --provider <target>     target adapter for sync (for example codex)
   --allow-broad-scan      permit an explicitly requested home inventory scan
   --allow-home            permit the explicit Pronto promotion path to target the real home
   --apply                 allow safe writes after the full preflight passes
@@ -132,6 +136,9 @@ function main(argv) {
     return result.status === "DOCTOR_BLOCKED" ? 2 : 0;
   }
   if (args.command === "sync" || args.command === "install") {
+    if (args.provider && !["generic", "codex", "claude", "cursor", "copilot", "gemini", "antigravity"].includes(args.provider)) {
+      throw new Error(`unsupported provider ${args.provider}; run agent-config help`);
+    }
     const result = syncManifest(manifest, manifestRoot, { apply: args.apply });
     print(args.json ? result : `${result.status}${args.apply ? " (applied safe actions)" : " (dry run)"}\n${result.actions.map((item) => `${item.action}: ${item.id}: ${item.reason}`).join("\n")}`, args.json);
     return result.status === "SYNC_BLOCKED" ? 2 : 0;
@@ -148,7 +155,7 @@ function main(argv) {
     print(args.json ? result : `${runtimes.status}\n${runtimes.results.map((item) => `${item.status}: ${item.runtime} — ${item.install_recipe}`).join("\n")}\nconfig: ${config.status}`, args.json);
     return config.status === "SYNC_BLOCKED" || runtimes.status === "BOOTSTRAP_NEEDS_MANUAL_INSTALL" ? 2 : 0;
   }
-  throw new Error(`unknown command ${args.command}`);
+  throw new Error(`unknown command ${args.command}; run agent-config help`);
 }
 
 try {

@@ -80,6 +80,10 @@ export function validateAgentUsability(rootInput = DEFAULT_ROOT) {
     if (!VALID_APPLICABILITY.has(applicability)) {
       errors.push("agent usability contract applicability must be applicable or not-applicable");
     }
+    if (applicability === "not-applicable" &&
+        (typeof contract.reason !== "string" || contract.reason.trim() === "")) {
+      errors.push('agent usability contract: not-applicable requires a non-empty reason');
+    }
 
     const tools = contract.tools;
     if (!Array.isArray(tools)) {

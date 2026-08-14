@@ -114,18 +114,40 @@ def render_index(root: Path) -> str:
                 "",
                 collection["summary"],
                 "",
-                "| Multiplier | Why open it | Type |",
-                "| --- | --- | --- |",
+                "Entries are grouped by the taxonomy order below; each group is",
+                "sorted by the collection's explicit entry order.",
             ]
         )
-        for asset_id in collection.get("entries", []):
-            asset = by_id.get(asset_id)
-            if asset is None:
+        collection_assets = [
+            by_id[asset_id]
+            for asset_id in collection.get("entries", [])
+            if asset_id in by_id
+        ]
+        for type_item in types:
+            if not isinstance(type_item, dict):
                 continue
-            lines.append(
-                f"| [`{asset_id}`]({_link_for(asset)}) | {asset['entry']['why']} | "
-                f"{asset['entry']['type']} |"
+            type_assets = [
+                asset
+                for asset in collection_assets
+                if entry_type(asset, taxonomy) == type_item["id"]
+            ]
+            if not type_assets:
+                continue
+            lines.extend(
+                [
+                    "",
+                    f"### {type_item['label']}",
+                    "",
+                    "| Multiplier | Why open it | Type |",
+                    "| --- | --- | --- |",
+                ]
             )
+            for asset in type_assets:
+                asset_id = asset["id"]
+                lines.append(
+                    f"| [`{asset_id}`]({_link_for(asset)}) | {asset['entry']['why']} | "
+                    f"{asset['entry']['type']} |"
+                )
 
     for type_item in types:
         if not isinstance(type_item, dict):
