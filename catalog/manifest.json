@@ -713,6 +713,7 @@
         "skills/project-compass/references/contract.schema.json",
         "skills/project-compass/references/registry.schema.json",
         "skills/project-compass/references/quiz.schema.json",
+        "skills/project-compass/scripts/compass_extensions.py",
         "skills/project-compass/scripts/project_compass.py",
         "skills/project-compass/scripts/test_project_compass.py"
       ],
