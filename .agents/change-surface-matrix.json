@@ -8,6 +8,13 @@
     {"id": "project-compass-family", "scope": "local", "path": ".project-compass/", "owner": "repository-owner", "condition": "The repository is Compass-managed and an addition, change, removal, or fold changes a root or subsystem boundary, declared path, parent outcome, or cross-compass link.", "operations": ["add", "change", "remove", "fold"], "validation": ["python3 skills/project-compass/scripts/project_compass.py validate <repo>", "python3 skills/project-compass/scripts/project_compass.py score <repo> --json", "Run the operation-specific Compass closure checks before accepting the matrix operation."], "status": "applicable"},
     {"id": "provider-projections", "scope": "external", "path": "installed provider projections", "owner": "projection-owner", "condition": "a distributed skill, workflow, route, or install mapping changes", "operations": ["add", "change", "remove", "fold"], "validation": ["pnpm audit", "pnpm doctor", "pnpm smoke"], "status": "applicable"}
   ],
+  "reviewed_no_impact": [
+    {
+      "date": "2026-08-14",
+      "change": "promotion-admission module and test decomposition",
+      "reason": "Internal responsibility split only; CLI arguments, import facade, schemas, catalog behavior, provider projections, and installation mappings are unchanged."
+    }
+  ],
   "unresolved_surfaces": [],
   "compass_closure": {
     "artifact_root": ".project-compass/",
