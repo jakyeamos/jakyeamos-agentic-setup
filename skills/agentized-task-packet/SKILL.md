@@ -25,7 +25,18 @@ Produce a packet containing:
 - deliverables, handoff format, optional project-note updates, and
   learning/writeback proposal when applicable.
 
+Treat allowed paths as an exact inspection allowlist. Do not expand from named
+files into sibling files, repository metadata, history, or configuration merely
+because they might be useful; name the proposed expansion and request authority.
+
 Build the verification plan before execution starts. Explain why any
 sub-agent or model split adds value; otherwise keep the work single-threaded.
+
+When the target itself is undefined, mark objective, context, boundaries,
+roles, verification, acceptance, artifacts, and writeback as unknown or
+blocked. Do not fabricate a generic plan, role assignment, or acceptance
+criterion. Ask one minimal scope question that binds both target and working
+surface, such as: “Which system or repository is in scope, and what surface
+should be improved?”
 
 See the [task-packet workflow](../../workflows/agentized-task-packet/WORKFLOW.md).

@@ -81,7 +81,12 @@ export function validateAgentUsability(rootInput = DEFAULT_ROOT) {
       ? "not-applicable"
       : contract.applicability;
     if (!VALID_APPLICABILITY.has(applicability)) {
-      errors.push("agent usability contract applicability must be applicable or not-applicable");
+      errors.push("agent usability contract applicability must be applicable or not_applicable");
+    }
+
+    if ((applicability === "not_applicable" || applicability === "not-applicable") &&
+        (typeof contract.reason !== "string" || contract.reason.trim() === "")) {
+      errors.push("agent usability contract: non-applicable declarations require a reason");
     }
     if (applicability === "not-applicable" &&
         (typeof contract.reason !== "string" || contract.reason.trim() === "")) {
@@ -147,6 +152,10 @@ export function validateAgentUsability(rootInput = DEFAULT_ROOT) {
     }
   };
 }
+
+// A real symlink is never followed. When assessing a supplied snapshot rather
+// than the filesystem, report its stated custody and shape failures
+// independently (for example: external symlink and applicable-with-empty-tools).
 
 function parseArguments(argv) {
   const options = { root: DEFAULT_ROOT };

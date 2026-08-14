@@ -56,6 +56,94 @@ A small cross-section of the catalog that shows how context, safety, writing, an
 
 Entries are grouped by the taxonomy order below; each group is
 sorted by the collection's explicit entry order.
+| [`consequence-closure`](../skills/consequence-closure/SKILL.md) | Trace a change beyond its diff to affected consumers, evidence surfaces, maturity claims, and reusable follow-up opportunities. | skill |
+| [`research-domain-writing`](../skills/research-domain-writing/SKILL.md) | Turn a domain-writing request into a researched, cited, reviewed deliverable instead of an unsupported draft. | skill |
+| [`repo-aware-context`](../workflows/repo-aware-context/WORKFLOW.md) | Give an agent the right repository identity and context without collapsing instructions, source maps, and live state together. | playbook |
+| [`safe-tool-guards`](../workflows/safe-tool-guards/WORKFLOW.md) | Classify and preview tool actions so destructive, credentialed, or externally visible work crosses an explicit approval boundary. | playbook |
+
+### Skills
+
+| Multiplier | Why open it | Type |
+| --- | --- | --- |
+| [`consequence-closure`](../skills/consequence-closure/SKILL.md) | Trace a change beyond its diff to affected consumers, evidence surfaces, maturity claims, and reusable follow-up opportunities. | skill |
+| [`research-domain-writing`](../skills/research-domain-writing/SKILL.md) | Turn a domain-writing request into a researched, cited, reviewed deliverable instead of an unsupported draft. | skill |
+
+### Playbooks
+
+| Multiplier | Why open it | Type |
+| --- | --- | --- |
+| [`repo-aware-context`](../workflows/repo-aware-context/WORKFLOW.md) | Give an agent the right repository identity and context without collapsing instructions, source maps, and live state together. | playbook |
+| [`safe-tool-guards`](../workflows/safe-tool-guards/WORKFLOW.md) | Classify and preview tool actions so destructive, credentialed, or externally visible work crosses an explicit approval boundary. | playbook |
+
+### Skills
+
+| Multiplier | Why open it | Type |
+| --- | --- | --- |
+| [`consequence-closure`](../skills/consequence-closure/SKILL.md) | Trace a change beyond its diff to affected consumers, evidence surfaces, maturity claims, and reusable follow-up opportunities. | skill |
+| [`research-domain-writing`](../skills/research-domain-writing/SKILL.md) | Turn a domain-writing request into a researched, cited, reviewed deliverable instead of an unsupported draft. | skill |
+
+### Playbooks
+
+| Multiplier | Why open it | Type |
+| --- | --- | --- |
+| [`repo-aware-context`](../workflows/repo-aware-context/WORKFLOW.md) | Give an agent the right repository identity and context without collapsing instructions, source maps, and live state together. | playbook |
+| [`safe-tool-guards`](../workflows/safe-tool-guards/WORKFLOW.md) | Classify and preview tool actions so destructive, credentialed, or externally visible work crosses an explicit approval boundary. | playbook |
+
+### Skills
+
+| Multiplier | Why open it | Type |
+| --- | --- | --- |
+| [`consequence-closure`](../skills/consequence-closure/SKILL.md) | Trace a change beyond its diff to affected consumers, evidence surfaces, maturity claims, and reusable follow-up opportunities. | skill |
+| [`research-domain-writing`](../skills/research-domain-writing/SKILL.md) | Turn a domain-writing request into a researched, cited, reviewed deliverable instead of an unsupported draft. | skill |
+
+### Playbooks
+
+| Multiplier | Why open it | Type |
+| --- | --- | --- |
+| [`repo-aware-context`](../workflows/repo-aware-context/WORKFLOW.md) | Give an agent the right repository identity and context without collapsing instructions, source maps, and live state together. | playbook |
+| [`safe-tool-guards`](../workflows/safe-tool-guards/WORKFLOW.md) | Classify and preview tool actions so destructive, credentialed, or externally visible work crosses an explicit approval boundary. | playbook |
+
+### Skills
+
+| Multiplier | Why open it | Type |
+| --- | --- | --- |
+| [`consequence-closure`](../skills/consequence-closure/SKILL.md) | Trace a change beyond its diff to affected consumers, evidence surfaces, maturity claims, and reusable follow-up opportunities. | skill |
+| [`research-domain-writing`](../skills/research-domain-writing/SKILL.md) | Turn a domain-writing request into a researched, cited, reviewed deliverable instead of an unsupported draft. | skill |
+
+### Playbooks
+
+| Multiplier | Why open it | Type |
+| --- | --- | --- |
+| [`repo-aware-context`](../workflows/repo-aware-context/WORKFLOW.md) | Give an agent the right repository identity and context without collapsing instructions, source maps, and live state together. | playbook |
+| [`safe-tool-guards`](../workflows/safe-tool-guards/WORKFLOW.md) | Classify and preview tool actions so destructive, credentialed, or externally visible work crosses an explicit approval boundary. | playbook |
+
+### Skills
+
+| Multiplier | Why open it | Type |
+| --- | --- | --- |
+| [`consequence-closure`](../skills/consequence-closure/SKILL.md) | Trace a change beyond its diff to affected consumers, evidence surfaces, maturity claims, and reusable follow-up opportunities. | skill |
+| [`research-domain-writing`](../skills/research-domain-writing/SKILL.md) | Turn a domain-writing request into a researched, cited, reviewed deliverable instead of an unsupported draft. | skill |
+
+### Playbooks
+
+| Multiplier | Why open it | Type |
+| --- | --- | --- |
+| [`repo-aware-context`](../workflows/repo-aware-context/WORKFLOW.md) | Give an agent the right repository identity and context without collapsing instructions, source maps, and live state together. | playbook |
+| [`safe-tool-guards`](../workflows/safe-tool-guards/WORKFLOW.md) | Classify and preview tool actions so destructive, credentialed, or externally visible work crosses an explicit approval boundary. | playbook |
+
+### Skills
+
+| Multiplier | Why open it | Type |
+| --- | --- | --- |
+| [`consequence-closure`](../skills/consequence-closure/SKILL.md) | Trace a change beyond its diff to affected consumers, evidence surfaces, maturity claims, and reusable follow-up opportunities. | skill |
+| [`research-domain-writing`](../skills/research-domain-writing/SKILL.md) | Turn a domain-writing request into a researched, cited, reviewed deliverable instead of an unsupported draft. | skill |
+
+### Playbooks
+
+| Multiplier | Why open it | Type |
+| --- | --- | --- |
+| [`repo-aware-context`](../workflows/repo-aware-context/WORKFLOW.md) | Give an agent the right repository identity and context without collapsing instructions, source maps, and live state together. | playbook |
+| [`safe-tool-guards`](../workflows/safe-tool-guards/WORKFLOW.md) | Classify and preview tool actions so destructive, credentialed, or externally visible work crosses an explicit approval boundary. | playbook |
 
 ### Skills
 

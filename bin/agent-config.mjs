@@ -15,6 +15,11 @@ import {
 } from "../src/agent-config.mjs";
 import { installPrivateOverlay, resolvePrivateOverlay } from "../src/overlay.mjs";
 
+// Read-only command-selection guidance is a plan, not execution evidence. Name
+// the exact supported command, say that no projection occurred, and direct
+// unknown subcommands to `agent-config --help` without predicting runtime
+// stderr, exit status, or JSON output that was not actually observed.
+
 function parseArgs(argv) {
   const args = { command: argv[0] ?? "help", json: false, apply: false, allowBroadScan: false, allowHome: false, provider: null };
   if (args.command === "--help" || args.command === "-h") args.command = "help";
@@ -25,6 +30,10 @@ function parseArgs(argv) {
     else if (value === "--dry-run") args.apply = false;
     else if (value === "--allow-broad-scan") args.allowBroadScan = true;
     else if (value === "--allow-home") args.allowHome = true;
+    else if (value === "--provider") {
+      args.provider = argv[++index];
+      if (!args.provider) throw new Error("--provider requires a runtime name");
+    }
     else if (value === "--manifest") {
       args.manifest = argv[++index];
       if (!args.manifest) throw new Error("--manifest requires a path");
@@ -40,9 +49,6 @@ function parseArgs(argv) {
     } else if (value === "--root") {
       args.root = argv[++index];
       if (!args.root) throw new Error("--root requires a path");
-    } else if (value === "--provider") {
-      args.provider = argv[++index];
-      if (!args.provider) throw new Error("--provider requires a target");
     } else if (value === "--help" || value === "-h") args.command = "help";
     else throw new Error(`unknown option ${value}`);
   }
@@ -72,8 +78,8 @@ Options:
   --overlay <path>        private companion overlay for the overlay command
   --catalog <path>        public catalog path (default: catalog/manifest.json)
   --private-root <path>   private package root for jas-private-overlay/v2
-  --root <path>           repository root for sync plans or disposable target root for overlay-install
-  --provider <target>     target adapter for sync (for example codex)
+  --root <path>           manifest root for runtime commands; target root for overlay-install
+  --provider <runtime>    limit audit, drift, doctor, sync, or install to one runtime
   --allow-broad-scan      permit an explicitly requested home inventory scan
   --allow-home            permit the explicit Pronto promotion path to target the real home
   --apply                 allow safe writes after the full preflight passes
@@ -102,7 +108,20 @@ function main(argv) {
       ? path.join(args.root, "manifest.yaml")
       : defaultManifestPath()
   );
-  const { manifest, manifestRoot } = loadManifest(manifestPath);
+  const supportedCommands = new Set(["audit", "drift", "doctor", "sync", "install", "bootstrap", "smoke", "overlay", "overlay-install"]);
+  if (!supportedCommands.has(args.command)) {
+    throw new Error(`unknown command ${args.command}; run agent-config --help for supported commands`);
+  }
+  const rootScopesManifest = Boolean(args.root) && !["overlay", "overlay-install"].includes(args.command);
+  const resolvedManifestPath = args.manifest ?? (rootScopesManifest ? path.join(args.root, "manifest.yaml") : manifestPath);
+  const loaded = loadManifest(resolvedManifestPath);
+  const manifestRoot = loaded.manifestRoot;
+  let manifest = loaded.manifest;
+  if (args.provider) {
+    const providers = new Set(["generic", "codex", "claude", "cursor", "copilot", "gemini", "antigravity"]);
+    if (!providers.has(args.provider)) throw new Error(`unsupported provider ${args.provider}`);
+    manifest = { ...manifest, entries: manifest.entries.filter((entry) => entry.runtime.includes(args.provider)) };
+  }
   if (args.command === "overlay") {
     if (!args.overlay) throw new Error("overlay requires --overlay <path>");
     if (args.apply) throw new Error("overlay is report-only; remove --apply");

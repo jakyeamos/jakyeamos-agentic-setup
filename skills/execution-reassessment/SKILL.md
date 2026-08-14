@@ -71,6 +71,8 @@ verification: <passed, blocked, or not run; narrow regression and result>
 The `impact` field must make the immediate stop boundary explicit. The
 `verification` field must not claim success from a plan, a clean process exit,
 or an unrun check.
+It must record the observed state transition when that is the regression—for
+example, generated types appearing and the subsequent build completing cleanly.
 
 ## Stopping condition
 

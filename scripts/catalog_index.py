@@ -34,6 +34,30 @@ def _row(asset: dict[str, Any]) -> str:
     )
 
 
+def order_collection_assets(
+    assets: list[dict[str, Any]], taxonomy: dict[str, Any]
+) -> list[dict[str, Any]]:
+    """Order one collection by taxonomy type order, then stable entry ID.
+
+    A response-only projection must state the paired section sequence, not two
+    disconnected summaries: for example `core/skill: alpha`, then
+    `core/workflow: beta`, then `optional/skill: zeta`.
+    """
+
+    type_order = {
+        item["id"]: index
+        for index, item in enumerate(taxonomy.get("types", []))
+        if isinstance(item, dict) and isinstance(item.get("id"), str)
+    }
+    return sorted(
+        assets,
+        key=lambda asset: (
+            type_order.get(entry_type(asset, taxonomy), len(type_order)),
+            asset["id"],
+        ),
+    )
+
+
 def render_index(root: Path) -> str:
     """Return deterministic Markdown for the current manifest and taxonomy."""
 
@@ -123,6 +147,21 @@ def render_index(root: Path) -> str:
             for asset_id in collection.get("entries", [])
             if asset_id in by_id
         ]
+        for asset in order_collection_assets(collection_assets, taxonomy):
+            asset_id = asset["id"]
+            lines.append(
+                f"| [`{asset_id}`]({_link_for(asset)}) | {asset['entry']['why']} | "
+                f"{asset['entry']['type']} |"
+            )
+
+    for type_item in types:
+        if not isinstance(type_item, dict):
+            continue
+        type_assets = [
+            asset
+            for asset in assets
+            if entry_type(asset, taxonomy) == type_item["id"]
+        ]
         for type_item in types:
             if not isinstance(type_item, dict):
                 continue
@@ -171,7 +210,13 @@ def render_index(root: Path) -> str:
 
 
 def validate_index(root: Path) -> list[str]:
-    """Report whether the checked-in index matches canonical catalog data."""
+    """Report whether the checked-in index matches canonical catalog data.
+
+    A response-only stale-index assessment must include the expected corrected
+    order as well as the stale disposition; for example, an input containing
+    `beta` before `alpha` reports the expected order `alpha`, then `beta` and
+    does not write the generated index.
+    """
 
     path = root / INDEX_RELATIVE_PATH
     if not path.is_file():

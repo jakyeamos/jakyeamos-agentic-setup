@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { execFileSync, spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -46,6 +47,32 @@ test("parses JSON-compatible YAML and validates the manifest contract", () => {
   const manifest = minimalManifest();
   assert.deepEqual(parseManifestText(JSON.stringify(manifest)), manifest);
   assert.equal(validateManifest(manifest), true);
+});
+
+test("CLI selects one provider for a root-scoped dry-run and routes unknown commands to help", () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "agent-config-provider-"));
+  try {
+    const manifest = minimalManifest({
+      entries: [
+        { ...minimalManifest().entries[0], id: "codex", source: "codex.md", destination: "codex-out.md", runtime: ["codex"], always_loaded: false },
+        { ...minimalManifest().entries[0], id: "claude", source: "claude.md", destination: "claude-out.md", runtime: ["claude"], always_loaded: false }
+      ],
+      runtime_commands: [{ runtime: "codex", command: "node", verification: "node --help", install_recipe: "installed" }]
+    });
+    fs.writeFileSync(path.join(root, "manifest.yaml"), JSON.stringify(manifest));
+    fs.writeFileSync(path.join(root, "codex.md"), "codex\n");
+    fs.writeFileSync(path.join(root, "claude.md"), "claude\n");
+    const output = execFileSync(process.execPath, [path.join(process.cwd(), "bin", "agent-config.mjs"), "sync", "--provider", "codex", "--root", root, "--dry-run", "--json"], { encoding: "utf8" });
+    const result = JSON.parse(output);
+    assert.deepEqual(result.actions.map((action) => action.id), ["codex"]);
+    assert.equal(fs.existsSync(path.join(root, "codex-out.md")), false);
+
+    const unknown = spawnSync(process.execPath, [path.join(process.cwd(), "bin", "agent-config.mjs"), "sparkle", "--json"], { encoding: "utf8" });
+    assert.equal(unknown.status, 1);
+    assert.match(unknown.stderr, /agent-config --help/);
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
 });
 
 test("publishes a schema with the required fields and all supported runtime adapters", () => {

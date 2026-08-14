@@ -38,6 +38,9 @@ Do not use this skill for:
    decisions into a disguised questionnaire. Give a recommended answer when
    the evidence supports one. Do not dump a questionnaire or pretend a full
    spec exists after one reply.
+   At an outbound side-effect boundary, missing recipient, destination, or
+   account authority outranks a missing stop condition: ask one exact authority
+   question first.
 2. **Capture the loop.** Record the recurrence or trigger, representative
    inputs, desired output or state change, and what makes the run complete.
 3. **Make execution legible.** Name the tools, files, systems, and account

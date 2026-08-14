@@ -201,6 +201,17 @@ def validate_candidate(candidate: Mapping[str, object]) -> dict[str, object]:
     }
 
 
+def candidate_preflight_findings(candidate: Mapping[str, object]) -> list[str]:
+    """Return independent hard-stop reasons before detailed candidate parsing."""
+
+    findings: list[str] = []
+    if candidate.get("status") != "candidate":
+        findings.append("candidate_state_required")
+    if _private_value_present(candidate):
+        findings.append("private_or_credential_shaped_value")
+    return findings
+
+
 def validate_projection(
     projection: Mapping[str, object],
     root: Path,
@@ -1234,6 +1245,15 @@ def main(argv: list[str] | None = None) -> int:
     try:
         root = args.root.expanduser().resolve()
         candidate = load_json(args.candidate.expanduser().resolve())
+        preflight_findings = candidate_preflight_findings(candidate)
+        if preflight_findings:
+            payload = {
+                "status": "blocked",
+                "reasons": preflight_findings,
+                "mutated": False,
+            }
+            print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
+            return 2
         candidate_result = validate_candidate(candidate)
         try:
             projection = _projection_from_candidate(

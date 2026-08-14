@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
-"""Validate the portable workbench catalog without third-party packages."""
+"""Validate the portable workbench catalog without third-party packages.
+
+Validation is cumulative: schema, taxonomy membership, path custody, local-link
+safety, and install mode are independent boundaries and all applicable errors
+are reported. A snapshot-only assessment must stay limited to the fields and
+file facts supplied by that snapshot; it must not imply a live filesystem read
+or introduce an additional identifier rule as observed evidence.
+"""
 
 from __future__ import annotations
 

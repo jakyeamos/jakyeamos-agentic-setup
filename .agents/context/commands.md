@@ -25,6 +25,9 @@ is also executable with `node scripts/check_agent_usability.mjs`.
 The report-only CLI commands are `pnpm audit`, `pnpm doctor`, `pnpm drift`, and
 `pnpm smoke`. `sync`, `install`, and `bootstrap` remain dry-run/manual-review
 surfaces; `--apply` requires an explicit target and a reviewed plan.
+`agent-config sync --provider <runtime> --root <repository> --dry-run --json`
+previews only the selected runtime entries from that repository's manifest.
+Unknown subcommands fail with a pointer to `agent-config --help`.
 
 Quality commands must remain bounded, deterministic, offline-capable, and
 free of provider, login, deployment, merge, push, migration, or deletion work.

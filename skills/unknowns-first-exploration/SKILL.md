@@ -90,6 +90,16 @@ still was not understood.
   finding from the target territory.
 - The `reaction` field must contain the concrete artifact or exact one question
   the user can react to now. “Present an artifact later” is not a reaction.
+- In stage one, ask the highest-blast-radius unresolved product question, not
+  for approval of a speculative workflow. For alerts, bind audience and channel
+  class in exactly one reaction question: “Who should receive these alerts,
+  and through which channel class?”
+- If the response proposes which unknown to resolve first, label that ordering
+  as an assumption rather than settled workflow. Keep later stages queued and
+  reaction-dependent until the user answers the one current question.
+- When the artifact is outbound prose and recipient or channel is unresolved,
+  `reaction` is exactly one concrete question about the missing recipient or
+  channel—not a bundle of tone, timing, and content questions.
 - Do not silently close a user judgment, implement before the required
   reaction, or claim the map is complete while required decisions remain
   open.

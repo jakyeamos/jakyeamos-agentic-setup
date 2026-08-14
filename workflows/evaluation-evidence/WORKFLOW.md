@@ -23,6 +23,11 @@ source, method, baseline, comparable inputs, confidence, freshness, and
 unresolved boundary. Merge related claims into one evidence row instead of
 creating a new artifact for every synonym.
 
+For comparisons, record the exact measurement method and the environment
+conditions that make baseline and observed runs comparable. If those
+conditions differ or are unknown, keep the result a limitation rather than an
+improvement claim.
+
 ## Capture the result
 
 Use the compact fixture in `fixtures/evaluation/contract-fixture.json` as a

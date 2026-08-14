@@ -21,13 +21,17 @@ function writeEvidence(root, relativePath = "docs/behavior.json") {
 }
 
 function contract(applicability, behaviorEvidence) {
-  return {
+  const value = {
     schema: "agent-usability/v1",
     reviewed_at: "2026-07-25",
     applicability,
     ...(applicability === "not-applicable" ? { reason: "fixture has no supported agent tool surface" } : {}),
     tools: [{ id: "fixture-tool", behavior_evidence: behaviorEvidence }]
   };
+  if (applicability === "not_applicable" || applicability === "not-applicable") {
+    value.reason = "documentation-only package";
+  }
+  return value;
 }
 
 test("the checked-in agent-usability contract has behavior evidence for every tool", () => {
@@ -75,6 +79,22 @@ test("not-applicable contracts may omit behavior evidence", () => {
     const result = validateAgentUsability(root);
     assert.equal(result.status, "pass");
     assert.deepEqual(result.errors, []);
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("not_applicable contracts require a reason and may omit tools", () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "agent-usability-not-applicable-v1-"));
+  try {
+    writeContract(root, { ...contract("not_applicable", []), tools: [] });
+    const result = validateAgentUsability(root);
+    assert.equal(result.status, "pass");
+    assert.equal(result.checks.declared_tools, 0);
+
+    writeContract(root, { schema: "agent-usability/v1", reviewed_at: "2026-08-14", applicability: "not_applicable", tools: [] });
+    const missingReason = validateAgentUsability(root);
+    assert.ok(missingReason.errors.includes("agent usability contract: non-applicable declarations require a reason"));
   } finally {
     fs.rmSync(root, { recursive: true, force: true });
   }

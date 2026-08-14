@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import cast
 
 from scripts.catalog_validation import validate_manifest, validate_supplied_asset_snapshot
+from scripts.catalog_index import order_collection_assets
 from scripts.public_safety_check import scan_repository
 
 SCRIPTS = Path(__file__).resolve().parents[1] / "scripts"
@@ -18,6 +19,21 @@ WORKBENCH = SCRIPTS / "workbench.py"
 
 
 class WorkbenchCliTests(unittest.TestCase):
+    def test_collection_order_follows_taxonomy_type_then_entry_id(self) -> None:
+        taxonomy = {
+            "types": [{"id": "skill"}, {"id": "workflow"}],
+            "kind_defaults": {"skill": "skill", "workflow": "workflow"},
+        }
+        assets = [
+            {"id": "zeta", "kind": "skill", "entry": {"type": "skill"}},
+            {"id": "beta", "kind": "workflow", "entry": {"type": "workflow"}},
+            {"id": "alpha", "kind": "skill", "entry": {"type": "skill"}},
+        ]
+        self.assertEqual(
+            [asset["id"] for asset in order_collection_assets(assets, taxonomy)],
+            ["alpha", "zeta", "beta"],
+        )
+
     def run_cli(self, *arguments: str) -> subprocess.CompletedProcess[str]:
         return subprocess.run(
             [sys.executable, str(WORKBENCH), *arguments],
