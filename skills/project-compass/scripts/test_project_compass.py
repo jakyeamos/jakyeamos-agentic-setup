@@ -9,7 +9,18 @@ import unittest
 from datetime import datetime, timezone
 from pathlib import Path
 
-from project_compass import ContractError, checkpoint, score_contract, validate_contract
+from project_compass import (
+    ContractError,
+    answer_quiz,
+    checkpoint,
+    load_quiz,
+    score_compass_family,
+    score_contract,
+    start_quiz,
+    validate_contract,
+    validate_quiz,
+    validate_registry,
+)
 
 
 def _outcome(
@@ -114,6 +125,57 @@ def _continuity() -> dict:
     }
 
 
+def _scoped_contract(compass_id: str, parent_id: str, parent_outcomes: list[str]) -> dict:
+    contract = _contract()
+    contract["project"]["name"] = compass_id.replace("-", " ").title()
+    contract["project"]["identity"] = f"The {compass_id} subsystem"
+    contract["scope"] = {
+        "id": compass_id,
+        "kind": "subsystem",
+        "parent_id": parent_id,
+        "purpose": f"Keep {compass_id} aligned with its parent outcome.",
+        "boundary": f"Owns the {compass_id} subsystem boundary.",
+        "non_goals": ["Redefining the product identity"],
+        "parent_outcomes": parent_outcomes,
+        "paths": [f"src/{compass_id}"],
+    }
+    return contract
+
+
+def _registry(now: str) -> dict:
+    return {
+        "schema_version": 1,
+        "root_id": "project",
+        "compasses": [
+            {
+                "id": "project",
+                "kind": "root",
+                "path": "contract.json",
+                "parent_id": None,
+                "status": "active",
+            },
+            {
+                "id": "playback",
+                "kind": "subsystem",
+                "path": "compasses/playback.json",
+                "parent_id": "project",
+                "status": "active",
+            },
+        ],
+        "links": [
+            {
+                "id": "playback-project",
+                "from": "playback",
+                "to": "project",
+                "kind": "shared-invariant",
+                "status": "aligned",
+                "summary": "Playback preserves the root listening outcome.",
+            }
+        ],
+        "updated_at": now,
+    }
+
+
 class CompassTests(unittest.TestCase):
     def test_balances_pillars_before_targets(self) -> None:
         scores = score_contract(_contract())
@@ -133,6 +195,153 @@ class CompassTests(unittest.TestCase):
         ]
         with self.assertRaises(ContractError):
             validate_contract(contract)
+
+    def test_validates_scoped_contract_metadata(self) -> None:
+        contract = _scoped_contract("playback", "project", ["usable-loop"])
+        validate_contract(contract)
+        contract["scope"]["paths"] = ["../outside"]
+        with self.assertRaises(ContractError):
+            validate_contract(contract)
+
+    def test_scores_scoped_compass_family_and_alignment(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            repo = Path(directory)
+            compass_dir = repo / ".project-compass"
+            (compass_dir / "compasses").mkdir(parents=True)
+            now = datetime.now(timezone.utc).isoformat()
+            root = _contract()
+            child = _scoped_contract("playback", "project", ["usable-loop"])
+            (compass_dir / "contract.json").write_text(
+                json.dumps(root), encoding="utf-8"
+            )
+            (compass_dir / "compasses" / "playback.json").write_text(
+                json.dumps(child), encoding="utf-8"
+            )
+            registry = _registry(now)
+            (compass_dir / "compasses.json").write_text(
+                json.dumps(registry), encoding="utf-8"
+            )
+            validate_registry(registry)
+            scores = score_compass_family(repo)
+            self.assertEqual(scores["root_id"], "project")
+            self.assertIn("playback", scores["children"])
+            self.assertEqual(scores["alignment"]["status"], "aligned")
+            self.assertEqual(scores["coverage"]["child_compasses"], 1)
+            registry["links"][0]["status"] = "unknown"
+            (compass_dir / "compasses.json").write_text(
+                json.dumps(registry), encoding="utf-8"
+            )
+            self.assertEqual(
+                score_compass_family(repo)["alignment"]["status"], "unknown"
+            )
+            registry["links"] = []
+            (compass_dir / "compasses.json").write_text(
+                json.dumps(registry), encoding="utf-8"
+            )
+            alignment = score_compass_family(repo)["alignment"]
+            self.assertEqual(alignment["status"], "unknown")
+            self.assertEqual(alignment["unlinked_children"], ["playback"])
+
+    def test_rejects_scoped_parent_cycle(self) -> None:
+        registry = _registry(datetime.now(timezone.utc).isoformat())
+        registry["compasses"][1]["parent_id"] = "playback"
+        with self.assertRaises(ContractError):
+            validate_registry(registry)
+
+    def test_greenfield_quiz_is_available_without_a_contract(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            repo = Path(directory)
+            status = start_quiz(
+                repo,
+                "greenfield",
+                session_id="greenfield-project",
+                now="2026-08-14T12:00:00+00:00",
+            )
+            self.assertEqual(status["next_question"]["id"], "purpose")
+            self.assertTrue(status["draft_only"])
+            answer_quiz(
+                repo,
+                "greenfield-project",
+                "purpose",
+                "A clear user outcome.",
+                now="2026-08-14T12:01:00+00:00",
+            )
+            next_status = answer_quiz(
+                repo,
+                "greenfield-project",
+                "audience",
+                "People who need the outcome.",
+                now="2026-08-14T12:02:00+00:00",
+            )
+            self.assertEqual(next_status["answered"], 2)
+            self.assertEqual(next_status["next_question"]["id"], "core-loop")
+            quiz = load_quiz(repo)
+            for question in quiz["sessions"][0]["questions"][2:]:
+                answer_quiz(
+                    repo,
+                    "greenfield-project",
+                    question["id"],
+                    "A considered answer.",
+                    now="2026-08-14T12:03:00+00:00",
+                )
+            completed = load_quiz(repo)["sessions"][0]
+            validate_quiz(load_quiz(repo))
+            self.assertEqual(completed["status"], "complete")
+            self.assertEqual(completed["answers"][-1]["status"], "explicit")
+
+    def test_brownfield_quiz_can_start_without_a_contract(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            repo = Path(directory)
+            status = start_quiz(
+                repo,
+                "brownfield",
+                session_id="brownfield-project",
+                now="2026-08-14T12:00:00+00:00",
+            )
+            self.assertEqual(status["scope_kind"], "root")
+            skipped = answer_quiz(
+                repo,
+                "brownfield-project",
+                "desired-purpose",
+                "",
+                now="2026-08-14T12:01:00+00:00",
+            )
+            self.assertEqual(skipped["answer_statuses"]["desired-purpose"], "skipped")
+
+    def test_subsystem_realignment_quiz_uses_child_scope(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            repo = Path(directory)
+            compass_dir = repo / ".project-compass"
+            (compass_dir / "compasses").mkdir(parents=True)
+            now = datetime.now(timezone.utc).isoformat()
+            (compass_dir / "contract.json").write_text(
+                json.dumps(_contract()), encoding="utf-8"
+            )
+            (compass_dir / "compasses" / "playback.json").write_text(
+                json.dumps(_scoped_contract("playback", "project", ["usable-loop"])),
+                encoding="utf-8",
+            )
+            (compass_dir / "compasses.json").write_text(
+                json.dumps(_registry(now)), encoding="utf-8"
+            )
+            status = start_quiz(
+                repo,
+                "realignment",
+                compass_id="playback",
+                session_id="realign-playback",
+                now="2026-08-14T12:00:00+00:00",
+            )
+            self.assertEqual(status["scope_kind"], "subsystem")
+            self.assertEqual(status["next_question"]["id"], "desired-change")
+            answer = answer_quiz(
+                repo,
+                "realign-playback",
+                "desired-change",
+                "Keep playback focused.",
+                status="tentative",
+                now="2026-08-14T12:01:00+00:00",
+            )
+            self.assertEqual(answer["answer_statuses"]["desired-change"], "tentative")
 
     def test_validates_continuity_and_reports_pending_questions(self) -> None:
         from project_compass import continuity_status, validate_continuity

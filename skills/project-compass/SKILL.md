@@ -1,6 +1,6 @@
 ---
 name: project-compass
-description: Reconcile a software project's changing product truth with what is planned, implemented, and genuinely verified. Trigger for explicit progress checkpoints, reorientation, product-scope decisions, or an incoming material reframe, replacement, narrowing, changed canonical source, changed authority, or conflicting requirement that risks dropping earlier truth. During ordinary continuation, apply only the lightweight continuity preflight and stay silent when nothing material changed. This is a product-direction and progress skill, not a planning skill.
+description: Reconcile a software project's changing product truth with what is planned, implemented, and genuinely verified across a root compass and scoped subsystem compasses. Trigger for explicit progress checkpoints, onboarding or realignment quizzes, product-scope decisions, or an incoming material reframe, replacement, narrowing, changed canonical source, changed authority, or conflicting requirement that risks dropping earlier truth. During ordinary continuation, apply only the lightweight continuity preflight and stay silent when nothing material changed. This is a product-direction and progress skill, not a planning skill.
 ---
 
 # Project Compass
@@ -20,6 +20,15 @@ product progress.
   runtime evidence describe verification. None may silently redefine another layer.
 - Treat conversation truth as a first-class, provenance-backed layer containing
   goals, constraints, decisions, rationale, and unresolved questions.
+- A project may have one root compass plus scoped child compasses. The root owns
+  product identity and global boundaries; a child refines a bounded subsystem
+  without silently redefining the root.
+- Keep parent outcomes and cross-compass handoffs explicit. A local subsystem
+  score never substitutes for alignment evidence, and adding child compasses
+  must not inflate root progress.
+- When purpose is ambiguous, use an intent-first quiz before treating code as
+  evidence of what a project or subsystem is for. Quiz answers remain draft
+  truth until reflected, reconciled, and explicitly ratified.
 - Treat every incoming instruction as a candidate change to the work, not an
   automatic replacement for conversation truth or project truth.
 - Preserve conflicts and scope changes with provenance.
@@ -48,6 +57,13 @@ specifications, fixtures, roadmap, or acceptance matrix there. Store compact
 references and decisions; leave canonical product behavior in the project
 artifacts that establish it. Validate the file with
 `references/continuity.schema.json`.
+
+When `.project-compass/compasses.json` exists, validate it with
+`references/registry.schema.json`, load every declared child contract, and
+check each child against its parent outcomes and declared cross-compass links.
+When `.project-compass/quiz.json` exists, validate it with
+`references/quiz.schema.json`; it is an answer record, not a replacement for
+the contract or continuity record.
 
 The continuity record contains:
 
@@ -122,6 +138,8 @@ Infer the mode from the request:
   "Let's rehash the project truth", "Help me reset direction."
 - **Scope gate** — "Does this belong?", "Should we add/rewrite/migrate this?",
   "Is this distracting us?"
+- **Compass quiz** — "Onboard this project", "Quiz me on the subsystem", "What
+  is unclear here?", or "Realign this with what I actually want."
 
 If more than one applies, run reorientation first, then finish with the checkpoint
 or scope assessment.
@@ -135,7 +153,8 @@ the prior conversation.
 Before making repository claims:
 
 1. Read the nearest repository context router when present.
-2. Inspect `.project-compass/contract.json` when it exists.
+2. Inspect `.project-compass/contract.json` when it exists, then discover a
+   `.project-compass/compasses.json` registry and its child contracts.
 3. Discover, rather than assume, the current sources of truth. Search bounded
    project paths for product briefs, PRDs, decision registers, roadmaps, state,
    status, release evidence, feature inventories, tests, and recent committed
@@ -146,6 +165,11 @@ Before making repository claims:
 6. Compare the relevant project evidence with the active conversation commitments
    and the incoming instruction. Project evidence can correct an implementation
    assumption, but it cannot by itself remove an acceptance requirement.
+
+For a brownfield quiz, ask for the desired purpose before presenting current
+code as an explanation of purpose. Use code, plans, tests, and runtime behavior
+to show what exists; use the user's answer to decide what should be preserved,
+redirected, retired, or left unknown.
 
 Use this authority model:
 
@@ -165,6 +189,67 @@ When `.project-compass/continuity.json` is absent, do not invent prior
 conversation decisions. Start with the explicit current thread and create the
 record only when a durable commitment or material reconciliation needs to be
 preserved.
+
+## Manage Scoped Compasses
+
+Keep `.project-compass/contract.json` as the root compass. Add
+`.project-compass/compasses.json` only when a subsystem has an independently
+meaningful purpose, boundary, interface, or drift risk. Each registry entry
+points to a contract file under `.project-compass/`; child contracts declare
+their parent, purpose, boundary, non-goals, paths, and parent outcomes.
+
+Use explicit links for subsystem dependencies, handoffs, and shared invariants.
+Their statuses are `aligned`, `unknown`, `blocked`, or `drift`. A family with an
+unresolved link is not fully aligned even when every local maturity score is
+high. Retire a compass when the boundary disappears; do not delete its history
+to make coverage look cleaner.
+
+The helper preserves singleton behavior when no registry exists:
+
+```bash
+python3 <skill-dir>/scripts/project_compass.py validate <repo>
+python3 <skill-dir>/scripts/project_compass.py score <repo> --json
+```
+
+With a registry, `score` reports root progress, each active child score,
+alignment status, and compass coverage separately. It never averages child
+scores into the root product score.
+
+## Run a Compass Quiz
+
+Use a quiz when intent is missing, a subsystem boundary is unclear, or observed
+behavior conflicts with the desired direction. Ask one meaningful question at a
+time and reflect the answer before treating it as a decision.
+
+- **Greenfield** establishes purpose, audience, core loop, boundaries, finish
+  line, and proof without requiring code.
+- **Brownfield** establishes desired purpose first, then classifies current
+  behavior as intentional, historical, accidental, preserve, redirect, retire,
+  or unknown.
+- **Realignment** starts from a known conflict and asks what should change, what
+  must remain true, what should be deferred or retired, and what evidence would
+  prove the new direction.
+
+For a child compass, replace product-level questions with subsystem purpose,
+parent outcome, responsibilities, interfaces, sibling contracts, and local
+proof. Accept `explicit`, `tentative`, `unknown`, and `skipped` answers. The
+session remains draft-only and requires manual review before updating intended
+truth or a continuity commitment.
+
+The deterministic helper can start, advance, and inspect a session:
+
+```bash
+python3 <skill-dir>/scripts/project_compass.py quiz start <repo> --mode greenfield --json
+python3 <skill-dir>/scripts/project_compass.py quiz answer <repo> \
+  --session-id <id> --question-id <id> --value "..." --json
+python3 <skill-dir>/scripts/project_compass.py quiz status <repo> \
+  --session-id <id> --json
+```
+
+Do not dump the question bank as a requirements form. Select the smallest set
+of questions that resolves the material unknown, preserve tentative answers as
+tentative, and create a reconciliation card when the answer changes existing
+truth.
 
 ## Bootstrap the Contract
 
@@ -199,6 +284,10 @@ python3 <skill-dir>/scripts/project_compass.py continuity <repo> --json
 `validate` also validates `.project-compass/continuity.json` when present.
 `continuity` reports active commitments and pending reconciliation questions; it
 does not infer or mutate decisions.
+
+When a compass registry is present, validation includes every child contract and
+the score output includes root progress, child progress, alignment status, and
+coverage. Do not collapse those into one percentage.
 
 Assign only these maturity values:
 
@@ -237,6 +326,11 @@ and report:
    deferred, or left behind, including unresolved reconciliation questions.
 8. Up to three highest-leverage matters to resolve next, without turning them into
    a plan.
+
+For a scoped family, also report which child compasses are usable, partial,
+blocked, retired, or unproven, plus unresolved parent links and cross-compass
+alignment. Treat missing registry or link evidence as `unknown`, not as proof
+that the family is aligned.
 
 Explicit checkpoint requests always append a history row, even when nothing
 changed. Say when the apparent progress figure in another system is task progress
@@ -344,6 +438,9 @@ materially changes an existing commitment.
   one decision question before broad implementation.
 - For a scope gate, return the product-fit judgment, displaced work, evidence,
   and recommendation without silently changing intended scope.
+- For a compass quiz, return the next question or completion state, the answer
+  provenance and certainty, the preserved/changed/unknown boundary, and a
+  manual-ratification reminder before changing intended truth.
 - For ordinary continuation with no material change, emit no Compass ceremony.
 - The check is done only when every material claim is tied to observed evidence
   or marked `unknown`, the selected mode's observable response is present, and

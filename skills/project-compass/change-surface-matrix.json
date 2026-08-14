@@ -2,16 +2,21 @@
   "schema_version": "change-surface-matrix/v1",
   "subject": {"kind": "skill", "id": "project-compass"},
   "owner": "Jakye Amos",
-  "last_reviewed": "2026-07-28",
+  "last_reviewed": "2026-08-14",
   "surfaces": [
     {
       "id": "hosted-source",
       "scope": "local",
       "path": "skills/project-compass/",
       "owner": "Jakye Amos",
-      "condition": "The authored skill contract, helper, schema, tests, or provider metadata changes.",
+      "condition": "The authored skill contract, scoped-compass or quiz helper, schema, tests, or provider metadata changes.",
       "operations": ["add", "change", "remove"],
-      "validation": ["python3 skills/project-compass/scripts/test_project_compass.py"],
+      "validation": [
+        "python3 skills/project-compass/scripts/test_project_compass.py",
+        "python3 -m json.tool skills/project-compass/references/contract.schema.json",
+        "python3 -m json.tool skills/project-compass/references/registry.schema.json",
+        "python3 -m json.tool skills/project-compass/references/quiz.schema.json"
+      ],
       "status": "applicable"
     },
     {
