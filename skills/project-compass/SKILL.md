@@ -204,6 +204,35 @@ unresolved link is not fully aligned even when every local maturity score is
 high. Retire a compass when the boundary disappears; do not delete its history
 to make coverage look cleaner.
 
+## Close Compass Changes Through the Matrix
+
+When a repository has a change-surface matrix, treat the Compass family as an
+affected surface for every `add`, `change`, `remove`, and `fold` operation that
+can alter a product or subsystem boundary, declared path, parent outcome,
+cross-compass link, continuity record, quiz result, or checkpoint. The matrix
+must name that surface explicitly; a generic source or test entry is not a
+substitute for Compass closure.
+
+Apply the operation-specific closure before accepting the change:
+
+- **Add** — register every new root or child compass and its paths, establish
+  its parent outcomes and links, and use a greenfield quiz when its purpose or
+  boundary is not explicit.
+- **Change** — reconcile changed purpose, boundary, paths, parent outcomes,
+  links, continuity, and quiz answers. Use a realignment quiz when the desired
+  direction changed, and revalidate and rescore the entire family afterward.
+- **Remove** — retire the affected compass and preserve its history. Remove or
+  resolve dangling paths, parent outcomes, and links; never make deletion look
+  like clean coverage.
+- **Fold** — compare source and target Compass families before accepting the
+  folded tree. Preserve source-only or conflicting truth as active, retired,
+  or explicitly unresolved, then validate and score the post-fold family. A
+  successful fold is integration evidence, not product progress by itself.
+
+If a required Compass surface or operation is missing from the matrix, leave
+the change unknown or blocked until the matrix is repaired. Do not infer
+freshness from a clean diff, matching hashes, or a merged branch alone.
+
 The helper preserves singleton behavior when no registry exists:
 
 ```bash

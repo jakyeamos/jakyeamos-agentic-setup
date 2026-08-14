@@ -728,7 +728,8 @@
         "skills/project-compass/scripts/test_project_compass.py",
         "fixtures/change-matrix/project-compass-add.json",
         "fixtures/change-matrix/project-compass-change.json",
-        "fixtures/change-matrix/project-compass-remove.json"
+        "fixtures/change-matrix/project-compass-remove.json",
+        "fixtures/change-matrix/project-compass-fold.json"
       ],
       "install": {
         "mode": "copy",
