@@ -6,6 +6,7 @@ from __future__ import annotations
 import json
 import re
 import sys
+from collections.abc import Iterable, Mapping
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
@@ -31,7 +32,7 @@ ALLOWED_LICENSE_STATUSES = {
 }
 SOURCE_ID_PATTERN = re.compile(r"^[a-z0-9][a-z0-9-]+$")
 PRIVATE_REFERENCE_PATTERN = re.compile(
-    r"(?:/(?:Users|home|private/var)/|~/(?:\.ssh|Library|\.config))"
+    r"(?:/(?:Users|home|private)/|~/(?:\.ssh|Library|\.config))"
 )
 EDITORIAL_TEXT_FIELDS = {"why", "use_when", "avoid_when"}
 
@@ -458,6 +459,64 @@ def _validate_asset(
                         )
 
     return errors
+
+
+def validate_supplied_asset_snapshot(
+    asset: Mapping[str, Any], taxonomy_type_ids: Iterable[str]
+) -> dict[str, Any]:
+    """Validate supplied asset boundaries without reading the filesystem.
+
+    Forward-test callers can use this helper when a manifest entry and
+    taxonomy membership are supplied as synthetic evidence. It reports the
+    private-source, editorial-type, and installation-mode checks independently
+    while keeping filesystem-dependent dimensions explicitly unknown.
+    """
+
+    taxonomy_types = {value for value in taxonomy_type_ids if isinstance(value, str)}
+    errors: list[str] = []
+
+    provenance = asset.get("provenance")
+    source = asset.get("source")
+    if isinstance(provenance, Mapping):
+        source = provenance.get("source", source)
+    private_source = isinstance(source, str) and bool(PRIVATE_REFERENCE_PATTERN.search(source))
+    if private_source:
+        errors.append("asset source is a private absolute path")
+
+    editorial = asset.get("editorial")
+    editorial_type = editorial.get("type") if isinstance(editorial, Mapping) else None
+    editorial_supplied = isinstance(editorial_type, str)
+    editorial_known = editorial_supplied and editorial_type in taxonomy_types
+    if editorial_supplied and not editorial_known:
+        errors.append("editorial type is not in the supplied taxonomy")
+
+    install = asset.get("install")
+    install_mode = install.get("mode") if isinstance(install, Mapping) else None
+    install_supplied = isinstance(install_mode, str)
+    install_known = install_supplied and install_mode in ALLOWED_INSTALL_MODES
+    if install_supplied and not install_known:
+        errors.append(f"installation mode is unsupported: {install_mode!r}")
+
+    return {
+        "status": "pass" if not errors else "fail",
+        "validation_scope": "supplied-asset-snapshot",
+        "errors": errors,
+        "checks": {
+            "private_source": "fail" if private_source else "pass",
+            "editorial_type": (
+                "pass" if editorial_known else "fail" if editorial_supplied else "unknown"
+            ),
+            "installation_mode": (
+                "pass" if install_known else "fail" if install_supplied else "unknown"
+            ),
+        },
+        "unknown_checks": [
+            "filesystem custody and file existence",
+            "evidence existence",
+            "library directory completeness and type alignment",
+            "local Markdown link resolution",
+        ],
+    }
 
 
 def validate_manifest(root: Path, *, snapshot: bool = False) -> list[str]:

@@ -43,6 +43,7 @@ const REVIEW_PATTERN = /last_reviewed:\s*(\d{4}-\d{2}-\d{2})/;
 const LINK_PATTERN = /\[[^\]]+\]\(([^)]+)\)/g;
 const SECRET_NAME_PATTERN = /(^|\/)(?:\.env(?:\..*)?|.*\.(?:pem|key|p12|pfx)|id_rsa|credentials(?:\.[^/]+)?)$/i;
 const SAFE_SECRET_NAMES = new Set([".env.example", ".env.template"]);
+const DAY_MS = 24 * 60 * 60 * 1000;
 
 function readJson(file) {
   return JSON.parse(readFileSync(file, "utf8"));
@@ -57,6 +58,20 @@ function dateOnly(value) {
   const date = value instanceof Date ? value : new Date(value);
   if (Number.isNaN(date.getTime())) return null;
   return Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+}
+
+export function freshnessEvidence(reviewedInput, asOfInput, limitDays = 35) {
+  const reviewed = dateOnly(reviewedInput);
+  const asOf = dateOnly(asOfInput);
+  if (reviewed === null || asOf === null) {
+    return { status: "unknown", age_days: null, limit_days: limitDays };
+  }
+  const ageDays = Math.floor((asOf - reviewed) / DAY_MS);
+  return {
+    status: ageDays > limitDays ? "fail" : "pass",
+    age_days: ageDays,
+    limit_days: limitDays
+  };
 }
 
 function trackedPaths(root) {
@@ -84,7 +99,7 @@ function checkContext(root, errors, asOf) {
     const reviewedDate = dateOnly(`${reviewed[1]}T00:00:00Z`);
     if (reviewedDate === null || asOf === null) {
       errors.push("context index has an invalid freshness date");
-    } else if (asOf - reviewedDate > 35 * 24 * 60 * 60 * 1000) {
+    } else if (freshnessEvidence(reviewedDate, asOf).status === "fail") {
       errors.push(`context index is stale: ${reviewed[1]}`);
     }
   }
@@ -173,17 +188,23 @@ export function validateContract(rootInput = DEFAULT_ROOT, asOfInput = new Date(
     if (reviewed && asOf !== null) {
       const reviewedDate = dateOnly(`${reviewed[1]}T00:00:00Z`);
       if (reviewedDate !== null) {
-        contextFreshnessDays = Math.floor((asOf - reviewedDate) / (24 * 60 * 60 * 1000));
+        contextFreshnessDays = freshnessEvidence(reviewedDate, asOf).age_days;
       }
     }
   }
+  const reviewedValue = existsSync(contextIndex) && !lstatSync(contextIndex).isSymbolicLink()
+    ? readFileSync(contextIndex, "utf8").match(REVIEW_PATTERN)?.[1]
+    : null;
+  const measuredFreshness = freshnessEvidence(reviewedValue, asOf, 35);
+  const freshnessStatus = contextErrors.some((error) => error.startsWith("context index"))
+    ? "fail"
+    : measuredFreshness.status;
   const contextDimensions = {
     ownership: contextErrors.some((error) => error.includes("must not be a symlink") || error.includes("missing .agents/context/README.md")) ? "fail" : "pass",
-    freshness: contextErrors.some((error) => error.startsWith("context index")) ? "fail" : (contextFreshnessDays === null ? "unknown" : "pass"),
+    freshness: freshnessStatus,
     freshness_evidence: {
-      status: contextErrors.some((error) => error.startsWith("context index")) ? "fail" : (contextFreshnessDays === null ? "unknown" : "pass"),
-      age_days: contextFreshnessDays,
-      limit_days: 35
+      ...measuredFreshness,
+      status: freshnessStatus
     },
     links: contextErrors.some((error) => error.startsWith("broken context link")) ? "fail" : "pass",
     freshness_days: contextFreshnessDays,

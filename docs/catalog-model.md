@@ -81,6 +81,19 @@ must supply all six editorial fields so a newly admitted multiplier is
 browsable on arrival. Runtime facts such as dependencies, maturity, and
 installation never belong in the editorial override.
 
+## Synthetic snapshot validation
+
+`scripts/catalog_validation.py` exposes
+`validate_supplied_asset_snapshot(asset, taxonomy_type_ids)` for clean-room
+checks where a manifest entry and taxonomy membership are supplied as synthetic
+evidence. It checks private source paths, taxonomy membership, and installation
+mode independently without reading files. Filesystem custody, evidence
+existence, library completeness, and local-link resolution remain explicitly
+unknown until a repository-backed validation runs. The environment contract's
+JSON report likewise exposes the measured context review age as
+`checks.context_dimensions.freshness_evidence.age_days` beside its
+`limit_days`.
+
 ## Browse and maintain
 
 ```bash

@@ -45,7 +45,7 @@ SYMBOLIC_HOME_PATTERN = re.compile(r"^\$(?:\{HOME\}|HOME)(?:/[A-Za-z0-9._-]+)*$"
 _PRIVATE_STRING_PREFIXES = (
     "/" + "Users" + "/",
     "/" + "home" + "/",
-    "/" + "private" + "/" + "var" + "/",
+    "/" + "private" + "/",
     "~" + "/" + ".ssh",
     "~" + "/" + "Library",
     "~" + "/" + ".config",
