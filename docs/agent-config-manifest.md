@@ -39,6 +39,15 @@ are allowed only to missing explicit targets. `--allow-broad-scan` is required
 for a scope rooted at `$HOME`. No command handles credentials, login, CAPTCHA,
 MFA, or GUI-only setup.
 
+For an audit-only provider plan, use
+`agent-config sync --manifest <repo>/manifest.yaml --provider codex --dry-run
+--json` (or `--manifest` with the equivalent source path). The result is a
+plan only: it reports `execution_mode: "dry-run"`,
+`projection_status: "not_projected"`, and `mutated: false`; it is not evidence
+that a provider projection or live sync occurred. Persistent overlay work is
+similarly report-only unless the explicit disposable root and `--apply`
+authority are both present.
+
 ## Private companion overlay
 
 `agent-config overlay --overlay <path>` resolves a private

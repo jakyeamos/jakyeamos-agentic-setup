@@ -201,7 +201,7 @@ def main(argv: list[str] | None = None) -> int:
 
     args = _parser().parse_args(argv)
     errors = validate_prevention_pack(args.root.resolve())
-    payload = {"errors": errors, "ok": not errors}
+    payload = {"errors": errors, "exit_status": 1 if errors else 0, "ok": not errors}
     if args.json:
         print(json.dumps(payload, indent=2, sort_keys=True))
     elif errors:

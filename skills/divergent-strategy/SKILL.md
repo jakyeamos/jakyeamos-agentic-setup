@@ -18,11 +18,19 @@ select one implementation.
 3. Judge candidates against named criteria with rationale and uncertainty. When
    the decision supplies measurable criteria (for example time, cost, risk,
    or coverage), score every supplied criterion for every candidate; do not
-   silently replace it with a convenient proxy or invented weighting.
+   silently replace it with a convenient proxy or invented weighting. Use an
+   explicit numeric scale (0-5 unless the user supplies another one), show one
+   numeric value for every candidate/criterion pair, and state whether weights
+   are equal or user-supplied. Keep risk and coverage as separate numeric
+   columns when they are decision criteria; do not collapse them into prose.
 4. Select a portfolio or recommendation, not merely an attractive first idea.
 5. Record entropy, rejected options, and unresolved product or environment
    questions.
 6. Propose memory, prompt, skill, or workflow writebacks separately from the
    recommendation and require approval before promotion.
+
+The evaluation table is part of the contract: include candidate, every named
+criterion, numeric score, score rationale, uncertainty, and confidence. A
+missing score is an unevaluated candidate, not a zero.
 
 See the [strategy workflow](../../workflows/divergent-strategy/WORKFLOW.md).

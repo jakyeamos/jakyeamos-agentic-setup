@@ -61,8 +61,8 @@ sorted by the collection's explicit entry order.
 
 | Multiplier | Why open it | Type |
 | --- | --- | --- |
-| [`research-domain-writing`](../skills/research-domain-writing/SKILL.md) | Turn a domain-writing request into a researched, cited, reviewed deliverable instead of an unsupported draft. | skill |
 | [`consequence-closure`](../skills/consequence-closure/SKILL.md) | Trace a change beyond its diff to affected consumers, evidence surfaces, maturity claims, and reusable follow-up opportunities. | skill |
+| [`research-domain-writing`](../skills/research-domain-writing/SKILL.md) | Turn a domain-writing request into a researched, cited, reviewed deliverable instead of an unsupported draft. | skill |
 
 ### Playbooks
 
@@ -70,85 +70,6 @@ sorted by the collection's explicit entry order.
 | --- | --- | --- |
 | [`repo-aware-context`](../workflows/repo-aware-context/WORKFLOW.md) | Give an agent the right repository identity and context without collapsing instructions, source maps, and live state together. | playbook |
 | [`safe-tool-guards`](../workflows/safe-tool-guards/WORKFLOW.md) | Classify and preview tool actions so destructive, credentialed, or externally visible work crosses an explicit approval boundary. | playbook |
-
-## Skills
-
-Agent behavior that should trigger for a recognizable class of work.
-
-| Multiplier | Why open it | Topics | Maturity | Adoption |
-| --- | --- | --- | --- | --- |
-| [`agentized-task-packet`](../skills/agentized-task-packet/SKILL.md) | Compile ambiguous requests into bounded task packets with targeted context, explicit roles, verification, acceptance, and handoff. | `context-selection`, `handoff`, `routing`, `task-decomposition`, `verification` | beta | copy |
-| [`consequence-closure`](../skills/consequence-closure/SKILL.md) | Trace a change beyond its diff to affected consumers, evidence surfaces, maturity claims, and reusable follow-up opportunities. | `change-impact`, `recurrence-reduction`, `verification` | experimental | copy |
-| [`divergent-strategy`](../skills/divergent-strategy/SKILL.md) | Explore a bounded portfolio of materially different strategies, judge them with explicit evidence, and promote only reviewed decisions. | `divergence`, `evaluation`, `portfolio`, `promotion`, `strategy` | beta | copy |
-| [`durable-agent-workflows`](../skills/durable-agent-workflows/SKILL.md) | Persist goals, artifacts, steering, queueing, approvals, and resume state so agent work survives interruption without losing its contract. | `artifacts`, `durability`, `goals`, `queueing`, `resumability`, `safety` | beta | copy |
-| [`evidence-backed-change-surface-mapping`](../skills/evidence-backed-change-surface-mapping/SKILL.md) | Map likely downstream change surfaces with explicit identity, freshness, provenance, uncertainty, and inference caps. | `bounded-inference`, `change-impact`, `freshness`, `provenance`, `uncertainty` | beta | copy |
-| [`execution-reassessment`](../skills/execution-reassessment/SKILL.md) | Stop recurring execution churn, diagnose the invalidated boundary, make the smallest durable change, and verify the lifecycle transition before resuming. | `diagnostics`, `execution-reassessment`, `lifecycle`, `safety`, `verification` | experimental | copy |
-| [`low-always-loaded-instruction-migration`](../skills/low-always-loaded-instruction-migration/SKILL.md) | Inventory, reconcile, and safely migrate durable instructions out of crowded startup surfaces without overwriting unresolved behavior. | `conflict-detection`, `instruction-routing`, `migration`, `safety`, `verification` | beta | copy |
-| [`operating-language`](../skills/operating-language/SKILL.md) | Turn repeated reasoning into compact, behavior-changing vocabulary with triggers, non-triggers, decisions, and completion evidence. | `decision-quality`, `migration`, `operating-model`, `routing`, `vocabulary` | beta | copy |
-| [`project-compass`](../skills/project-compass/SKILL.md) | Reconcile changing product truth with planned, implemented, and verified outcomes while tracking honest MVP and complete-product progress. | `change-surface-routing`, `checkpointing`, `conversation-continuity`, `product-direction`, `progress`, `reorientation`, `scope-drift` | experimental | copy |
-| [`project-partner`](../skills/project-partner/SKILL.md) | Provide candid, codebase-aware conversation that pressure-tests ideas and existing PRDs without turning exploration into a requirements interview. | `codebase-awareness`, `decision-hygiene`, `idea-exploration`, `prd-discussion`, `product-conversation`, `tradeoffs` | experimental | copy |
-| [`recurring-loop-authorship`](../skills/recurring-loop-authorship/SKILL.md) | Turn a repeated personal routine into a customizable workflow specification with explicit state, human checkpoints, bounded retries, and a safe readiness gate. | `checkpoints`, `human-control`, `persistence`, `recurrence`, `workflow-authorship` | experimental | copy |
-| [`repo-behavior-spec-loop`](../skills/repo-behavior-spec-loop/SKILL.md) | Turn expected repository behavior into a cited ledger, runnable verification loop, bounded fix cycle, and regression report. | `acceptance-testing`, `behavior-specification`, `evidence`, `regression`, `safety` | beta | copy |
-| [`research-domain-writing`](../skills/research-domain-writing/SKILL.md) | Turn a domain-writing request into a researched, cited, reviewed deliverable instead of an unsupported draft. | `grounded-writing`, `quality-assurance`, `research` | stable | copy |
-| [`review-gated-verified-fix`](../skills/review-gated-verified-fix/SKILL.md) | Execute bounded remediation in an isolated work area and hand off evidence for human acceptance without auto-merging. | `isolated-execution`, `issue-admission`, `no-auto-merge`, `review-packet`, `verification` | beta | copy |
-| [`safe-canonical-branch-folding`](../skills/safe-canonical-branch-folding/SKILL.md) | Consolidate named branches into a canonical development line while preserving uncertain work, proving equivalence, and separating integration, publication, and pruning authority. | `approval`, `branch-folding`, `git-safety`, `provenance`, `verification` | experimental | copy |
-| [`skill-harvest-and-promotion`](../skills/skill-harvest-and-promotion/SKILL.md) | Mine authored workflows into polished public skills using behavior extraction, deduplication, safety review, and forward tests. | `deduplication`, `provenance`, `public-safety`, `redaction`, `skill-authoring` | beta | copy |
-| [`terrace`](../skills/terrace/SKILL.md) | Router skill for planning, execution, validation, review, and release-readiness work through Terrace. | `execution`, `planning`, `release-readiness`, `workflow-routing` | stable | copy |
-| [`unknowns-first-exploration`](../skills/unknowns-first-exploration/SKILL.md) | Turn ambiguous work into a staged four-quadrant map with evidence, user reaction, visible landmines, open decisions, and a copyable implementation prompt. | `decision-mapping`, `exploration`, `handoff`, `landmine-detection`, `user-reaction` | experimental | copy |
-
-## Playbooks
-
-A repeatable multi-step workflow with checkpoints and verification.
-
-| Multiplier | Why open it | Topics | Maturity | Adoption |
-| --- | --- | --- | --- | --- |
-| [`context-budget-governor`](../workflows/context-budget-governor/WORKFLOW.md) | A vendor-neutral checkpoint policy that turns a token-budget threshold into a reviewable compaction handoff. | `checkpointing`, `compaction`, `handoff`, `long-context` | beta | copy |
-| [`environment-legibility-audit`](../workflows/environment-legibility-audit/WORKFLOW.md) | A bounded, evidence-first audit for repository identity, machine-legible context, verified commands, and actionable remediation plans. | `context-legibility`, `evidence`, `pre-cr`, `quality-runner-routing`, `remediation-plans`, `repository-audit`, `safety` | experimental | copy |
-| [`evaluation-evidence`](../workflows/evaluation-evidence/WORKFLOW.md) | A contract-oriented evidence workflow for separating observed results, hypotheses, limitations, and reproducible fixtures. | `evaluation`, `evidence`, `fixtures`, `provenance` | beta | copy |
-| [`governed-work-loop`](../workflows/governed-work-loop/WORKFLOW.md) | A compact route -> context -> execute -> verify -> handoff operating loop for agentic work. | `execution`, `handoff`, `routing`, `verification` | stable | copy |
-| [`repo-aware-context`](../workflows/repo-aware-context/WORKFLOW.md) | Give an agent the right repository identity and context without collapsing instructions, source maps, and live state together. | `repository-context`, `routing`, `scope-control` | beta | copy |
-| [`safe-tool-guards`](../workflows/safe-tool-guards/WORKFLOW.md) | Classify and preview tool actions so destructive, credentialed, or externally visible work crosses an explicit approval boundary. | `approval-boundaries`, `auditability`, `tool-safety` | beta | copy |
-
-## Setups
-
-Configuration and host-specific wiring that makes a workflow usable.
-
-| Multiplier | Why open it | Topics | Maturity | Adoption |
-| --- | --- | --- | --- | --- |
-| [`adapter-antigravity`](../adapters/antigravity/WORKBENCH.md) | Manual-review mapping from the vendor-neutral contracts to Antigravity project-instruction surfaces. | `manual-hook-staging`, `safety`, `workflow-routing` | experimental | stage |
-| [`adapter-claude`](../adapters/claude/WORKBENCH.md) | Manual-review mapping from the vendor-neutral workbench contracts to Claude project instructions and hooks. | `context-compaction`, `manual-hook-staging`, `safety`, `workflow-routing` | beta | stage |
-| [`adapter-codex`](../adapters/codex/WORKBENCH.md) | Manual-review mapping from the vendor-neutral workbench contracts to Codex skills, compaction, and tool guards. | `context-compaction`, `manual-hook-staging`, `safety`, `workflow-routing` | beta | stage |
-| [`adapter-copilot`](../adapters/copilot/WORKBENCH.md) | Manual-review mapping from the vendor-neutral workbench contracts to Copilot repository instructions and guard surfaces. | `manual-hook-staging`, `safety`, `workflow-routing` | experimental | stage |
-| [`adapter-cursor`](../adapters/cursor/WORKBENCH.md) | Manual-review mapping from the vendor-neutral workbench contracts to Cursor project instructions and tool guards. | `manual-hook-staging`, `safety`, `workflow-routing` | experimental | stage |
-| [`adapter-gemini`](../adapters/gemini/WORKBENCH.md) | Manual-review mapping from the vendor-neutral contracts to Gemini project-instruction surfaces. | `manual-hook-staging`, `safety`, `workflow-routing` | experimental | stage |
-| [`adapter-generic`](../adapters/generic/WORKBENCH.md) | Host-neutral manual-review checklist for mapping the workbench contracts into an agent that supports project instructions. | `context-compaction`, `handoff`, `safety`, `workflow-routing` | stable | stage |
-
-## Tools
-
-Executable software that performs or verifies part of the work.
-
-| Multiplier | Why open it | Topics | Maturity | Adoption |
-| --- | --- | --- | --- | --- |
-| [`agent-config`](../bin/agent-config.mjs) | Dependency-light audit, drift, doctor, sync, install, bootstrap, and smoke commands for explicit low-loaded instruction manifests. | `manifest`, `provenance`, `routing`, `runtime-smoke`, `safe-sync` | beta | copy |
-
-## References
-
-A useful external project, example, case study, fixture, or pattern to inspect.
-
-| Multiplier | Why open it | Topics | Maturity | Adoption |
-| --- | --- | --- | --- | --- |
-| [`documentation-as-principles`](../docs/workflow-multipliers/documentation-as-principles.md) | A portable convention for one authoritative home per fact, pointer-only summaries, explicit reasons, and visible freshness or uncertainty. | `documentation`, `progressive-disclosure`, `provenance`, `source-of-truth` | experimental | copy |
-| [`evidence-based-skill-improvement`](../docs/workflow-multipliers/evidence-based-skill-improvement.md) | A reusable method for testing and refining agent skills from observed behavior, controls, and regression evidence rather than prose inspection alone. | `evaluation`, `evidence`, `regression`, `skill-improvement` | experimental | copy |
-| [`fixture-promoted-skill-forward-tests`](../fixtures/forward-tests.json) | Trigger and non-trigger cases used to keep the additive skill set explicit and clean-room-testable. | `clean-room`, `forward-testing`, `skill-discovery` | beta | copy |
-| [`reference-agent-eval-contract`](https://github.com/jakyeamos/agent-eval-contract) | External contract reference for structured evaluation payloads; its runtime is not copied here. | `contract`, `evaluation`, `evidence` | reference | manual |
-| [`reference-agent-eval-runtime`](https://github.com/jakyeamos/agent-eval-runtime) | External report-only runtime for agent evaluation, comparison, and benchmark evidence. | `benchmarks`, `comparison`, `evaluation`, `evidence` | reference | manual |
-| [`reference-aios`](https://github.com/jakyeamos/AIOS) | External local operating-system reference for context, routing, memory, and project health patterns. | `context`, `memory`, `routing`, `runtime` | reference | manual |
-| [`reference-context-compiler-contract`](https://github.com/jakyeamos/context-compiler-contract) | External contract reference for context packet boundaries and compiler-facing integration. | `context`, `contract`, `integration` | reference | manual |
-| [`reference-gemini-surface`](manifest.json) | Catalog-only reference for Gemini-related instruction and tool surfaces whose v1 install semantics are not stable here. | `portability`, `reference`, `surface-audit` | reference | manual |
-| [`reference-pre-cr-suite`](https://github.com/jakyeamos/pre-cr-suite) | External project-local readiness reference where one .pre-cr.json contract feeds editor clients and a headless changed-line gate. | `client-parity`, `coverage`, `project-contract`, `quality` | reference | manual |
-| [`reference-pronto`](https://github.com/jakyeamos/pronto) | External local-first portfolio command center for repository discovery, quality evidence, provider-neutral snapshots, and read-only remediation previews. | `portfolio`, `quality-evidence`, `read-only-previews`, `repository-discovery` | reference | manual |
-| [`reference-quality-runner`](https://github.com/jakyeamos/quality-runner) | External quality and evidence reference; runtime, caches, and artifacts remain outside this package. | `evidence`, `quality`, `release-readiness` | reference | manual |
-| [`reference-tmcp`](https://github.com/jakyeamos/tmcp) | External workflow and skill-graph reference; TMCP runtime and generated harvest output are not copied. | `evidence`, `routing`, `skill-graph`, `workflow` | reference | manual |
 
 ## Inspect or adopt one
 

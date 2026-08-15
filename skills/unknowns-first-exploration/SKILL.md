@@ -82,6 +82,9 @@ still was not understood.
 - Disclose early findings; do not save a load-bearing landmine for the end.
 - Label observations, assumptions, hypotheses, and invented examples
   separately. Cite real files or artifacts for factual claims.
+- If the scan found no assumptions, write `assumptions: none` explicitly. Do
+  not imply that an empty assumption set was checked merely by omitting the
+  field.
 - If a scan has not occurred, say so and keep the claim an assumption or
   hypothesis. Do not manufacture a generic landmine card and present it as a
   finding from the target territory.

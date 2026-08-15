@@ -556,10 +556,41 @@ def validate_manifest_snapshot(root: Path) -> dict[str, Any]:
     """Return a bounded result that keeps omitted checks explicitly unknown."""
 
     errors = validate_manifest(root, snapshot=True)
+    manifest = load_manifest(root)
+    taxonomy = load_taxonomy(root)
+    assets = manifest.get("assets", [])
+    supplied_asset_ids = [
+        asset.get("id")
+        for asset in assets
+        if isinstance(asset, dict) and isinstance(asset.get("id"), str)
+    ]
+    relative_references = all(
+        _is_relative_path(reference)
+        for asset in assets
+        if isinstance(asset, dict)
+        for reference in asset.get("entrypoints", []) + asset.get("files", [])
+        if isinstance(reference, str)
+    )
+    install_modes = sorted(
+        {
+            str(asset.get("install", {}).get("mode"))
+            for asset in assets
+            if isinstance(asset, dict) and isinstance(asset.get("install"), dict)
+        }
+    )
     return {
         "status": "pass" if not errors else "fail",
         "validation_scope": "snapshot-limited",
         "errors": errors,
+        "checks": {
+            "manifest_schema": "pass" if manifest.get("schema_version") == 1 else "fail",
+            "taxonomy_schema": "pass" if taxonomy.get("schema_version") == 1 else "fail",
+            "asset_ids": supplied_asset_ids,
+            "relative_references": "pass" if relative_references else "fail",
+            "install_modes": install_modes,
+            "filesystem_custody": "unknown",
+            "markdown_links": "unknown",
+        },
         "unknown_checks": [
             "filesystem file and evidence existence",
             "library directory completeness and type alignment",

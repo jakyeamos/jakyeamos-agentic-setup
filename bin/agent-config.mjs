@@ -78,7 +78,11 @@ Options:
   --allow-home            permit the explicit Pronto promotion path to target the real home
   --apply                 allow safe writes after the full preflight passes
   --dry-run               force report-only behavior (the default)
-  --json                  emit machine-readable output`;
+  --json                  emit machine-readable output
+
+Audit alternative: agent-config sync --manifest <repo>/manifest.yaml
+  --provider codex --dry-run --json
+This is a plan only: no provider projection or live target mutation occurs.`;
 }
 
 function main(argv) {

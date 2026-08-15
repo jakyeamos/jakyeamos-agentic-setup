@@ -27,6 +27,13 @@ The checkpoint is a handoff artifact, not a transcript. Do not copy raw
 session logs, credentials, environment files, browser state, or private paths
 into it.
 
+When a checkpoint cannot establish a complete state, write a sanitized,
+machine-readable boundary instead of filling the gap with a guess. The
+checkpoint must retain the known objective and next action, set `status` to
+`blocked` or `unknown`, and name the missing evidence. Never copy secrets,
+raw logs, credentials, environment files, browser state, or host-private paths
+into the checkpoint.
+
 ## Host adapter contract
 
 The generic workflow does not register hooks. A host adapter may observe a

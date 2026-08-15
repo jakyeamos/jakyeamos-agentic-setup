@@ -185,6 +185,36 @@ export function validateContract(rootInput = DEFAULT_ROOT, asOfInput = new Date(
     freshness_days: contextFreshnessDays,
     freshness_limit_days: 35
   };
+  const qualityGateChecks = Object.fromEntries(
+    Object.entries(REQUIRED_SCRIPTS).map(([name, command]) => [
+      name,
+      {
+        command,
+        status: errors.includes(`package script drift: ${name}`) ? "fail" : "pass"
+      }
+    ])
+  );
+  const ignoreRuleChecks = Object.fromEntries(
+    REQUIRED_IGNORES.map((rule) => [
+      rule,
+      {
+        status: errors.includes(`missing .gitignore rule: ${rule}`) ? "fail" : "pass"
+      }
+    ])
+  );
+  const packageManager = (() => {
+    try {
+      const packageJson = readJson(path.join(root, "package.json"));
+      const value = packageJson.packageManager ?? null;
+      return {
+        value,
+        expected: "pnpm@11.9.0",
+        status: value === "pnpm@11.9.0" ? "pass" : "fail"
+      };
+    } catch {
+      return { value: null, expected: "pnpm@11.9.0", status: "unknown" };
+    }
+  })();
   return {
     schema_version: "environment-contract/v1",
     as_of: new Date(asOfInput).toISOString(),
@@ -194,8 +224,12 @@ export function validateContract(rootInput = DEFAULT_ROOT, asOfInput = new Date(
       context_packets: PACKETS.filter((packet) => existsSync(path.join(root, ".agents/context", packet))).length,
       context_packets_required: PACKETS.length,
       context_dimensions: contextDimensions,
+      package_manager: packageManager,
+      quality_gates: qualityGateChecks,
+      ignore_rules: ignoreRuleChecks,
       quality_commands: QUALITY_COMMANDS.length,
       tracked_secret_paths: errors.filter((error) => error.startsWith("secret-like tracked path:")).length,
+      tracked_secret_custody: errors.some((error) => error.startsWith("secret-like tracked path:")) ? "fail" : "pass",
       strict_javascript_syntax: true,
       required_pre_cr_adapter: !errors.some((error) => error.includes("quality adapter")),
       agent_usability: agentUsability

@@ -142,10 +142,14 @@ class WorkbenchCliTests(unittest.TestCase):
         self,
     ) -> None:
         source = REPO / "fixtures/consequence-closure/validation-failure-disposition.json"
-        expected_files = {
+        expected_install_files = {
             "skills/consequence-closure/SKILL.md",
             "skills/consequence-closure/WORKFLOW.md",
             "skills/consequence-closure/references/validation-failure-disposition.json",
+        }
+        expected_files = {
+            *expected_install_files,
+            ".workbench-receipts/consequence-closure.json",
         }
 
         with tempfile.TemporaryDirectory() as directory:
@@ -172,7 +176,7 @@ class WorkbenchCliTests(unittest.TestCase):
                     .as_posix()
                     for action in dry_payload["actions"]
                 },
-                expected_files,
+                expected_install_files,
             )
 
             applied = self.run_cli(

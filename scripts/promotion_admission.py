@@ -1227,6 +1227,7 @@ def main(argv: list[str] | None = None) -> int:
     """Run the report-only or explicitly approved JAS admission boundary."""
 
     args = _parser().parse_args(argv)
+    candidate_result: dict[str, object] | None = None
     try:
         root = args.root.expanduser().resolve()
         candidate = load_json(args.candidate.expanduser().resolve())
@@ -1240,11 +1241,15 @@ def main(argv: list[str] | None = None) -> int:
             if args.command == "validate" and args.projection is None and "no embedded sanitized promotion projection" in str(exc):
                 payload = {
                     "status": "review_required",
+                    "admission_status": "review_required",
+                    "candidate_structurally_valid": True,
+                    "candidate_state": "candidate",
                     "candidate_id": candidate_result["candidate_id"],
                     "asset_id": None,
                     "visibility": "private",
                     "schema_version": None,
                     "reason": "promotion_projection_missing",
+                    "projection_status": "missing",
                     "target": None,
                     "mutated": False,
                 }
@@ -1264,10 +1269,14 @@ def main(argv: list[str] | None = None) -> int:
             )
             payload: dict[str, object] = {
                 "status": "blocked" if is_legacy_private else "review_required",
+                "admission_status": "blocked" if is_legacy_private else "review_required",
+                "candidate_structurally_valid": True,
+                "candidate_state": "candidate",
                 "candidate_id": candidate_result["candidate_id"],
                 "asset_id": projection_result["asset_id"],
                 "visibility": projection_result["visibility"],
                 "schema_version": projection_result["schema_version"],
+                "projection_status": "present",
                 "reason": (
                     "private_overlay_requires_catalog_asset_reference"
                     if is_legacy_private
@@ -1317,7 +1326,18 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
         return 0 if payload["status"] != "blocked" else 2
     except (AdmissionError, OSError, ValueError) as exc:
-        payload = {"status": "blocked", "error": str(exc)}
+        payload = {
+            "status": "blocked",
+            "admission_status": "blocked",
+            "candidate_structurally_valid": candidate_result is not None,
+            "candidate_state": "candidate" if candidate_result is not None else "invalid",
+            "projection_status": "not_evaluated",
+            "mutated": False,
+            "reason": "candidate_validation_failed"
+            if candidate_result is None
+            else "admission_validation_failed",
+            "error": str(exc),
+        }
         if args.json:
             print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
         else:

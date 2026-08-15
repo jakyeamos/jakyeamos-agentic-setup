@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const DEFAULT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const CONTRACT_RELATIVE_PATH = ".agents/agent-usability.json";
-const VALID_APPLICABILITY = new Set(["applicable", "not-applicable"]);
+const VALID_APPLICABILITY = new Set(["applicable", "not-applicable", "not_applicable"]);
 
 function readJson(file) {
   return JSON.parse(readFileSync(file, "utf8"));
@@ -76,7 +76,9 @@ export function validateAgentUsability(rootInput = DEFAULT_ROOT) {
       errors.push("agent usability contract schema must be agent-usability/v1");
     }
 
-    const applicability = contract.applicability;
+    const applicability = contract.applicability === "not_applicable"
+      ? "not-applicable"
+      : contract.applicability;
     if (!VALID_APPLICABILITY.has(applicability)) {
       errors.push("agent usability contract applicability must be applicable or not-applicable");
     }
@@ -91,6 +93,7 @@ export function validateAgentUsability(rootInput = DEFAULT_ROOT) {
     } else {
       if (applicability === "applicable" && tools.length === 0) {
         errors.push('agent usability contract: applicability "applicable" requires at least one declared tool');
+        errors.push("agent usability contract: no applicable tool behavior evidence can be evaluated");
       }
 
       const toolIds = new Set();
