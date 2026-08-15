@@ -45,6 +45,9 @@ const SECRET_NAME_PATTERN = /(^|\/)(?:\.env(?:\..*)?|.*\.(?:pem|key|p12|pfx)|id_
 const SAFE_SECRET_NAMES = new Set([".env.example", ".env.template"]);
 const DAY_MS = 24 * 60 * 60 * 1000;
 
+// A dimension-only report is still evidence-bearing: freshness must retain the
+// measured age and its limit rather than collapsing to a bare pass/fail value.
+
 function readJson(file) {
   return JSON.parse(readFileSync(file, "utf8"));
 }
@@ -71,6 +74,32 @@ export function freshnessEvidence(reviewedInput, asOfInput, limitDays = 35) {
     status: ageDays > limitDays ? "fail" : "pass",
     age_days: ageDays,
     limit_days: limitDays
+  };
+}
+
+export function summarizeDimensionStatuses(result) {
+  const checks = result?.checks ?? {};
+  const context = checks.context_dimensions ?? {};
+  const freshness = context.freshness_evidence ?? {};
+  const statusOf = (value) => (typeof value === "string" ? value : "unknown");
+  const nestedStatuses = (value) => Object.fromEntries(
+    Object.entries(value ?? {}).map(([key, item]) => [
+      key,
+      statusOf(item?.status)
+    ])
+  );
+  return {
+    ownership: statusOf(context.ownership),
+    freshness: {
+      status: statusOf(context.freshness ?? freshness.status),
+      age_days: typeof freshness.age_days === "number" ? freshness.age_days : null,
+      limit_days: typeof freshness.limit_days === "number" ? freshness.limit_days : null
+    },
+    links: statusOf(context.links),
+    package_manager: statusOf(checks.package_manager?.status),
+    quality_gates: nestedStatuses(checks.quality_gates),
+    ignore_rules: nestedStatuses(checks.ignore_rules),
+    tracked_secret_custody: statusOf(checks.tracked_secret_custody)
   };
 }
 

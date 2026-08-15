@@ -3,7 +3,11 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
-import { freshnessEvidence, validateContract } from "../scripts/check_environment_contract.mjs";
+import {
+  freshnessEvidence,
+  summarizeDimensionStatuses,
+  validateContract
+} from "../scripts/check_environment_contract.mjs";
 
 const PACKETS = [
   "architecture.md",
@@ -119,6 +123,32 @@ test("freshness evidence reports the measured review age and limit", () => {
   } finally {
     fs.rmSync(root, { recursive: true, force: true });
   }
+});
+
+test("dimension-only reports retain freshness evidence", () => {
+  const summary = summarizeDimensionStatuses({
+    checks: {
+      context_dimensions: {
+        ownership: "pass",
+        freshness: "pass",
+        freshness_evidence: { status: "pass", age_days: 12, limit_days: 35 },
+        links: "pass"
+      },
+      package_manager: { status: "pass" },
+      quality_gates: { test: { status: "pass" } },
+      ignore_rules: { ".env": { status: "pass" } },
+      tracked_secret_custody: "pass"
+    }
+  });
+  assert.deepEqual(summary, {
+    ownership: "pass",
+    freshness: { status: "pass", age_days: 12, limit_days: 35 },
+    links: "pass",
+    package_manager: "pass",
+    quality_gates: { test: "pass" },
+    ignore_rules: { ".env": "pass" },
+    tracked_secret_custody: "pass"
+  });
 });
 
 test("the contract rejects missing routed packets", () => {
