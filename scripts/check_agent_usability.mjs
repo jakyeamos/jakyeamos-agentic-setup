@@ -61,6 +61,7 @@ export function validateAgentUsability(rootInput = DEFAULT_ROOT) {
     errors.push(`missing agent usability contract: ${CONTRACT_RELATIVE_PATH}`);
   } else if (lstatSync(contractPath).isSymbolicLink()) {
     errors.push(`agent usability contract must not be a symlink: ${CONTRACT_RELATIVE_PATH}`);
+    errors.push("agent usability contract: no applicable tool behavior evidence can be evaluated");
   } else {
     try {
       contract = readJson(contractPath);

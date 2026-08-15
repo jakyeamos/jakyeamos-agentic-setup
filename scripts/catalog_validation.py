@@ -552,8 +552,16 @@ def validate_manifest(root: Path, *, snapshot: bool = False) -> list[str]:
     return errors
 
 
-def validate_manifest_snapshot(root: Path) -> dict[str, Any]:
-    """Return a bounded result that keeps omitted checks explicitly unknown."""
+def validate_manifest_snapshot(
+    root: Path, supplied_evidence: dict[str, bool] | None = None
+) -> dict[str, Any]:
+    """Return a bounded result that keeps omitted checks explicitly unknown.
+
+    ``supplied_evidence`` is an optional caller-owned snapshot, not a filesystem
+    probe.  When it explicitly asserts ``taxonomy_membership``, ``regular_file``,
+    or ``no_local_absolute_links``, those dimensions are recorded as passing for
+    the supplied snapshot only.  No omitted fact is inferred from the manifest.
+    """
 
     errors = validate_manifest(root, snapshot=True)
     manifest = load_manifest(root)
@@ -578,6 +586,31 @@ def validate_manifest_snapshot(root: Path) -> dict[str, Any]:
             if isinstance(asset, dict) and isinstance(asset.get("install"), dict)
         }
     )
+    evidence = supplied_evidence or {}
+    snapshot_checks = {
+        "taxonomy_membership": "pass"
+        if evidence.get("taxonomy_membership") is True
+        else "unknown",
+        "filesystem_custody": "pass"
+        if evidence.get("regular_file") is True
+        else "unknown",
+        "markdown_links": "pass"
+        if evidence.get("no_local_absolute_links") is True
+        else "unknown",
+    }
+    unknown_checks: list[str] = []
+    if evidence.get("taxonomy_membership") is not True:
+        unknown_checks.append("taxonomy membership, unless explicitly supplied")
+    if evidence.get("regular_file") is not True:
+        unknown_checks.append(
+            "filesystem file and evidence existence, unless explicitly supplied"
+        )
+    unknown_checks.extend(
+        [
+            "library directory completeness and type alignment",
+            "local Markdown link resolution, unless explicitly supplied",
+        ]
+    )
     return {
         "status": "pass" if not errors else "fail",
         "validation_scope": "snapshot-limited",
@@ -585,17 +618,12 @@ def validate_manifest_snapshot(root: Path) -> dict[str, Any]:
         "checks": {
             "manifest_schema": "pass" if manifest.get("schema_version") == 1 else "fail",
             "taxonomy_schema": "pass" if taxonomy.get("schema_version") == 1 else "fail",
+            **snapshot_checks,
             "asset_ids": supplied_asset_ids,
             "relative_references": "pass" if relative_references else "fail",
             "install_modes": install_modes,
-            "filesystem_custody": "unknown",
-            "markdown_links": "unknown",
         },
-        "unknown_checks": [
-            "filesystem file and evidence existence",
-            "library directory completeness and type alignment",
-            "local Markdown link resolution",
-        ],
+        "unknown_checks": unknown_checks,
     }
 
 

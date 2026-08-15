@@ -180,8 +180,12 @@ export function validateContract(rootInput = DEFAULT_ROOT, asOfInput = new Date(
   const contextDimensions = {
     ownership: contextErrors.some((error) => error.includes("must not be a symlink") || error.includes("missing .agents/context/README.md")) ? "fail" : "pass",
     freshness: contextErrors.some((error) => error.startsWith("context index")) ? "fail" : (contextFreshnessDays === null ? "unknown" : "pass"),
+    freshness_evidence: {
+      status: contextErrors.some((error) => error.startsWith("context index")) ? "fail" : (contextFreshnessDays === null ? "unknown" : "pass"),
+      age_days: contextFreshnessDays,
+      limit_days: 35
+    },
     links: contextErrors.some((error) => error.startsWith("broken context link")) ? "fail" : "pass",
-    packets: contextErrors.some((error) => error.startsWith("missing context packet") || error.startsWith("context packet must not")) ? "fail" : "pass",
     freshness_days: contextFreshnessDays,
     freshness_limit_days: 35
   };

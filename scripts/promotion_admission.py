@@ -100,8 +100,15 @@ def validate_candidate(candidate: Mapping[str, object]) -> dict[str, object]:
     """Validate the leverage candidate without exposing its private evidence."""
 
     _required_exact(candidate, "schema_version", CANDIDATE_SCHEMA_VERSION)
+    preflight_errors: list[str] = []
     if _private_value_present(candidate):
-        raise AdmissionError("candidate contains a private or credential-shaped value")
+        preflight_errors.append(
+            "candidate contains a private absolute path or credential-shaped value"
+        )
+    if candidate.get("status") != "candidate":
+        preflight_errors.append("candidate must remain in candidate status for JAS admission")
+    if preflight_errors:
+        raise AdmissionError("; ".join(preflight_errors))
     _required_exact(candidate, "visibility", "private")
     candidate_id = _required_text(candidate, "candidate_id")
     if not CANDIDATE_ID_PATTERN.fullmatch(candidate_id):
@@ -177,10 +184,6 @@ def validate_candidate(candidate: Mapping[str, object]) -> dict[str, object]:
         raise AdmissionError("private_package is only valid for private candidates")
     if portability == "private":
         _required_text(candidate, "disposition_reason")
-    if status != "candidate":
-        raise AdmissionError(
-            "candidate must remain in candidate status for JAS admission"
-        )
     if review_status not in {"pending", "approved"}:
         raise AdmissionError("candidate review_status must be pending or approved")
     return {
@@ -1326,17 +1329,19 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
         return 0 if payload["status"] != "blocked" else 2
     except (AdmissionError, OSError, ValueError) as exc:
+        error_text = str(exc)
         payload = {
             "status": "blocked",
             "admission_status": "blocked",
             "candidate_structurally_valid": candidate_result is not None,
-            "candidate_state": "candidate" if candidate_result is not None else "invalid",
+            "candidate_state": candidate.get("status") if isinstance(candidate, Mapping) else "invalid",
             "projection_status": "not_evaluated",
             "mutated": False,
             "reason": "candidate_validation_failed"
             if candidate_result is None
             else "admission_validation_failed",
-            "error": str(exc),
+            "validation_errors": [item.strip() for item in error_text.split("; ") if item.strip()],
+            "error": error_text,
         }
         if args.json:
             print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))

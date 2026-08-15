@@ -40,13 +40,18 @@ for a scope rooted at `$HOME`. No command handles credentials, login, CAPTCHA,
 MFA, or GUI-only setup.
 
 For an audit-only provider plan, use
-`agent-config sync --manifest <repo>/manifest.yaml --provider codex --dry-run
---json` (or `--manifest` with the equivalent source path). The result is a
-plan only: it reports `execution_mode: "dry-run"`,
+`agent-config sync --provider codex --root <repo> --dry-run --json` (or
+`--manifest <repo>/manifest.yaml` with the equivalent source path). The result is
+a plan only: it reports `execution_mode: "dry-run"`,
 `projection_status: "not_projected"`, and `mutated: false`; it is not evidence
 that a provider projection or live sync occurred. Persistent overlay work is
 similarly report-only unless the explicit disposable root and `--apply`
 authority are both present.
+
+When selecting a command without executing it, describe the command as a
+proposed plan; do not report output, projection, or mutation that was not
+observed. Unsupported tokens are rejected and routed to help; do not infer
+exact stderr, exit codes, or JSON error formatting from this interface.
 
 ## Private companion overlay
 

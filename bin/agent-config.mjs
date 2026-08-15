@@ -72,7 +72,7 @@ Options:
   --overlay <path>        private companion overlay for the overlay command
   --catalog <path>        public catalog path (default: catalog/manifest.json)
   --private-root <path>   private package root for jas-private-overlay/v2
-  --root <path>           disposable target root for overlay-install
+  --root <path>           repository root for sync plans or disposable target root for overlay-install
   --provider <target>     target adapter for sync (for example codex)
   --allow-broad-scan      permit an explicitly requested home inventory scan
   --allow-home            permit the explicit Pronto promotion path to target the real home
@@ -80,9 +80,15 @@ Options:
   --dry-run               force report-only behavior (the default)
   --json                  emit machine-readable output
 
-Audit alternative: agent-config sync --manifest <repo>/manifest.yaml
-  --provider codex --dry-run --json
-This is a plan only: no provider projection or live target mutation occurs.`;
+Audit alternative: agent-config sync --provider codex --root <repo> --dry-run --json
+This is a plan only: no provider projection or live target mutation occurs.
+When selecting a command without executing it, describe it as a proposed plan;
+do not report output, projection, or mutation that was not observed. Unsupported
+tokens are rejected and routed to help; do not infer exact stderr, exit codes, or
+JSON error formatting from this interface.
+When an overlay install is blocked, use this audit/dry-run alternative; do not
+infer home-install authority from the request.
+`;
 }
 
 function main(argv) {
@@ -91,7 +97,12 @@ function main(argv) {
     print(help(), false);
     return 0;
   }
-  const { manifest, manifestRoot } = loadManifest(args.manifest ?? defaultManifestPath());
+  const manifestPath = args.manifest ?? (
+    args.root && args.command !== "overlay-install"
+      ? path.join(args.root, "manifest.yaml")
+      : defaultManifestPath()
+  );
+  const { manifest, manifestRoot } = loadManifest(manifestPath);
   if (args.command === "overlay") {
     if (!args.overlay) throw new Error("overlay requires --overlay <path>");
     if (args.apply) throw new Error("overlay is report-only; remove --apply");
