@@ -9,7 +9,7 @@ import unittest
 from pathlib import Path
 from typing import cast
 
-from scripts.catalog_validation import validate_manifest
+from scripts.catalog_validation import validate_manifest, validate_supplied_asset_snapshot
 from scripts.public_safety_check import scan_repository
 
 SCRIPTS = Path(__file__).resolve().parents[1] / "scripts"
@@ -142,10 +142,14 @@ class WorkbenchCliTests(unittest.TestCase):
         self,
     ) -> None:
         source = REPO / "fixtures/consequence-closure/validation-failure-disposition.json"
-        expected_files = {
+        expected_install_files = {
             "skills/consequence-closure/SKILL.md",
             "skills/consequence-closure/WORKFLOW.md",
             "skills/consequence-closure/references/validation-failure-disposition.json",
+        }
+        expected_files = {
+            *expected_install_files,
+            ".workbench-receipts/consequence-closure.json",
         }
 
         with tempfile.TemporaryDirectory() as directory:
@@ -172,7 +176,7 @@ class WorkbenchCliTests(unittest.TestCase):
                     .as_posix()
                     for action in dry_payload["actions"]
                 },
-                expected_files,
+                expected_install_files,
             )
 
             applied = self.run_cli(
@@ -343,6 +347,27 @@ class WorkbenchCliTests(unittest.TestCase):
             )
             self.assertTrue(any("editorial type" in error for error in errors))
             self.assertTrue(any("lowercase slugs" in error for error in errors))
+
+    def test_supplied_asset_snapshot_reports_independent_boundary_failures(self) -> None:
+        result = validate_supplied_asset_snapshot(
+            {
+                "provenance": {"source": "/private/team/catalog-entry"},
+                "editorial": {"type": "unknown-type"},
+                "install": {"mode": "magic"},
+            },
+            {"setup", "workflow"},
+        )
+        self.assertEqual(result["status"], "fail")
+        self.assertEqual(
+            result["checks"],
+            {
+                "private_source": "fail",
+                "editorial_type": "fail",
+                "installation_mode": "fail",
+            },
+        )
+        self.assertEqual(len(result["errors"]), 3)
+        self.assertTrue(result["unknown_checks"])
 
     def test_public_safety_scanner_rejects_unsafe_fixture(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

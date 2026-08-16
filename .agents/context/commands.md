@@ -17,7 +17,8 @@ python3 scripts/pre_cr_coverage.py
 validates the catalog as the packaging surface. `pnpm check` validates the
 environment contract, including routed packets, freshness, strict scripts,
 the required Pre-CR adapter, tracked secret-like paths, and the agent-usability
-contract. An applicable agent-usability contract must provide at least one
+contract. Its JSON output includes the measured context review age and freshness
+limit. An applicable agent-usability contract must provide at least one
 existing behavior-evidence file for every declared tool. The focused validator
 is also executable with `node scripts/check_agent_usability.mjs`.
 

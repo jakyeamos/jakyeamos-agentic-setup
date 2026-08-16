@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import shutil
 import sys
@@ -52,6 +53,14 @@ def _find_asset(root: Path, asset_id: str) -> dict[str, Any]:
 
 def _json_text(value: Any) -> str:
     return json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
+
+
+def _sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def _emit(value: Any, as_json: bool, human_lines: list[str]) -> None:
@@ -280,7 +289,133 @@ def _apply_install(root: Path, plan: dict[str, Any]) -> dict[str, Any]:
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source_path, destination)
         action["status"] = "copied"
+    receipt_path = root / ".workbench-receipts" / f"{plan['asset_id']}.json"
+    receipt = {
+        "schema_version": "portable-workbench-receipt/v1",
+        "asset_id": plan["asset_id"],
+        "target": plan["target"],
+        "install_mode": plan["install_mode"],
+        "files": [
+            {
+                "path": str(Path(action["destination"]).relative_to(root)),
+                "sha256": _sha256(Path(action["destination"])),
+                "source": action["source"],
+            }
+            for action in plan["actions"]
+        ],
+    }
+    receipt_path.parent.mkdir(parents=True, exist_ok=True)
+    receipt_path.write_text(_json_text(receipt), encoding="utf-8")
+    plan["receipt"] = str(receipt_path)
     plan["dry_run"] = False
+    return plan
+
+
+def _uninstall_plan(
+    root: Path,
+    asset: dict[str, Any],
+    target: str,
+    dry_run: bool,
+    receipt_path: Path | None = None,
+) -> dict[str, Any]:
+    """Plan a receipt-scoped uninstall without deleting modified files."""
+
+    if target not in INSTALL_TARGETS:
+        raise WorkbenchError(f"unsupported installation target: {target}")
+    supported_targets = asset.get("supported_targets", [])
+    if target not in supported_targets:
+        raise WorkbenchError(
+            f"asset {asset.get('id')} does not support target {target}"
+        )
+    install = asset.get("install", {})
+    if not isinstance(install, dict):
+        raise WorkbenchError(f"asset {asset.get('id')} has an invalid install record")
+    mode = install.get("mode")
+    receipt = (receipt_path or (root / ".workbench-receipts" / f"{asset.get('id')}.json")).resolve()
+    base: dict[str, Any] = {
+        "asset_id": asset.get("id"),
+        "dry_run": dry_run,
+        "install_mode": mode,
+        "operation": "uninstall",
+        "receipt": str(receipt),
+        "root": str(root),
+        "target": target,
+        "actions": [],
+        "mutated": False,
+    }
+    if mode not in {"copy", "stage"}:
+        base.update(
+            status="blocked-uninstall-safety",
+            reason="unsupported_install_mode",
+        )
+        return base
+    if not receipt.is_file() or receipt.is_symlink():
+        base.update(status="blocked-uninstall-safety", reason="receipt_missing")
+        return base
+    try:
+        receipt_value = json.loads(receipt.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        base.update(status="blocked-uninstall-safety", reason="receipt_invalid")
+        base["receipt_error"] = str(exc)
+        return base
+    if not isinstance(receipt_value, dict) or receipt_value.get("asset_id") != asset.get("id"):
+        base.update(status="blocked-uninstall-safety", reason="receipt_identity_mismatch")
+        return base
+    receipt_files = receipt_value.get("files")
+    expected_by_source = {
+        item.get("source"): item
+        for item in receipt_files
+        if isinstance(item, dict) and isinstance(item.get("source"), str)
+    } if isinstance(receipt_files, list) else {}
+    try:
+        destination_root = _safe_destination(
+            root, Path(str(install.get("destination", "")))
+        )
+    except WorkbenchError:
+        base.update(status="blocked-uninstall-safety", reason="unsafe_destination")
+        return base
+    unsafe = False
+    for source in sorted(asset.get("files", [])):
+        relative_destination = _install_relative_path(asset, source)
+        destination = _safe_destination(destination_root, relative_destination)
+        receipt_item = expected_by_source.get(source)
+        expected_hash = receipt_item.get("sha256") if isinstance(receipt_item, dict) else None
+        relative_path = str(destination.relative_to(root))
+        if not destination.exists():
+            action_status = "missing"
+            unsafe = True
+        elif not destination.is_file() or destination.is_symlink():
+            action_status = "modified"
+            unsafe = True
+        elif not isinstance(expected_hash, str) or _sha256(destination) != expected_hash:
+            action_status = "modified"
+            unsafe = True
+        else:
+            action_status = "ready-remove"
+        base["actions"].append(
+            {
+                "destination": str(destination),
+                "path": relative_path,
+                "source": source,
+                "status": action_status,
+            }
+        )
+    base["status"] = "blocked-uninstall-safety" if unsafe else "ready-uninstall"
+    if unsafe:
+        base["reason"] = "receipt_hash_or_file_state_mismatch"
+    return base
+
+
+def _apply_uninstall(plan: dict[str, Any]) -> dict[str, Any]:
+    if plan["status"] != "ready-uninstall":
+        return plan
+    for action in plan["actions"]:
+        destination = Path(action["destination"])
+        if destination.exists():
+            destination.unlink()
+        action["status"] = "removed"
+    plan["dry_run"] = False
+    plan["mutated"] = bool(plan["actions"])
     return plan
 
 
@@ -337,6 +472,24 @@ def _parser() -> argparse.ArgumentParser:
         "--apply", action="store_true", help="copy into the explicit target root"
     )
     install_parser.add_argument(
+        "--json", action="store_true", help="emit deterministic JSON"
+    )
+
+    uninstall_parser = subparsers.add_parser(
+        "uninstall", help="plan or apply a receipt-scoped safe asset uninstall"
+    )
+    uninstall_parser.add_argument("asset_id")
+    uninstall_parser.add_argument("--target", required=True, choices=INSTALL_TARGETS)
+    uninstall_parser.add_argument("--root", required=True, type=Path)
+    uninstall_parser.add_argument("--receipt", type=Path)
+    uninstall_mode = uninstall_parser.add_mutually_exclusive_group()
+    uninstall_mode.add_argument(
+        "--dry-run", action="store_true", help="preview only; this is the default"
+    )
+    uninstall_mode.add_argument(
+        "--apply", action="store_true", help="remove only unchanged receipt-scoped files"
+    )
+    uninstall_parser.add_argument(
         "--json", action="store_true", help="emit deterministic JSON"
     )
 
@@ -410,6 +563,34 @@ def main(argv: list[str] | None = None) -> int:
             )
             if plan.get("manual_review"):
                 human.append(f"manual review: {plan['manual_review']}")
+            _emit(plan, args.json, human)
+            return 1 if plan["status"].startswith("blocked") else 0
+        if args.command == "uninstall":
+            root = args.root.expanduser().resolve()
+            if root == Path("/") or root == Path.home():
+                raise WorkbenchError(
+                    "refusing an uninstall root that is the filesystem or user home"
+                )
+            asset = _find_asset(ROOT, args.asset_id)
+            plan = _uninstall_plan(
+                root,
+                asset,
+                args.target,
+                not args.apply,
+                None if args.receipt is None else args.receipt.expanduser(),
+            )
+            if args.apply and plan["status"] == "ready-uninstall":
+                plan = _apply_uninstall(plan)
+            human = [
+                f"{plan['asset_id']}: {plan['status']}",
+                f"target root: {plan['root']}",
+                f"operation: {plan['operation']}",
+                f"dry-run: {plan['dry_run']}",
+            ]
+            human.extend(
+                f"{action['status']}: {action['source']} -> {action['destination']}"
+                for action in plan["actions"]
+            )
             _emit(plan, args.json, human)
             return 1 if plan["status"].startswith("blocked") else 0
         if args.command == "index":

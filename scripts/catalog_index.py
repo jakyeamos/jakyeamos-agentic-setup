@@ -114,41 +114,41 @@ def render_index(root: Path) -> str:
                 "",
                 collection["summary"],
                 "",
-                "| Multiplier | Why open it | Type |",
-                "| --- | --- | --- |",
+                "Entries are grouped by the taxonomy order below; each group is",
+                "sorted by the collection's explicit entry order.",
             ]
         )
-        for asset_id in collection.get("entries", []):
-            asset = by_id.get(asset_id)
-            if asset is None:
-                continue
-            lines.append(
-                f"| [`{asset_id}`]({_link_for(asset)}) | {asset['entry']['why']} | "
-                f"{asset['entry']['type']} |"
-            )
-
-    for type_item in types:
-        if not isinstance(type_item, dict):
-            continue
-        type_assets = [
-            asset
-            for asset in assets
-            if entry_type(asset, taxonomy) == type_item["id"]
+        collection_assets = [
+            by_id[asset_id]
+            for asset_id in collection.get("entries", [])
+            if asset_id in by_id
         ]
-        if not type_assets:
-            continue
-        lines.extend(
-            [
-                "",
-                f"## {type_item['label']}",
-                "",
-                type_item["purpose"],
-                "",
-                "| Multiplier | Why open it | Topics | Maturity | Adoption |",
-                "| --- | --- | --- | --- | --- |",
+        for type_item in types:
+            if not isinstance(type_item, dict):
+                continue
+            type_assets = [
+                asset
+                for asset in collection_assets
+                if entry_type(asset, taxonomy) == type_item["id"]
             ]
-        )
-        lines.extend(_row(asset) for asset in type_assets)
+            type_assets = sorted(type_assets, key=lambda asset: asset["id"])
+            if not type_assets:
+                continue
+            lines.extend(
+                [
+                    "",
+                    f"### {type_item['label']}",
+                    "",
+                    "| Multiplier | Why open it | Type |",
+                    "| --- | --- | --- |",
+                ]
+            )
+            for asset in type_assets:
+                asset_id = asset["id"]
+                lines.append(
+                    f"| [`{asset_id}`]({_link_for(asset)}) | {asset['entry']['why']} | "
+                    f"{asset['entry']['type']} |"
+                )
 
     lines.extend(
         [
@@ -177,8 +177,39 @@ def validate_index(root: Path) -> list[str]:
     if not path.is_file():
         return ["catalog/index.md: missing generated index"]
     if path.read_text(encoding="utf-8") != render_index(root):
+        manifest = load_manifest(root)
+        taxonomy = load_taxonomy(root)
+        assets = {
+            asset["id"]: project_entry(asset, taxonomy)
+            for asset in manifest.get("assets", [])
+            if isinstance(asset, dict) and isinstance(asset.get("id"), str)
+        }
+        expected_order: list[str] = []
+        for collection in taxonomy.get("collections", []):
+            if not isinstance(collection, dict):
+                continue
+            collection_assets = [
+                assets[asset_id]
+                for asset_id in collection.get("entries", [])
+                if asset_id in assets
+            ]
+            for type_item in taxonomy.get("types", []):
+                if not isinstance(type_item, dict):
+                    continue
+                expected_order.extend(
+                    asset["id"]
+                    for asset in sorted(
+                        (
+                            item
+                            for item in collection_assets
+                            if entry_type(item, taxonomy) == type_item["id"]
+                        ),
+                        key=lambda item: item["id"],
+                    )
+                )
         return [
-            "catalog/index.md: generated index is stale; run "
+            "catalog/index.md: generated index is stale; expected deterministic "
+            f"entry order: {', '.join(expected_order) or 'none'}; run "
             "python3 scripts/workbench.py index --write"
         ]
     return []

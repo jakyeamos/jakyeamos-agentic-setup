@@ -43,6 +43,10 @@ const REVIEW_PATTERN = /last_reviewed:\s*(\d{4}-\d{2}-\d{2})/;
 const LINK_PATTERN = /\[[^\]]+\]\(([^)]+)\)/g;
 const SECRET_NAME_PATTERN = /(^|\/)(?:\.env(?:\..*)?|.*\.(?:pem|key|p12|pfx)|id_rsa|credentials(?:\.[^/]+)?)$/i;
 const SAFE_SECRET_NAMES = new Set([".env.example", ".env.template"]);
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+// A dimension-only report is still evidence-bearing: freshness must retain the
+// measured age and its limit rather than collapsing to a bare pass/fail value.
 
 function readJson(file) {
   return JSON.parse(readFileSync(file, "utf8"));
@@ -57,6 +61,46 @@ function dateOnly(value) {
   const date = value instanceof Date ? value : new Date(value);
   if (Number.isNaN(date.getTime())) return null;
   return Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+}
+
+export function freshnessEvidence(reviewedInput, asOfInput, limitDays = 35) {
+  const reviewed = dateOnly(reviewedInput);
+  const asOf = dateOnly(asOfInput);
+  if (reviewed === null || asOf === null) {
+    return { status: "unknown", age_days: null, limit_days: limitDays };
+  }
+  const ageDays = Math.floor((asOf - reviewed) / DAY_MS);
+  return {
+    status: ageDays > limitDays ? "fail" : "pass",
+    age_days: ageDays,
+    limit_days: limitDays
+  };
+}
+
+export function summarizeDimensionStatuses(result) {
+  const checks = result?.checks ?? {};
+  const context = checks.context_dimensions ?? {};
+  const freshness = context.freshness_evidence ?? {};
+  const statusOf = (value) => (typeof value === "string" ? value : "unknown");
+  const nestedStatuses = (value) => Object.fromEntries(
+    Object.entries(value ?? {}).map(([key, item]) => [
+      key,
+      statusOf(item?.status)
+    ])
+  );
+  return {
+    ownership: statusOf(context.ownership),
+    freshness: {
+      status: statusOf(context.freshness ?? freshness.status),
+      age_days: typeof freshness.age_days === "number" ? freshness.age_days : null,
+      limit_days: typeof freshness.limit_days === "number" ? freshness.limit_days : null
+    },
+    links: statusOf(context.links),
+    package_manager: statusOf(checks.package_manager?.status),
+    quality_gates: nestedStatuses(checks.quality_gates),
+    ignore_rules: nestedStatuses(checks.ignore_rules),
+    tracked_secret_custody: statusOf(checks.tracked_secret_custody)
+  };
 }
 
 function trackedPaths(root) {
@@ -84,7 +128,7 @@ function checkContext(root, errors, asOf) {
     const reviewedDate = dateOnly(`${reviewed[1]}T00:00:00Z`);
     if (reviewedDate === null || asOf === null) {
       errors.push("context index has an invalid freshness date");
-    } else if (asOf - reviewedDate > 35 * 24 * 60 * 60 * 1000) {
+    } else if (freshnessEvidence(reviewedDate, asOf).status === "fail") {
       errors.push(`context index is stale: ${reviewed[1]}`);
     }
   }
@@ -160,6 +204,71 @@ export function validateContract(rootInput = DEFAULT_ROOT, asOfInput = new Date(
       if (SECRET_NAME_PATTERN.test(file)) errors.push(`secret-like tracked path: ${file}`);
     }
   }
+  const contextErrors = errors.filter((error) =>
+    error.startsWith("missing .agents/context/") ||
+    error.startsWith("context index") ||
+    error.startsWith("context packet") ||
+    error.startsWith("broken context link")
+  );
+  const contextIndex = path.join(root, ".agents", "context", "README.md");
+  let contextFreshnessDays = null;
+  if (existsSync(contextIndex) && !lstatSync(contextIndex).isSymbolicLink()) {
+    const reviewed = readFileSync(contextIndex, "utf8").match(REVIEW_PATTERN);
+    if (reviewed && asOf !== null) {
+      const reviewedDate = dateOnly(`${reviewed[1]}T00:00:00Z`);
+      if (reviewedDate !== null) {
+        contextFreshnessDays = freshnessEvidence(reviewedDate, asOf).age_days;
+      }
+    }
+  }
+  const reviewedValue = existsSync(contextIndex) && !lstatSync(contextIndex).isSymbolicLink()
+    ? readFileSync(contextIndex, "utf8").match(REVIEW_PATTERN)?.[1]
+    : null;
+  const measuredFreshness = freshnessEvidence(reviewedValue, asOf, 35);
+  const freshnessStatus = contextErrors.some((error) => error.startsWith("context index"))
+    ? "fail"
+    : measuredFreshness.status;
+  const contextDimensions = {
+    ownership: contextErrors.some((error) => error.includes("must not be a symlink") || error.includes("missing .agents/context/README.md")) ? "fail" : "pass",
+    freshness: freshnessStatus,
+    freshness_evidence: {
+      ...measuredFreshness,
+      status: freshnessStatus
+    },
+    links: contextErrors.some((error) => error.startsWith("broken context link")) ? "fail" : "pass",
+    freshness_days: contextFreshnessDays,
+    freshness_limit_days: 35
+  };
+  const qualityGateChecks = Object.fromEntries(
+    Object.entries(REQUIRED_SCRIPTS).map(([name, command]) => [
+      name,
+      {
+        command,
+        status: errors.includes(`package script drift: ${name}`) ? "fail" : "pass"
+      }
+    ])
+  );
+  const ignoreRuleChecks = Object.fromEntries(
+    REQUIRED_IGNORES.map((rule) => [
+      rule,
+      {
+        status: errors.includes(`missing .gitignore rule: ${rule}`) ? "fail" : "pass"
+      }
+    ])
+  );
+  const packageManager = (() => {
+    try {
+      const packageJson = readJson(path.join(root, "package.json"));
+      const value = packageJson.packageManager ?? null;
+      return {
+        value,
+        expected: "pnpm@11.9.0",
+        status: value === "pnpm@11.9.0" ? "pass" : "fail"
+      };
+    } catch {
+      return { value: null, expected: "pnpm@11.9.0", status: "unknown" };
+    }
+  })();
   return {
     schema_version: "environment-contract/v1",
     as_of: new Date(asOfInput).toISOString(),
@@ -168,8 +277,13 @@ export function validateContract(rootInput = DEFAULT_ROOT, asOfInput = new Date(
     checks: {
       context_packets: PACKETS.filter((packet) => existsSync(path.join(root, ".agents/context", packet))).length,
       context_packets_required: PACKETS.length,
+      context_dimensions: contextDimensions,
+      package_manager: packageManager,
+      quality_gates: qualityGateChecks,
+      ignore_rules: ignoreRuleChecks,
       quality_commands: QUALITY_COMMANDS.length,
       tracked_secret_paths: errors.filter((error) => error.startsWith("secret-like tracked path:")).length,
+      tracked_secret_custody: errors.some((error) => error.startsWith("secret-like tracked path:")) ? "fail" : "pass",
       strict_javascript_syntax: true,
       required_pre_cr_adapter: !errors.some((error) => error.includes("quality adapter")),
       agent_usability: agentUsability

@@ -227,6 +227,33 @@ class PromotionAdmissionTests(unittest.TestCase):
             self.assertNotIn("private-source-marker", output)
             self.assertNotIn("private-evidence-marker", output)
 
+    def test_validation_reports_status_and_private_path_boundaries_together(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            candidate = _candidate()
+            candidate["status"] = "promoted"
+            candidate["title"] = "/private/team/secrets.txt"
+            candidate_path = root / "candidate.json"
+            candidate_path.write_text(json.dumps(candidate), encoding="utf-8")
+
+            result, payload, output = self._run(
+                ["validate", "--candidate", str(candidate_path)]
+            )
+
+            self.assertEqual(result, 2)
+            self.assertEqual(payload["status"], "blocked")
+            errors = cast(list[str], payload["validation_errors"])
+            self.assertIn(
+                "candidate contains a private absolute path or credential-shaped value",
+                errors,
+            )
+            self.assertIn(
+                "candidate must remain in candidate status for JAS admission", errors
+            )
+            self.assertEqual(payload["candidate_state"], "promoted")
+            self.assertFalse(payload["mutated"])
+            self.assertNotIn("/private/team/secrets.txt", output)
+
     def test_v3_projection_carries_complete_editorial_metadata_into_the_plan(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)

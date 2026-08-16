@@ -25,6 +25,7 @@ function contract(applicability, behaviorEvidence) {
     schema: "agent-usability/v1",
     reviewed_at: "2026-07-25",
     applicability,
+    ...(applicability === "not-applicable" ? { reason: "fixture has no supported agent tool surface" } : {}),
     tools: [{ id: "fixture-tool", behavior_evidence: behaviorEvidence }]
   };
 }

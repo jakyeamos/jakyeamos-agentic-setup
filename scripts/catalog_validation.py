@@ -6,6 +6,7 @@ from __future__ import annotations
 import json
 import re
 import sys
+from collections.abc import Iterable, Mapping
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
@@ -31,7 +32,7 @@ ALLOWED_LICENSE_STATUSES = {
 }
 SOURCE_ID_PATTERN = re.compile(r"^[a-z0-9][a-z0-9-]+$")
 PRIVATE_REFERENCE_PATTERN = re.compile(
-    r"(?:/(?:Users|home|private/var)/|~/(?:\.ssh|Library|\.config))"
+    r"(?:/(?:Users|home|private)/|~/(?:\.ssh|Library|\.config))"
 )
 EDITORIAL_TEXT_FIELDS = {"why", "use_when", "avoid_when"}
 
@@ -291,6 +292,8 @@ def _validate_asset(
     asset: Any,
     seen_ids: set[str],
     taxonomy: dict[str, Any] | None = None,
+    *,
+    snapshot: bool = False,
 ) -> list[str]:
     errors: list[str] = []
     if not isinstance(asset, dict):
@@ -362,7 +365,7 @@ def _validate_asset(
                 errors.append(f"{label}: invalid file path {file_value!r}")
                 continue
             file_path = root / file_value
-            if not file_path.is_file():
+            if not snapshot and not file_path.is_file():
                 errors.append(f"{label}: missing file {file_value}")
 
     entrypoints = asset.get("entrypoints", [])
@@ -406,7 +409,7 @@ def _validate_asset(
         for evidence_ref in evidence:
             if not isinstance(evidence_ref, str) or not evidence_ref:
                 errors.append(f"{label}: evidence references must be strings")
-            elif (
+            elif not snapshot and (
                 not _is_url(evidence_ref)
                 and not (root / evidence_ref.split("#", 1)[0]).is_file()
             ):
@@ -458,8 +461,73 @@ def _validate_asset(
     return errors
 
 
-def validate_manifest(root: Path) -> list[str]:
-    """Return catalog validation errors for a repository root."""
+def validate_supplied_asset_snapshot(
+    asset: Mapping[str, Any], taxonomy_type_ids: Iterable[str]
+) -> dict[str, Any]:
+    """Validate supplied asset boundaries without reading the filesystem.
+
+    Forward-test callers can use this helper when a manifest entry and
+    taxonomy membership are supplied as synthetic evidence. It reports the
+    private-source, editorial-type, and installation-mode checks independently
+    while keeping filesystem-dependent dimensions explicitly unknown.
+    """
+
+    taxonomy_types = {value for value in taxonomy_type_ids if isinstance(value, str)}
+    errors: list[str] = []
+
+    provenance = asset.get("provenance")
+    source = asset.get("source")
+    if isinstance(provenance, Mapping):
+        source = provenance.get("source", source)
+    private_source = isinstance(source, str) and bool(PRIVATE_REFERENCE_PATTERN.search(source))
+    if private_source:
+        errors.append("asset source is a private absolute path")
+
+    editorial = asset.get("editorial")
+    editorial_type = editorial.get("type") if isinstance(editorial, Mapping) else None
+    editorial_supplied = isinstance(editorial_type, str)
+    editorial_known = editorial_supplied and editorial_type in taxonomy_types
+    if editorial_supplied and not editorial_known:
+        errors.append("editorial type is not in the supplied taxonomy")
+
+    install = asset.get("install")
+    install_mode = install.get("mode") if isinstance(install, Mapping) else None
+    install_supplied = isinstance(install_mode, str)
+    install_known = install_supplied and install_mode in ALLOWED_INSTALL_MODES
+    if install_supplied and not install_known:
+        errors.append(f"installation mode is unsupported: {install_mode!r}")
+
+    return {
+        "status": "pass" if not errors else "fail",
+        "validation_scope": "supplied-asset-snapshot",
+        "errors": errors,
+        "checks": {
+            "private_source": "fail" if private_source else "pass",
+            "editorial_type": (
+                "pass" if editorial_known else "fail" if editorial_supplied else "unknown"
+            ),
+            "installation_mode": (
+                "pass" if install_known else "fail" if install_supplied else "unknown"
+            ),
+        },
+        "unknown_checks": [
+            "filesystem custody and file existence",
+            "evidence existence",
+            "library directory completeness and type alignment",
+            "local Markdown link resolution",
+        ],
+    }
+
+
+def validate_manifest(root: Path, *, snapshot: bool = False) -> list[str]:
+    """Return catalog validation errors for a repository root.
+
+    ``snapshot=True`` validates only the supplied manifest/taxonomy shape and
+    safe relative-reference syntax. Filesystem-dependent existence, library
+    completeness, and local Markdown-link checks are intentionally omitted;
+    callers must report those dimensions as unknown rather than treating a
+    snapshot-limited pass as a full repository pass.
+    """
 
     errors: list[str] = []
     try:
@@ -525,18 +593,97 @@ def validate_manifest(root: Path) -> list[str]:
     else:
         seen_ids: set[str] = set()
         for asset in assets:
-            errors.extend(_validate_asset(root, asset, seen_ids, taxonomy))
-        errors.extend(_validate_library(root, assets, taxonomy))
+            errors.extend(
+                _validate_asset(root, asset, seen_ids, taxonomy, snapshot=snapshot)
+            )
+        if not snapshot:
+            errors.extend(_validate_library(root, assets, taxonomy))
 
-    for path in sorted(root.rglob("*.md")):
-        if any(
-            part
-            in {".git", ".pre-cr", ".quality-runner", ".aios", ".tmcp", "__pycache__"}
-            for part in path.parts
-        ):
-            continue
-        errors.extend(_validate_markdown_links(root, path))
+    if not snapshot:
+        for path in sorted(root.rglob("*.md")):
+            if any(
+                part
+                in {".git", ".pre-cr", ".quality-runner", ".aios", ".tmcp", "__pycache__"}
+                for part in path.parts
+            ):
+                continue
+            errors.extend(_validate_markdown_links(root, path))
     return errors
+
+
+def validate_manifest_snapshot(
+    root: Path, supplied_evidence: dict[str, bool] | None = None
+) -> dict[str, Any]:
+    """Return a bounded result that keeps omitted checks explicitly unknown.
+
+    ``supplied_evidence`` is an optional caller-owned snapshot, not a filesystem
+    probe.  When it explicitly asserts ``taxonomy_membership``, ``regular_file``,
+    or ``no_local_absolute_links``, those dimensions are recorded as passing for
+    the supplied snapshot only.  No omitted fact is inferred from the manifest.
+    """
+
+    errors = validate_manifest(root, snapshot=True)
+    manifest = load_manifest(root)
+    taxonomy = load_taxonomy(root)
+    assets = manifest.get("assets", [])
+    supplied_asset_ids = [
+        asset.get("id")
+        for asset in assets
+        if isinstance(asset, dict) and isinstance(asset.get("id"), str)
+    ]
+    relative_references = all(
+        _is_relative_path(reference)
+        for asset in assets
+        if isinstance(asset, dict)
+        for reference in asset.get("entrypoints", []) + asset.get("files", [])
+        if isinstance(reference, str)
+    )
+    install_modes = sorted(
+        {
+            str(asset.get("install", {}).get("mode"))
+            for asset in assets
+            if isinstance(asset, dict) and isinstance(asset.get("install"), dict)
+        }
+    )
+    evidence = supplied_evidence or {}
+    snapshot_checks = {
+        "taxonomy_membership": "pass"
+        if evidence.get("taxonomy_membership") is True
+        else "unknown",
+        "filesystem_custody": "pass"
+        if evidence.get("regular_file") is True
+        else "unknown",
+        "markdown_links": "pass"
+        if evidence.get("no_local_absolute_links") is True
+        else "unknown",
+    }
+    unknown_checks: list[str] = []
+    if evidence.get("taxonomy_membership") is not True:
+        unknown_checks.append("taxonomy membership, unless explicitly supplied")
+    if evidence.get("regular_file") is not True:
+        unknown_checks.append(
+            "filesystem file and evidence existence, unless explicitly supplied"
+        )
+    unknown_checks.extend(
+        [
+            "library directory completeness and type alignment",
+            "local Markdown link resolution, unless explicitly supplied",
+        ]
+    )
+    return {
+        "status": "pass" if not errors else "fail",
+        "validation_scope": "snapshot-limited",
+        "errors": errors,
+        "checks": {
+            "manifest_schema": "pass" if manifest.get("schema_version") == 1 else "fail",
+            "taxonomy_schema": "pass" if taxonomy.get("schema_version") == 1 else "fail",
+            **snapshot_checks,
+            "asset_ids": supplied_asset_ids,
+            "relative_references": "pass" if relative_references else "fail",
+            "install_modes": install_modes,
+        },
+        "unknown_checks": unknown_checks,
+    }
 
 
 def main() -> int:

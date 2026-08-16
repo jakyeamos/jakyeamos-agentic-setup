@@ -183,7 +183,16 @@ export function syncManifest(manifest, manifestRoot, options = {}) {
     applied = true;
   }
   if (applied) saveBaselines(manifestRoot, baselines);
-  return { generated_at: new Date().toISOString(), apply: options.apply === true, actions, blocked: blocked.length, status: blocked.length > 0 ? "SYNC_BLOCKED" : "SYNC_CLEAN" };
+  return {
+    generated_at: new Date().toISOString(),
+    apply: options.apply === true,
+    execution_mode: options.apply === true ? "apply" : "dry-run",
+    projection_status: "not_projected",
+    mutated: applied,
+    actions,
+    blocked: blocked.length,
+    status: blocked.length > 0 ? "SYNC_BLOCKED" : "SYNC_CLEAN"
+  };
 }
 
 export function doctorManifest(manifest, manifestRoot) {

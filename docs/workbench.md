@@ -13,12 +13,18 @@ python3 scripts/workbench.py search --query "long context" --json
 python3 scripts/workbench.py show context-budget-governor --json
 python3 scripts/workbench.py install context-budget-governor \
   --target generic --root /tmp/workbench-target --dry-run --json
+python3 scripts/workbench.py uninstall context-budget-governor \
+  --target generic --root /tmp/workbench-target --dry-run --json
 ```
 
 Installation requires an explicit target root, defaults to dry-run, copies
 only manifest-allowlisted files, and never overwrites an existing file. It
 reports external dependencies but does not install them. Adapters are staged
-for review; external references remain manual and are never copied.
+for review; external references remain manual and are never copied. An apply
+installation writes a receipt under `.workbench-receipts/`; uninstall is also
+dry-run by default and removes files only when that receipt exists and every
+installed file still has the recorded hash. Missing receipts, symlinks, and
+hash drift produce `blocked-uninstall-safety` without deleting anything.
 
 ## Manifest-aware setup engine
 

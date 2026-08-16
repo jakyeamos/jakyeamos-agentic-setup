@@ -3,7 +3,11 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import test from "node:test";
-import { validateContract } from "../scripts/check_environment_contract.mjs";
+import {
+  freshnessEvidence,
+  summarizeDimensionStatuses,
+  validateContract
+} from "../scripts/check_environment_contract.mjs";
 
 const PACKETS = [
   "architecture.md",
@@ -24,7 +28,7 @@ const QUALITY_COMMANDS = [
   "python3 scripts/pre_cr_coverage.py"
 ];
 
-function writeFixture(root, indexSuffix = "") {
+function writeFixture(root, indexSuffix = "", reviewedAt = "2026-07-25") {
   fs.mkdirSync(path.join(root, ".agents", "context"), { recursive: true });
   fs.mkdirSync(path.join(root, "catalog"), { recursive: true });
   fs.mkdirSync(path.join(root, "docs"), { recursive: true });
@@ -75,7 +79,7 @@ function writeFixture(root, indexSuffix = "") {
   const links = PACKETS.map((packet) => `[${packet}](${packet})`).join("\n");
   fs.writeFileSync(
     path.join(root, ".agents", "context", "README.md"),
-    `# Context\n\nlast_reviewed: 2026-07-25\n\n${links}\n${indexSuffix}`
+    `# Context\n\nlast_reviewed: ${reviewedAt}\n\n${links}\n${indexSuffix}`
   );
   for (const packet of PACKETS) {
     fs.writeFileSync(path.join(root, ".agents", "context", packet), `# ${packet}\n`);
@@ -99,6 +103,52 @@ test("the contract rejects broken context links", () => {
   } finally {
     fs.rmSync(root, { recursive: true, force: true });
   }
+});
+
+test("freshness evidence reports the measured review age and limit", () => {
+  assert.deepEqual(
+    freshnessEvidence("2026-08-01", "2026-08-13"),
+    { status: "pass", age_days: 12, limit_days: 35 }
+  );
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "environment-contract-freshness-"));
+  try {
+    writeFixture(root, "", "2026-08-01");
+    const result = validateContract(root, "2026-08-13", ["AGENTS.md"]);
+    assert.equal(result.checks.context_dimensions.freshness, "pass");
+    assert.deepEqual(result.checks.context_dimensions.freshness_evidence, {
+      status: "pass",
+      age_days: 12,
+      limit_days: 35
+    });
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("dimension-only reports retain freshness evidence", () => {
+  const summary = summarizeDimensionStatuses({
+    checks: {
+      context_dimensions: {
+        ownership: "pass",
+        freshness: "pass",
+        freshness_evidence: { status: "pass", age_days: 12, limit_days: 35 },
+        links: "pass"
+      },
+      package_manager: { status: "pass" },
+      quality_gates: { test: { status: "pass" } },
+      ignore_rules: { ".env": { status: "pass" } },
+      tracked_secret_custody: "pass"
+    }
+  });
+  assert.deepEqual(summary, {
+    ownership: "pass",
+    freshness: { status: "pass", age_days: 12, limit_days: 35 },
+    links: "pass",
+    package_manager: "pass",
+    quality_gates: { test: "pass" },
+    ignore_rules: { ".env": "pass" },
+    tracked_secret_custody: "pass"
+  });
 });
 
 test("the contract rejects missing routed packets", () => {

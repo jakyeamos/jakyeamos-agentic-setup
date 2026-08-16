@@ -49,6 +49,11 @@ Record broken links, missing owners, stale commands, and unverifiable baselines
 explicitly. Use `unknown`, `stale`, or `blocked` when evidence is incomplete;
 do not silently fall back to an older packet or an unverified command.
 
+When the workspace index freshness check fails, include the exact
+machine-readable phrase `workspace index: stale` in the result. Keep the
+stale-index finding separate from checkout identity and do not treat a stale
+index as evidence for the current repository.
+
 Dynamic command checks must run only from a runtime-owned disposable baseline.
 Refuse dirty, detached, stale, prunable, or otherwise unverifiable checkouts,
 and compare the original checkout status before and after the check.

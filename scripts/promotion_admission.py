@@ -45,7 +45,7 @@ SYMBOLIC_HOME_PATTERN = re.compile(r"^\$(?:\{HOME\}|HOME)(?:/[A-Za-z0-9._-]+)*$"
 _PRIVATE_STRING_PREFIXES = (
     "/" + "Users" + "/",
     "/" + "home" + "/",
-    "/" + "private" + "/" + "var" + "/",
+    "/" + "private" + "/",
     "~" + "/" + ".ssh",
     "~" + "/" + "Library",
     "~" + "/" + ".config",
@@ -100,6 +100,15 @@ def validate_candidate(candidate: Mapping[str, object]) -> dict[str, object]:
     """Validate the leverage candidate without exposing its private evidence."""
 
     _required_exact(candidate, "schema_version", CANDIDATE_SCHEMA_VERSION)
+    preflight_errors: list[str] = []
+    if _private_value_present(candidate):
+        preflight_errors.append(
+            "candidate contains a private absolute path or credential-shaped value"
+        )
+    if candidate.get("status") != "candidate":
+        preflight_errors.append("candidate must remain in candidate status for JAS admission")
+    if preflight_errors:
+        raise AdmissionError("; ".join(preflight_errors))
     _required_exact(candidate, "visibility", "private")
     candidate_id = _required_text(candidate, "candidate_id")
     if not CANDIDATE_ID_PATTERN.fullmatch(candidate_id):
@@ -175,10 +184,6 @@ def validate_candidate(candidate: Mapping[str, object]) -> dict[str, object]:
         raise AdmissionError("private_package is only valid for private candidates")
     if portability == "private":
         _required_text(candidate, "disposition_reason")
-    if status != "candidate":
-        raise AdmissionError(
-            "candidate must remain in candidate status for JAS admission"
-        )
     if review_status not in {"pending", "approved"}:
         raise AdmissionError("candidate review_status must be pending or approved")
     return {
@@ -1225,14 +1230,35 @@ def main(argv: list[str] | None = None) -> int:
     """Run the report-only or explicitly approved JAS admission boundary."""
 
     args = _parser().parse_args(argv)
+    candidate_result: dict[str, object] | None = None
     try:
         root = args.root.expanduser().resolve()
         candidate = load_json(args.candidate.expanduser().resolve())
         candidate_result = validate_candidate(candidate)
-        projection = _projection_from_candidate(
-            candidate,
-            None if args.projection is None else args.projection.expanduser().resolve(),
-        )
+        try:
+            projection = _projection_from_candidate(
+                candidate,
+                None if args.projection is None else args.projection.expanduser().resolve(),
+            )
+        except AdmissionError as exc:
+            if args.command == "validate" and args.projection is None and "no embedded sanitized promotion projection" in str(exc):
+                payload = {
+                    "status": "review_required",
+                    "admission_status": "review_required",
+                    "candidate_structurally_valid": True,
+                    "candidate_state": "candidate",
+                    "candidate_id": candidate_result["candidate_id"],
+                    "asset_id": None,
+                    "visibility": "private",
+                    "schema_version": None,
+                    "reason": "promotion_projection_missing",
+                    "projection_status": "missing",
+                    "target": None,
+                    "mutated": False,
+                }
+                print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
+                return 0
+            raise
         projection_result = validate_projection(
             projection,
             root,
@@ -1246,10 +1272,14 @@ def main(argv: list[str] | None = None) -> int:
             )
             payload: dict[str, object] = {
                 "status": "blocked" if is_legacy_private else "review_required",
+                "admission_status": "blocked" if is_legacy_private else "review_required",
+                "candidate_structurally_valid": True,
+                "candidate_state": "candidate",
                 "candidate_id": candidate_result["candidate_id"],
                 "asset_id": projection_result["asset_id"],
                 "visibility": projection_result["visibility"],
                 "schema_version": projection_result["schema_version"],
+                "projection_status": "present",
                 "reason": (
                     "private_overlay_requires_catalog_asset_reference"
                     if is_legacy_private
@@ -1299,7 +1329,20 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
         return 0 if payload["status"] != "blocked" else 2
     except (AdmissionError, OSError, ValueError) as exc:
-        payload = {"status": "blocked", "error": str(exc)}
+        error_text = str(exc)
+        payload = {
+            "status": "blocked",
+            "admission_status": "blocked",
+            "candidate_structurally_valid": candidate_result is not None,
+            "candidate_state": candidate.get("status") if isinstance(candidate, Mapping) else "invalid",
+            "projection_status": "not_evaluated",
+            "mutated": False,
+            "reason": "candidate_validation_failed"
+            if candidate_result is None
+            else "admission_validation_failed",
+            "validation_errors": [item.strip() for item in error_text.split("; ") if item.strip()],
+            "error": error_text,
+        }
         if args.json:
             print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
         else:

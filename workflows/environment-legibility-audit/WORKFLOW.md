@@ -96,6 +96,13 @@ audit. Capture the source checkout status before and after discovery and
 preparation; any difference is a failed audit invariant, not a successful
 preparation.
 
+The remediation must be evidence-focused and read-only. For example, when a
+second repository is stale or its dynamic contract is missing, propose
+refreshing that repository's context/contracts, materializing a clean attached
+disposable baseline, and running a bounded read-only smoke check after the
+baseline gates pass. Do not claim that a repair was performed, and do not edit
+either checkout from the audit.
+
 ## Remediation output
 
 Create one directly implementable plan per identity. Each plan names the gap,
