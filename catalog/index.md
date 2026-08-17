@@ -165,6 +165,8 @@ sorted by the collection's explicit entry order.
 python3 scripts/workbench.py show <entry-id> --json
 python3 scripts/workbench.py install <entry-id> \
   --target generic --root /tmp/workbench-target --dry-run --json
+python3 scripts/workbench.py uninstall <entry-id> \
+  --target generic --root /tmp/workbench-target --dry-run --json
 ```
 
 See the [catalog model](../docs/catalog-model.md) before adding an entry

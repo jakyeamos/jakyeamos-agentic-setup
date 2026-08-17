@@ -49,6 +49,14 @@ test("parses JSON-compatible YAML and validates the manifest contract", () => {
   assert.equal(validateManifest(manifest), true);
 });
 
+test("agent-config reports its package version without loading a manifest", () => {
+  const plain = execFileSync("node", ["bin/agent-config.mjs", "--version"], { encoding: "utf8" });
+  const json = execFileSync("node", ["bin/agent-config.mjs", "version", "--json"], { encoding: "utf8" });
+
+  assert.equal(plain, "agent-config 0.4.0\n");
+  assert.deepEqual(JSON.parse(json), { name: "agent-config", version: "0.4.0" });
+});
+
 test("CLI selects one provider for a root-scoped dry-run and routes unknown commands to help", () => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "agent-config-provider-"));
   try {

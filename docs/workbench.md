@@ -32,6 +32,7 @@ The dependency-light Node engine handles explicit, fail-closed configuration
 work:
 
 ```bash
+pnpm agent-config --version
 pnpm agent-config --help
 pnpm audit -- --json
 pnpm drift -- --json

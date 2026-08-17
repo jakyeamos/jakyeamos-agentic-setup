@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { readFileSync } from "node:fs";
 import path from "node:path";
 import {
   bootstrapRuntimes,
@@ -15,6 +16,10 @@ import {
 } from "../src/agent-config.mjs";
 import { installPrivateOverlay, resolvePrivateOverlay } from "../src/overlay.mjs";
 
+const PACKAGE_VERSION = JSON.parse(
+  readFileSync(new URL("../package.json", import.meta.url), "utf8")
+).version;
+
 // Read-only command-selection guidance is a plan, not execution evidence. Name
 // the exact supported command, say that no projection occurred, and direct
 // unknown subcommands to `agent-config --help` without predicting runtime
@@ -23,6 +28,7 @@ import { installPrivateOverlay, resolvePrivateOverlay } from "../src/overlay.mjs
 function parseArgs(argv) {
   const args = { command: argv[0] ?? "help", json: false, apply: false, allowBroadScan: false, allowHome: false, provider: null };
   if (args.command === "--help" || args.command === "-h") args.command = "help";
+  if (args.command === "--version" || args.command === "-V") args.command = "version";
   for (let index = 1; index < argv.length; index += 1) {
     const value = argv[index];
     if (value === "--json") args.json = true;
@@ -60,7 +66,7 @@ function print(value, json) {
 }
 
 function help() {
-  return `Usage: agent-config <audit|drift|doctor|sync|install|bootstrap|smoke|overlay|overlay-install> [options]
+  return `Usage: agent-config <version|audit|drift|doctor|sync|install|bootstrap|smoke|overlay|overlay-install> [options]
 
 Commands are read-only by default.
   audit   inventory surfaces, lint always-loaded files, and write audit reports
@@ -74,6 +80,7 @@ Commands are read-only by default.
   overlay-install plan or apply an overlay into an explicit disposable root
 
 Options:
+  --version               print the installed package version
   --manifest <path>       manifest path (default: repository manifest.yaml)
   --overlay <path>        private companion overlay for the overlay command
   --catalog <path>        public catalog path (default: catalog/manifest.json)
@@ -101,6 +108,10 @@ function main(argv) {
   const args = parseArgs(argv);
   if (args.command === "help") {
     print(help(), false);
+    return 0;
+  }
+  if (args.command === "version") {
+    print(args.json ? { name: "agent-config", version: PACKAGE_VERSION } : `agent-config ${PACKAGE_VERSION}`, args.json);
     return 0;
   }
   const manifestPath = args.manifest ?? (
