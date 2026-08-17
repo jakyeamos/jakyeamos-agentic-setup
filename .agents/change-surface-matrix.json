@@ -2,8 +2,21 @@
   "schema_version": "change-surface-matrix/v1",
   "subject": {"kind": "repository", "id": "jakyeamos-agent-skills"},
   "owner": "repository-owner",
-  "last_reviewed": "2026-08-11",
+  "last_reviewed": "2026-08-13",
   "surfaces": [
+    {
+      "id": "matrix-maintenance",
+      "scope": "local",
+      "path": ".agents/change-surface-matrix.json",
+      "owner": "repository-owner",
+      "condition": "A material feature, functionality, behavior, CLI/API, workflow, data, integration, security/privacy, or quality/release change is added or changed.",
+      "operations": ["add", "change", "remove"],
+      "validation": [
+        "Update this matrix in the same change with affected surfaces, contracts, documentation, tests, evidence, owners, and projections.",
+        "For a purely internal refactor or isolated fix with no matrix impact, record a reviewed no-impact reason in the same change record; omission is not an implicit no-impact decision."
+      ],
+      "status": "applicable"
+    },
     {"id": "catalog-and-library", "scope": "local", "path": "skills/, catalog/, scripts/, and tests/", "owner": "repository-owner", "condition": "catalog, skill contract, installer, or validation behavior changes", "operations": ["add", "change", "remove"], "validation": ["pnpm lint", "pnpm test", "pnpm check"], "status": "applicable"},
     {"id": "provider-projections", "scope": "external", "path": "installed provider projections", "owner": "projection-owner", "condition": "a distributed skill, workflow, route, or install mapping changes", "operations": ["add", "change", "remove"], "validation": ["pnpm audit", "pnpm doctor", "pnpm smoke"], "status": "applicable"}
   ],

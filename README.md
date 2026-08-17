@@ -75,7 +75,10 @@ python3 scripts/workbench.py install context-budget-governor \
 
 Installation requires an explicit target, defaults to dry-run, copies only
 manifest-allowlisted files, and never overwrites an existing file. Adapters are
-staged for review. External projects remain references and are not copied.
+staged for review. A successful apply writes a receipt-scoped ownership record;
+the matching `uninstall` command is also dry-run by default and refuses
+modified or unowned manifest files. External projects remain references and are
+not copied.
 
 The [workbench manual](docs/workbench.md) owns setup-engine commands, promotion
 admission, private overlays, validation, and safety boundaries. The

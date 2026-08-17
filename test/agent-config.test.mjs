@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -41,6 +42,14 @@ function minimalManifest(overrides = {}) {
     ...overrides
   };
 }
+
+test("agent-config reports its package version without loading a manifest", () => {
+  const plain = execFileSync("node", ["bin/agent-config.mjs", "--version"], { encoding: "utf8" });
+  const json = execFileSync("node", ["bin/agent-config.mjs", "version", "--json"], { encoding: "utf8" });
+
+  assert.equal(plain, "agent-config 0.4.0\n");
+  assert.deepEqual(JSON.parse(json), { name: "agent-config", version: "0.4.0" });
+});
 
 test("parses JSON-compatible YAML and validates the manifest contract", () => {
   const manifest = minimalManifest();

@@ -37,6 +37,8 @@ executable through `scripts/check_environment_contract.mjs` and required by
   [`catalog/manifest.json`](catalog/manifest.json) and load only the matching
   entrypoint.
 
-The Python catalog surface remains available for catalog inspection. The
+The Python catalog surface remains available for catalog inspection and
+receipt-scoped installs. Its `install` and `uninstall` commands default to
+dry-run; `--apply` requires an explicit target and a reviewed plan. The
 manifest-aware Node setup surface is routed through `agent-config`; see the
 manifest contract for its command list and explicit dry-run/apply boundary.

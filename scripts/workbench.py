@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import shutil
 import sys
@@ -208,6 +209,90 @@ def _safe_destination(root: Path, relative: Path) -> Path:
     return destination
 
 
+def _sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _receipt_path(root: Path, asset: dict[str, Any], target: str) -> Path:
+    asset_id = str(asset.get("id", ""))
+    if not asset_id or Path(asset_id).name != asset_id:
+        raise WorkbenchError(f"asset {asset_id!r} cannot have an install receipt")
+    return _safe_destination(
+        root, Path(".workbench") / "receipts" / target / f"{asset_id}.json"
+    )
+
+
+def _install_receipt(asset: dict[str, Any], target: str) -> dict[str, Any]:
+    files: list[dict[str, str]] = []
+    for source in sorted(asset.get("files", [])):
+        source_path = ROOT / source
+        if not source_path.is_file():
+            raise WorkbenchError(f"manifest source is not a file: {source}")
+        files.append(
+            {
+                "destination": _install_relative_path(asset, source).as_posix(),
+                "sha256": _sha256_file(source_path),
+                "source": source,
+            }
+        )
+    install = asset.get("install", {})
+    return {
+        "asset_id": asset.get("id"),
+        "destination": str(install.get("destination", "")),
+        "files": files,
+        "install_mode": install.get("mode"),
+        "schema_version": 1,
+        "target": target,
+    }
+
+
+def _receipt_matches(
+    receipt: Any,
+    asset: dict[str, Any],
+    target: str,
+    expected_destination: str,
+) -> bool:
+    if not isinstance(receipt, dict):
+        return False
+    install = asset.get("install", {})
+    expected_files = [
+        {
+            "destination": _install_relative_path(asset, source).as_posix(),
+            "source": source,
+        }
+        for source in sorted(asset.get("files", []))
+    ]
+    actual_files = receipt.get("files")
+    if not isinstance(actual_files, list):
+        return False
+    if receipt.get("schema_version") != 1:
+        return False
+    if receipt.get("asset_id") != asset.get("id"):
+        return False
+    if receipt.get("target") != target:
+        return False
+    if receipt.get("install_mode") != install.get("mode"):
+        return False
+    if receipt.get("destination") != expected_destination:
+        return False
+    if len(actual_files) != len(expected_files):
+        return False
+    for expected, actual in zip(expected_files, actual_files):
+        if not isinstance(actual, dict):
+            return False
+        if actual.get("source") != expected["source"]:
+            return False
+        if actual.get("destination") != expected["destination"]:
+            return False
+        if not isinstance(actual.get("sha256"), str) or len(actual["sha256"]) != 64:
+            return False
+    return True
+
+
 def _install_plan(
     root: Path, asset: dict[str, Any], target: str, dry_run: bool
 ) -> dict[str, Any]:
@@ -225,17 +310,24 @@ def _install_plan(
     mode = install.get("mode")
     dependencies, required_missing = _dependency_report(asset)
     actions: list[dict[str, Any]] = []
+    receipt: dict[str, Any] | None = None
+    receipt_exists = False
     if mode in {"copy", "stage"}:
         destination_root = _safe_destination(
             root, Path(str(install.get("destination", "")))
         )
+        receipt_path = _receipt_path(root, asset, target)
+        receipt_exists = receipt_path.exists() or receipt_path.is_symlink()
+        receipt = {
+            "path": str(receipt_path),
+            "status": "exists" if receipt_exists else "would-write" if dry_run else "ready",
+        }
         for source in sorted(asset.get("files", [])):
             relative_destination = _install_relative_path(asset, source)
             destination = _safe_destination(destination_root, relative_destination)
-            action_status = (
-                "exists"
-                if destination.exists()
-                else ("would-copy" if dry_run else "ready")
+            source_missing = not (ROOT / source).is_file()
+            action_status = "missing-source" if source_missing else (
+                "exists" if destination.exists() else ("would-copy" if dry_run else "ready")
             )
             actions.append(
                 {
@@ -246,10 +338,17 @@ def _install_plan(
             )
 
     existing = [action for action in actions if action["status"] == "exists"]
+    missing_sources = [
+        action for action in actions if action["status"] == "missing-source"
+    ]
     if mode == "manual":
         status = "manual-review"
+    elif missing_sources:
+        status = "blocked-missing-source"
     elif required_missing:
         status = "blocked-missing-required-dependency"
+    elif receipt_exists:
+        status = "blocked-existing-receipt"
     elif existing:
         status = "blocked-existing-files"
     else:
@@ -265,6 +364,7 @@ def _install_plan(
         "status": status,
         "target": target,
         "actions": actions,
+        "receipt": receipt,
     }
 
 
@@ -274,13 +374,182 @@ def _apply_install(root: Path, plan: dict[str, Any]) -> dict[str, Any]:
     if plan["install_mode"] == "manual":
         return plan
     root.mkdir(parents=True, exist_ok=True)
+    copied: list[Path] = []
     for action in plan["actions"]:
         source_path = ROOT / action["source"]
         destination = Path(action["destination"])
         destination.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(source_path, destination)
+        try:
+            shutil.copy2(source_path, destination)
+        except Exception:
+            for copied_path in reversed(copied):
+                if copied_path.is_file() and not copied_path.is_symlink():
+                    copied_path.unlink()
+            raise
+        copied.append(destination)
         action["status"] = "copied"
+    receipt_path = Path(plan["receipt"]["path"])
+    receipt_path.parent.mkdir(parents=True, exist_ok=True)
+    asset = _find_asset(ROOT, plan["asset_id"])
+    receipt_payload = _install_receipt(asset, plan["target"])
+    try:
+        with receipt_path.open("x", encoding="utf-8") as handle:
+            handle.write(_json_text(receipt_payload))
+    except Exception:
+        for copied_path in reversed(copied):
+            if copied_path.is_file() and not copied_path.is_symlink():
+                copied_path.unlink()
+        raise
+    plan["receipt"]["status"] = "written"
     plan["dry_run"] = False
+    return plan
+
+
+def _uninstall_plan(
+    root: Path, asset: dict[str, Any], target: str, dry_run: bool
+) -> dict[str, Any]:
+    if target not in INSTALL_TARGETS:
+        raise WorkbenchError(f"unsupported installation target: {target}")
+    supported_targets = asset.get("supported_targets", [])
+    if target not in supported_targets:
+        raise WorkbenchError(
+            f"asset {asset.get('id')} does not support target {target}"
+        )
+
+    install = asset.get("install", {})
+    if not isinstance(install, dict):
+        raise WorkbenchError(f"asset {asset.get('id')} has an invalid install record")
+    mode = install.get("mode")
+    dependencies, _ = _dependency_report(asset)
+    destination_root = _safe_destination(
+        root, Path(str(install.get("destination", "")))
+    ) if mode in {"copy", "stage"} else None
+    receipt_path = _receipt_path(root, asset, target) if mode in {"copy", "stage"} else None
+    actions: list[dict[str, Any]] = []
+    receipt_payload: Any = None
+    receipt_error: str | None = None
+    if mode == "manual":
+        return {
+            "asset_id": asset.get("id"),
+            "actions": actions,
+            "dependencies": dependencies,
+            "dry_run": dry_run,
+            "install_mode": mode,
+            "manual_review": install.get("manual_review"),
+            "receipt": None,
+            "root": str(root),
+            "status": "manual-review",
+            "target": target,
+        }
+
+    assert destination_root is not None
+    assert receipt_path is not None
+    receipt_exists = receipt_path.is_file() and not receipt_path.is_symlink()
+    if receipt_exists:
+        try:
+            receipt_payload = json.loads(receipt_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            receipt_error = f"unreadable install receipt: {exc}"
+        if receipt_error is None and not _receipt_matches(
+            receipt_payload,
+            asset,
+            target,
+            str(install.get("destination", "")),
+        ):
+            receipt_error = "install receipt does not match the current manifest"
+
+    expected_hashes: dict[str, str] = {}
+    if receipt_error is None and isinstance(receipt_payload, dict):
+        expected_hashes = {
+            item["source"]: item["sha256"]
+            for item in receipt_payload["files"]
+            if isinstance(item, dict)
+            and isinstance(item.get("source"), str)
+            and isinstance(item.get("sha256"), str)
+        }
+    for source in sorted(asset.get("files", [])):
+        relative_destination = _install_relative_path(asset, source)
+        destination = _safe_destination(destination_root, relative_destination)
+        if not destination.exists() and not destination.is_symlink():
+            action_status = "absent"
+        elif destination.is_symlink():
+            action_status = "blocked-symlink"
+        elif not destination.is_file():
+            action_status = "blocked-non-file"
+        elif receipt_error is not None or not receipt_exists:
+            action_status = "unowned"
+        elif _sha256_file(destination) != expected_hashes.get(source):
+            action_status = "modified"
+        else:
+            action_status = "would-remove" if dry_run else "ready-to-remove"
+        actions.append(
+            {
+                "destination": str(destination),
+                "source": source,
+                "status": action_status,
+            }
+        )
+
+    unsafe = [
+        action
+        for action in actions
+        if action["status"] in {"blocked-symlink", "blocked-non-file", "unowned", "modified"}
+    ]
+    all_absent = all(action["status"] == "absent" for action in actions)
+    if mode not in {"copy", "stage"}:
+        status = "manual-review"
+    elif receipt_path.is_symlink() or (receipt_path.exists() and not receipt_exists):
+        status = "blocked-invalid-receipt"
+    elif receipt_error is not None:
+        status = "blocked-invalid-receipt"
+    elif unsafe:
+        status = "blocked-uninstall-safety"
+    elif not receipt_exists:
+        status = "already-absent" if all_absent else "blocked-missing-receipt"
+    else:
+        status = "already-absent" if all_absent else "ready"
+
+    receipt_status = None
+    if receipt_exists:
+        receipt_status = (
+            "would-remove"
+            if dry_run and not unsafe
+            else "ready-to-remove"
+            if not dry_run and not unsafe
+            else "blocked"
+        )
+    return {
+        "asset_id": asset.get("id"),
+        "actions": actions,
+        "dependencies": dependencies,
+        "dry_run": dry_run,
+        "install_mode": mode,
+        "manual_review": install.get("manual_review"),
+        "receipt": {
+            "path": str(receipt_path),
+            "status": receipt_status or "absent",
+        },
+        "root": str(root),
+        "status": status,
+        "target": target,
+    }
+
+
+def _apply_uninstall(root: Path, plan: dict[str, Any]) -> dict[str, Any]:
+    if plan["status"] not in {"ready", "already-absent"}:
+        return plan
+    receipt_path = Path(plan["receipt"]["path"])
+    for action in plan["actions"]:
+        if action["status"] == "ready-to-remove":
+            destination = Path(action["destination"])
+            if destination.is_file() and not destination.is_symlink():
+                destination.unlink()
+                action["status"] = "removed"
+    if receipt_path.is_file() and not receipt_path.is_symlink():
+        receipt_path.unlink()
+        plan["receipt"]["status"] = "removed"
+    plan["dry_run"] = False
+    plan["status"] = "uninstalled"
     return plan
 
 
@@ -337,6 +606,23 @@ def _parser() -> argparse.ArgumentParser:
         "--apply", action="store_true", help="copy into the explicit target root"
     )
     install_parser.add_argument(
+        "--json", action="store_true", help="emit deterministic JSON"
+    )
+
+    uninstall_parser = subparsers.add_parser(
+        "uninstall", help="plan or apply a receipt-scoped asset uninstall"
+    )
+    uninstall_parser.add_argument("asset_id")
+    uninstall_parser.add_argument("--target", required=True, choices=INSTALL_TARGETS)
+    uninstall_parser.add_argument("--root", required=True, type=Path)
+    uninstall_mode = uninstall_parser.add_mutually_exclusive_group()
+    uninstall_mode.add_argument(
+        "--dry-run", action="store_true", help="preview only; this is the default"
+    )
+    uninstall_mode.add_argument(
+        "--apply", action="store_true", help="remove only receipt-owned files"
+    )
+    uninstall_parser.add_argument(
         "--json", action="store_true", help="emit deterministic JSON"
     )
 
@@ -408,6 +694,34 @@ def main(argv: list[str] | None = None) -> int:
                 f"{action['status']}: {action['source']} -> {action['destination']}"
                 for action in plan["actions"]
             )
+            if plan.get("manual_review"):
+                human.append(f"manual review: {plan['manual_review']}")
+            _emit(plan, args.json, human)
+            return 1 if plan["status"].startswith("blocked") else 0
+        if args.command == "uninstall":
+            root = args.root.expanduser().resolve()
+            if root == Path("/") or root == Path.home():
+                raise WorkbenchError(
+                    "refusing an uninstall root that is the filesystem or user home"
+                )
+            asset = _find_asset(ROOT, args.asset_id)
+            dry_run = not args.apply
+            plan = _uninstall_plan(root, asset, args.target, dry_run)
+            if args.apply and plan["status"] in {"ready", "already-absent"}:
+                plan = _apply_uninstall(root, plan)
+            human = [
+                f"{plan['asset_id']}: {plan['status']}",
+                f"target root: {plan['root']}",
+                f"mode: {plan['install_mode']}",
+            ]
+            human.extend(
+                f"{action['status']}: {action['source']} -> {action['destination']}"
+                for action in plan["actions"]
+            )
+            if plan.get("receipt"):
+                human.append(
+                    f"receipt {plan['receipt']['status']}: {plan['receipt']['path']}"
+                )
             if plan.get("manual_review"):
                 human.append(f"manual review: {plan['manual_review']}")
             _emit(plan, args.json, human)

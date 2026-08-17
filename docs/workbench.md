@@ -18,7 +18,25 @@ python3 scripts/workbench.py install context-budget-governor \
 Installation requires an explicit target root, defaults to dry-run, copies
 only manifest-allowlisted files, and never overwrites an existing file. It
 reports external dependencies but does not install them. Adapters are staged
-for review; external references remain manual and are never copied.
+for review; external references remain manual and are never copied. A
+successful copy or stage apply also writes an installer-owned receipt under
+`.workbench/receipts/` in the target root. The receipt records the asset,
+target, relative destinations, and source hashes without embedding host paths.
+
+Review and reverse an applied asset with the receipt-scoped uninstall command:
+
+```bash
+python3 scripts/workbench.py uninstall context-budget-governor \
+  --target generic --root /tmp/workbench-target --dry-run --json
+python3 scripts/workbench.py uninstall context-budget-governor \
+  --target generic --root /tmp/workbench-target --apply --json
+```
+
+Uninstall is dry-run by default and refuses modified files, symlinks, missing
+or invalid receipts, and any manifest target file that is not owned by the
+receipt. It never removes parent directories or unrelated files. A missing
+receipt with no remaining manifest files is reported as `already-absent`; an
+existing manifest file without a receipt remains blocked for manual review.
 
 ## Manifest-aware setup engine
 
@@ -26,6 +44,7 @@ The dependency-light Node engine handles explicit, fail-closed configuration
 work:
 
 ```bash
+pnpm agent-config --version
 pnpm agent-config --help
 pnpm audit -- --json
 pnpm drift -- --json
