@@ -700,9 +700,9 @@
       "kind": "skill",
       "asset_class": "portable",
       "title": "Project Compass",
-      "summary": "Reconcile changing product truth with planned, implemented, and verified outcomes while tracking honest MVP and complete-product progress.",
+      "summary": "Reconcile changing product truth across root and subsystem compasses with intent-first onboarding, realignment quizzes, and honest MVP and complete-product progress.",
       "maturity": "experimental",
-      "capabilities": ["product-direction", "progress", "scope-drift", "reorientation", "checkpointing", "conversation-continuity", "change-surface-routing"],
+      "capabilities": ["product-direction", "progress", "scope-drift", "reorientation", "checkpointing", "conversation-continuity", "scoped-compasses", "cross-compass-alignment", "onboarding-quiz", "realignment-quiz", "change-surface-routing"],
       "supported_targets": ["generic", "codex", "claude", "cursor", "copilot", "gemini", "antigravity"],
       "entrypoints": ["skills/project-compass/SKILL.md"],
       "files": [
@@ -711,6 +711,9 @@
         "skills/project-compass/change-surface-matrix.json",
         "skills/project-compass/references/continuity.schema.json",
         "skills/project-compass/references/contract.schema.json",
+        "skills/project-compass/references/registry.schema.json",
+        "skills/project-compass/references/quiz.schema.json",
+        "skills/project-compass/scripts/compass_extensions.py",
         "skills/project-compass/scripts/project_compass.py",
         "skills/project-compass/scripts/test_project_compass.py"
       ],
@@ -725,7 +728,8 @@
         "skills/project-compass/scripts/test_project_compass.py",
         "fixtures/change-matrix/project-compass-add.json",
         "fixtures/change-matrix/project-compass-change.json",
-        "fixtures/change-matrix/project-compass-remove.json"
+        "fixtures/change-matrix/project-compass-remove.json",
+        "fixtures/change-matrix/project-compass-fold.json"
       ],
       "install": {
         "mode": "copy",

@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.project-compass/registry.schema.json",
+  "title": "Project Compass Registry",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "root_id",
+    "compasses",
+    "links",
+    "updated_at"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "const": 1 },
+    "root_id": { "$ref": "#/$defs/id" },
+    "compasses": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/compass" }
+    },
+    "links": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/link" }
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "compass": {
+      "type": "object",
+      "required": ["id", "kind", "path", "parent_id", "status"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "kind": { "enum": ["root", "subsystem"] },
+        "path": { "type": "string", "minLength": 1 },
+        "parent_id": { "type": ["string", "null"] },
+        "status": { "enum": ["active", "draft", "retired"] }
+      }
+    },
+    "link": {
+      "type": "object",
+      "required": ["id", "from", "to", "kind", "status", "summary"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "from": { "$ref": "#/$defs/id" },
+        "to": { "$ref": "#/$defs/id" },
+        "kind": {
+          "enum": ["depends-on", "handoff", "shared-invariant"]
+        },
+        "status": {
+          "enum": ["aligned", "unknown", "blocked", "drift"]
+        },
+        "summary": { "type": "string", "minLength": 1 }
+      }
+    }
+  }
+}

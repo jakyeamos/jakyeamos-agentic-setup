@@ -1,0 +1,13 @@
+{
+  "schema_version": "change-matrix-operation-fixture/v1",
+  "subject": "project-compass",
+  "operation": "fold",
+  "scenario": "Fold a source branch or subsystem boundary into the canonical integration line.",
+  "expected_surface_ids": ["hosted-source", "compass-family-truth", "catalog-manifest", "installer-projection", "installed-canonical-copy", "pronto-topology", "tmcp-contract-quality"],
+  "assertions": [
+    "Source and target Compass families are compared before the fold is accepted.",
+    "Source-only, conflicting, or moved scopes remain active, retired, or explicitly unresolved rather than disappearing.",
+    "The post-fold registry, declared paths, parent outcomes, and cross-compass links validate and score against the resulting tree.",
+    "A successful fold is not counted as product progress without post-fold outcome evidence."
+  ]
+}

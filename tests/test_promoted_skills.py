@@ -13,6 +13,7 @@ VALIDATION_FAILURE_CASES = (
     REPO
     / "fixtures/consequence-closure/validation-failure-disposition.json"
 )
+COMPASS_OPERATIONS = ("add", "change", "remove", "fold")
 
 
 class PromotedSkillTests(unittest.TestCase):
@@ -29,7 +30,13 @@ class PromotedSkillTests(unittest.TestCase):
         self.assertIn("installed-canonical-copy", surface_ids)
         self.assertIn("pronto-topology", surface_ids)
         self.assertIn("tmcp-contract-quality", surface_ids)
-        for operation in ("add", "change", "remove"):
+        self.assertIn("compass-family-truth", surface_ids)
+        for surface in matrix["surfaces"]:
+            self.assertEqual(tuple(surface["operations"]), COMPASS_OPERATIONS)
+        closure = matrix["compass_closure"]
+        self.assertEqual(closure["artifact_root"], ".project-compass/")
+        self.assertEqual(tuple(closure["operations"]), COMPASS_OPERATIONS)
+        for operation in COMPASS_OPERATIONS:
             fixture = json.loads(
                 (
                     REPO
@@ -38,6 +45,27 @@ class PromotedSkillTests(unittest.TestCase):
             )
             self.assertEqual(fixture["operation"], operation)
             self.assertEqual(set(fixture["expected_surface_ids"]), surface_ids)
+            self.assertTrue(fixture["assertions"])
+            self.assertEqual(
+                matrix["operation_evidence"][operation]["status"], "passed"
+            )
+            self.assertEqual(
+                matrix["operation_evidence"][operation]["evidence"],
+                [f"fixtures/change-matrix/project-compass-{operation}.json"],
+            )
+
+    def test_repository_matrix_routes_compass_family_lifecycle(self) -> None:
+        matrix = json.loads(
+            (REPO / ".agents/change-surface-matrix.json").read_text(encoding="utf-8")
+        )
+        surface = next(
+            item for item in matrix["surfaces"] if item["id"] == "project-compass-family"
+        )
+        self.assertEqual(tuple(surface["operations"]), COMPASS_OPERATIONS)
+        self.assertEqual(matrix["compass_closure"]["artifact_root"], ".project-compass/")
+        self.assertEqual(
+            tuple(matrix["compass_closure"]["operations"]), COMPASS_OPERATIONS
+        )
 
     def test_each_promoted_skill_has_trigger_and_non_trigger_forward_cases(self) -> None:
         payload = json.loads(FORWARD_CASES.read_text(encoding="utf-8"))
