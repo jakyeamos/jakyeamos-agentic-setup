@@ -2,16 +2,36 @@
   "schema_version": "change-surface-matrix/v1",
   "subject": {"kind": "skill", "id": "project-compass"},
   "owner": "Jakye Amos",
-  "last_reviewed": "2026-07-28",
+  "last_reviewed": "2026-08-14",
   "surfaces": [
     {
       "id": "hosted-source",
       "scope": "local",
       "path": "skills/project-compass/",
       "owner": "Jakye Amos",
-      "condition": "The authored skill contract, helper, schema, tests, or provider metadata changes.",
-      "operations": ["add", "change", "remove"],
-      "validation": ["python3 skills/project-compass/scripts/test_project_compass.py"],
+      "condition": "The authored skill contract, scoped-compass or quiz helper, schema, tests, or provider metadata changes.",
+      "operations": ["add", "change", "remove", "fold"],
+      "validation": [
+        "python3 skills/project-compass/scripts/test_project_compass.py",
+        "python3 -m json.tool skills/project-compass/references/contract.schema.json",
+        "python3 -m json.tool skills/project-compass/references/registry.schema.json",
+        "python3 -m json.tool skills/project-compass/references/quiz.schema.json"
+      ],
+      "status": "applicable"
+    },
+    {
+      "id": "compass-family-truth",
+      "scope": "local",
+      "path": ".project-compass/",
+      "owner": "Jakye Amos",
+      "condition": "A root or subsystem compass, registry entry or link, declared path, continuity record, quiz result, or checkpoint is added, changed, removed, or brought across a fold.",
+      "operations": ["add", "change", "remove", "fold"],
+      "validation": [
+        "python3 skills/project-compass/scripts/project_compass.py validate <repo>",
+        "python3 skills/project-compass/scripts/project_compass.py score <repo> --json",
+        "Confirm every active registry entry and declared path exists after the operation; retire removed scopes without deleting their history.",
+        "Confirm parent outcomes and cross-compass links are aligned or explicitly unknown, blocked, or drifted."
+      ],
       "status": "applicable"
     },
     {
@@ -20,7 +40,7 @@
       "path": "catalog/manifest.json",
       "owner": "Jakye Amos",
       "condition": "A distributed Project Compass file or capability changes.",
-      "operations": ["add", "change", "remove"],
+      "operations": ["add", "change", "remove", "fold"],
       "validation": ["pnpm check"],
       "status": "applicable"
     },
@@ -30,7 +50,7 @@
       "path": "scripts/install.sh",
       "owner": "Jakye Amos",
       "condition": "The Project Compass distribution payload or destination changes.",
-      "operations": ["add", "change", "remove"],
+      "operations": ["add", "change", "remove", "fold"],
       "validation": ["pnpm test"],
       "status": "applicable"
     },
@@ -40,7 +60,7 @@
       "path": "canonical-skill-root://project-compass/",
       "owner": "Jakye Amos",
       "condition": "The hosted source is promoted to the provider-neutral canonical skill root.",
-      "operations": ["add", "change", "remove"],
+      "operations": ["add", "change", "remove", "fold"],
       "validation": ["Compare hosted and installed Project Compass directory snapshots and hashes."],
       "status": "applicable"
     },
@@ -50,7 +70,7 @@
       "path": "repository://pronto",
       "owner": "Jakye Amos",
       "condition": "Hosting, source identity, hashes, provider state, or parity evidence changes.",
-      "operations": ["add", "change", "remove"],
+      "operations": ["add", "change", "remove", "fold"],
       "validation": ["pronto skills project-compass --json", "pronto change-matrix skill project-compass --json"],
       "status": "applicable"
     },
@@ -60,15 +80,38 @@
       "path": "repository://tmcp",
       "owner": "Jakye Amos",
       "condition": "Triggers, required reads, verification, observable output, done criteria, approvals, precedence, host assumptions, or mandatory structure changes.",
-      "operations": ["add", "change", "remove"],
+      "operations": ["add", "change", "remove", "fold"],
       "validation": ["TMCP static skill evaluation and behavioral trigger/output evaluation"],
       "status": "applicable"
     }
   ],
   "unresolved_surfaces": [],
+  "compass_closure": {
+    "artifact_root": ".project-compass/",
+    "operations": {
+      "add": [
+        "Register every new root or subsystem compass and its declared paths.",
+        "Validate parent outcomes and cross-compass links before accepting coverage."
+      ],
+      "change": [
+        "Reconcile changed purpose, boundary, paths, parent outcomes, links, continuity, and quiz answers.",
+        "Run family validation and scoring after the changed truth is recorded."
+      ],
+      "remove": [
+        "Retire removed scopes and preserve their history instead of deleting the record.",
+        "Remove or resolve dangling paths, parent outcomes, and cross-compass links."
+      ],
+      "fold": [
+        "Compare source and target compass families before accepting the folded result.",
+        "Preserve source-only or conflicting truth as active, retired, or explicitly unresolved; never infer product progress from the fold alone.",
+        "Run family validation and scoring against the post-fold tree."
+      ]
+    }
+  },
   "operation_evidence": {
     "add": {"status": "passed", "evidence": ["fixtures/change-matrix/project-compass-add.json"]},
     "change": {"status": "passed", "evidence": ["fixtures/change-matrix/project-compass-change.json"]},
-    "remove": {"status": "passed", "evidence": ["fixtures/change-matrix/project-compass-remove.json"]}
+    "remove": {"status": "passed", "evidence": ["fixtures/change-matrix/project-compass-remove.json"]},
+    "fold": {"status": "passed", "evidence": ["fixtures/change-matrix/project-compass-fold.json"]}
   }
 }

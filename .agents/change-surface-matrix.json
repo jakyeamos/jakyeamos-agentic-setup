@@ -2,10 +2,33 @@
   "schema_version": "change-surface-matrix/v1",
   "subject": {"kind": "repository", "id": "jakyeamos-agent-skills"},
   "owner": "repository-owner",
-  "last_reviewed": "2026-08-11",
+  "last_reviewed": "2026-08-14",
   "surfaces": [
-    {"id": "catalog-and-library", "scope": "local", "path": "skills/, catalog/, scripts/, and tests/", "owner": "repository-owner", "condition": "catalog, skill contract, installer, or validation behavior changes", "operations": ["add", "change", "remove"], "validation": ["pnpm lint", "pnpm test", "pnpm check"], "status": "applicable"},
-    {"id": "provider-projections", "scope": "external", "path": "installed provider projections", "owner": "projection-owner", "condition": "a distributed skill, workflow, route, or install mapping changes", "operations": ["add", "change", "remove"], "validation": ["pnpm audit", "pnpm doctor", "pnpm smoke"], "status": "applicable"}
+    {"id": "catalog-and-library", "scope": "local", "path": "skills/, catalog/, scripts/, and tests/", "owner": "repository-owner", "condition": "catalog, skill contract, installer, or validation behavior changes", "operations": ["add", "change", "remove", "fold"], "validation": ["pnpm lint", "pnpm test", "pnpm check"], "status": "applicable"},
+    {"id": "project-compass-family", "scope": "local", "path": ".project-compass/", "owner": "repository-owner", "condition": "The repository is Compass-managed and an addition, change, removal, or fold changes a root or subsystem boundary, declared path, parent outcome, or cross-compass link.", "operations": ["add", "change", "remove", "fold"], "validation": ["python3 skills/project-compass/scripts/project_compass.py validate <repo>", "python3 skills/project-compass/scripts/project_compass.py score <repo> --json", "Run the operation-specific Compass closure checks before accepting the matrix operation."], "status": "applicable"},
+    {"id": "provider-projections", "scope": "external", "path": "installed provider projections", "owner": "projection-owner", "condition": "a distributed skill, workflow, route, or install mapping changes", "operations": ["add", "change", "remove", "fold"], "validation": ["pnpm audit", "pnpm doctor", "pnpm smoke"], "status": "applicable"}
   ],
-  "unresolved_surfaces": []
+  "unresolved_surfaces": [],
+  "compass_closure": {
+    "artifact_root": ".project-compass/",
+    "operations": {
+      "add": [
+        "Register every new root or subsystem compass and its declared paths.",
+        "Validate parent outcomes and cross-compass links before accepting coverage."
+      ],
+      "change": [
+        "Reconcile changed purpose, boundary, paths, parent outcomes, links, continuity, and quiz answers.",
+        "Run family validation and scoring after the changed truth is recorded."
+      ],
+      "remove": [
+        "Retire removed scopes and preserve their history instead of deleting the record.",
+        "Remove or resolve dangling paths, parent outcomes, and cross-compass links."
+      ],
+      "fold": [
+        "Compare source and target compass families before accepting the folded result.",
+        "Preserve source-only or conflicting truth as active, retired, or explicitly unresolved; never infer product progress from the fold alone.",
+        "Run family validation and scoring against the post-fold tree."
+      ]
+    }
+  }
 }

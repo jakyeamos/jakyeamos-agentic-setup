@@ -4,15 +4,15 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 import os
-import re
 import sys
 import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+import compass_extensions as _compass_extensions
 
 MATURITY_VALUES = {0, 25, 50, 75, 100}
 CONFIDENCE_VALUES = {"low": 0.25, "medium": 0.6, "high": 1.0}
@@ -46,7 +46,14 @@ CONTINUITY_DISPOSITIONS = {
     "proceed", "proceed-with-preservation", "pending-question",
     "recorded-supersession",
 }
-ID_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+ID_PATTERN = _compass_extensions.ID_PATTERN
+COMPASS_KINDS = _compass_extensions.COMPASS_KINDS
+COMPASS_STATUSES = _compass_extensions.COMPASS_STATUSES
+LINK_KINDS = _compass_extensions.LINK_KINDS
+LINK_STATUSES = _compass_extensions.LINK_STATUSES
+QUIZ_MODES = _compass_extensions.QUIZ_MODES
+QUIZ_STATUSES = _compass_extensions.QUIZ_STATUSES
+QUIZ_ANSWER_STATUSES = _compass_extensions.QUIZ_ANSWER_STATUSES
 
 
 class ContractError(ValueError):
@@ -76,12 +83,58 @@ def _validate_source(value: Any, path: str) -> None:
         _require(isinstance(value["note"], str), f"{path}.note must be a string")
 
 
+def _validate_relative_path(value: Any, path: str) -> None:
+    _require(isinstance(value, str) and value.strip(),
+             f"{path} must be a non-empty relative path")
+    candidate = Path(value)
+    _require(not candidate.is_absolute() and not value.startswith("~"),
+             f"{path} must be relative")
+    _require(".." not in candidate.parts and "." not in candidate.parts,
+             f"{path} must not contain traversal segments")
+
+
+def _validate_scope(value: Any, path: str = "scope") -> None:
+    _require(isinstance(value, dict), f"{path} must be an object")
+    scope_id = value.get("id")
+    _require(isinstance(scope_id, str) and ID_PATTERN.fullmatch(scope_id),
+             f"{path}.id must be hyphen-case")
+    kind = value.get("kind")
+    _require(kind in COMPASS_KINDS, f"{path}.kind is invalid")
+    parent_id = value.get("parent_id")
+    if kind == "root":
+        _require(parent_id is None, f"{path}.parent_id must be null for a root")
+    else:
+        _require(isinstance(parent_id, str)
+                 and ID_PATTERN.fullmatch(parent_id),
+                 f"{path}.parent_id must be a compass id for a subsystem")
+        _require(parent_id != scope_id,
+                 f"{path}.parent_id cannot reference itself")
+    for field in ("purpose", "boundary"):
+        _require(isinstance(value.get(field), str) and value[field].strip(),
+                 f"{path}.{field} must be a non-empty string")
+    for field in ("non_goals", "parent_outcomes", "paths"):
+        _validate_string_array(value.get(field), f"{path}.{field}")
+    for index, outcome_id in enumerate(value["parent_outcomes"]):
+        _require(ID_PATTERN.fullmatch(outcome_id),
+                 f"{path}.parent_outcomes[{index}] must be hyphen-case")
+    for index, scope_path in enumerate(value["paths"]):
+        _validate_relative_path(scope_path, f"{path}.paths[{index}]")
+
+
 def _contract_path(repo: Path) -> Path:
     return repo / ".project-compass" / "contract.json"
 
 
 def _continuity_path(repo: Path) -> Path:
     return repo / ".project-compass" / "continuity.json"
+
+
+def _registry_path(repo: Path) -> Path:
+    return repo / ".project-compass" / "compasses.json"
+
+
+def _quiz_path(repo: Path) -> Path:
+    return repo / ".project-compass" / "quiz.json"
 
 
 def _history_path(repo: Path) -> Path:
@@ -113,6 +166,8 @@ def validate_contract(data: dict[str, Any]) -> None:
     _require(isinstance(not_this, list) and all(
         isinstance(item, str) and item.strip() for item in not_this
     ), "project.not_this must be an array of non-empty strings")
+    if "scope" in data:
+        _validate_scope(data["scope"])
 
     targets = data.get("targets")
     _require(isinstance(targets, dict), "targets must be an object")
@@ -350,12 +405,14 @@ def load_continuity(repo: Path) -> dict[str, Any]:
 
 
 def _validate_repo(repo: Path) -> dict[str, Any]:
-    data = load_contract(repo)
-    validate_contract(data)
+    family = load_compass_family(repo)
     continuity_path = _continuity_path(repo)
     if continuity_path.exists():
         load_continuity(repo)
-    return data
+    quiz_path = _quiz_path(repo)
+    if quiz_path.exists():
+        load_quiz(repo)
+    return family["contracts"][family["root_id"]]
 
 
 def continuity_status(data: dict[str, Any]) -> dict[str, Any]:
@@ -446,18 +503,6 @@ def score_contract(data: dict[str, Any]) -> dict[str, Any]:
     return result
 
 
-def _target_fingerprint(data: dict[str, Any], target: str) -> str:
-    payload = {
-        "definition": data["targets"][target]["definition"],
-        "pillars": _score_inputs(data, target),
-    }
-    for outcomes in payload["pillars"].values():
-        for outcome_id in list(outcomes):
-            outcomes[outcome_id] = None
-    encoded = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
-    return hashlib.sha256(encoded).hexdigest()[:16]
-
-
 def _load_history(path: Path) -> list[dict[str, Any]]:
     if not path.exists():
         return []
@@ -475,21 +520,6 @@ def _load_history(path: Path) -> list[dict[str, Any]]:
                  f"checkpoint line {line_number} must be an object")
         records.append(record)
     return records
-
-
-def _delivery_score(
-    previous_inputs: dict[str, dict[str, int]],
-    current_inputs: dict[str, dict[str, int]],
-) -> int | None:
-    held_structure: dict[str, dict[str, int]] = {}
-    for pillar_id, previous_outcomes in previous_inputs.items():
-        held_structure[pillar_id] = {}
-        current_outcomes = current_inputs.get(pillar_id, {})
-        for outcome_id, previous_maturity in previous_outcomes.items():
-            held_structure[pillar_id][outcome_id] = current_outcomes.get(
-                outcome_id, previous_maturity
-            )
-    return _score_from_inputs(held_structure)
 
 
 def _checkpoint_record(
@@ -569,6 +599,15 @@ def checkpoint(repo: Path, note: str | None) -> dict[str, Any]:
     history_path = _history_path(repo)
     history = _load_history(history_path)
     record = _checkpoint_record(data, scores, history[-1] if history else None, note)
+    family = load_compass_family(repo)
+    if family["registry"] is not None:
+        family_scores = score_compass_family(repo)
+        record["compass_family"] = {
+            "root_id": family_scores["root_id"],
+            "children": family_scores["children"],
+            "alignment": family_scores["alignment"],
+            "coverage": family_scores["coverage"],
+        }
     _atomic_append_jsonl(history_path, record)
     return record
 
@@ -587,6 +626,29 @@ def _parser() -> argparse.ArgumentParser:
     child = subparsers.add_parser("continuity")
     child.add_argument("repo", type=Path)
     child.add_argument("--json", action="store_true")
+    quiz = subparsers.add_parser("quiz")
+    quiz_subparsers = quiz.add_subparsers(dest="quiz_command", required=True)
+    start = quiz_subparsers.add_parser("start")
+    start.add_argument("repo", type=Path)
+    start.add_argument("--mode", choices=sorted(QUIZ_MODES), required=True)
+    start.add_argument("--compass-id", default="project")
+    start.add_argument("--scope-kind", choices=sorted(COMPASS_KINDS))
+    start.add_argument("--session-id")
+    start.add_argument("--now")
+    start.add_argument("--json", action="store_true")
+    answer = quiz_subparsers.add_parser("answer")
+    answer.add_argument("repo", type=Path)
+    answer.add_argument("--session-id", required=True)
+    answer.add_argument("--question-id", required=True)
+    answer.add_argument("--value", default="")
+    answer.add_argument("--status", choices=sorted(QUIZ_ANSWER_STATUSES), default="explicit")
+    answer.add_argument("--source-ref", default="conversation:user")
+    answer.add_argument("--now")
+    answer.add_argument("--json", action="store_true")
+    status = quiz_subparsers.add_parser("status")
+    status.add_argument("repo", type=Path)
+    status.add_argument("--session-id", required=True)
+    status.add_argument("--json", action="store_true")
     return parser
 
 
@@ -599,9 +661,35 @@ def main(argv: list[str] | None = None) -> int:
             result: dict[str, Any] = {"valid": True}
         elif args.command == "score":
             data = _validate_repo(repo)
-            result = score_contract(data)
+            result = (
+                score_compass_family(repo)
+                if _registry_path(repo).exists()
+                else score_contract(data)
+            )
         elif args.command == "continuity":
             result = continuity_status(load_continuity(repo))
+        elif args.command == "quiz":
+            if args.quiz_command == "start":
+                result = start_quiz(
+                    repo,
+                    args.mode,
+                    compass_id=args.compass_id,
+                    session_id=args.session_id,
+                    now=args.now,
+                    scope_kind=args.scope_kind,
+                )
+            elif args.quiz_command == "answer":
+                result = answer_quiz(
+                    repo,
+                    args.session_id,
+                    args.question_id,
+                    args.value,
+                    status=args.status,
+                    source_ref=args.source_ref,
+                    now=args.now,
+                )
+            else:
+                result = quiz_status(repo, args.session_id)
         else:
             result = checkpoint(repo, args.note)
     except ContractError as exc:
@@ -618,6 +706,35 @@ def main(argv: list[str] | None = None) -> int:
     else:
         print(json.dumps(result, indent=2, sort_keys=True))
     return 0
+
+
+_compass_extensions.configure(
+    contract_error=ContractError,
+    id_pattern=ID_PATTERN,
+    require=_require,
+    validate_timestamp=_validate_timestamp,
+    validate_source=_validate_source,
+    validate_relative_path=_validate_relative_path,
+    load_contract=load_contract,
+    validate_contract=validate_contract,
+    contract_path=_contract_path,
+    registry_path=_registry_path,
+    quiz_path=_quiz_path,
+    score_contract=score_contract,
+    score_inputs=_score_inputs,
+    score_from_inputs=_score_from_inputs,
+)
+validate_registry = _compass_extensions.validate_registry
+load_registry = _compass_extensions.load_registry
+load_compass_family = _compass_extensions.load_compass_family
+validate_quiz = _compass_extensions.validate_quiz
+load_quiz = _compass_extensions.load_quiz
+score_compass_family = _compass_extensions.score_compass_family
+start_quiz = _compass_extensions.start_quiz
+answer_quiz = _compass_extensions.answer_quiz
+quiz_status = _compass_extensions.quiz_status
+_target_fingerprint = _compass_extensions._target_fingerprint
+_delivery_score = _compass_extensions._delivery_score
 
 
 if __name__ == "__main__":

@@ -46,6 +46,9 @@
         }
       }
     },
+    "scope": {
+      "$ref": "#/$defs/scope"
+    },
     "targets": {
       "type": "object",
       "required": ["mvp", "complete_product"],
@@ -81,6 +84,42 @@
     }
   },
   "$defs": {
+    "scope": {
+      "type": "object",
+      "required": [
+        "id",
+        "kind",
+        "parent_id",
+        "purpose",
+        "boundary",
+        "non_goals",
+        "parent_outcomes",
+        "paths"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "kind": { "enum": ["root", "subsystem"] },
+        "parent_id": { "type": ["string", "null"] },
+        "purpose": { "type": "string", "minLength": 1 },
+        "boundary": { "type": "string", "minLength": 1 },
+        "non_goals": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        },
+        "parent_outcomes": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/id" },
+          "uniqueItems": true
+        },
+        "paths": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "uniqueItems": true
+        }
+      }
+    },
     "target": {
       "type": "object",
       "required": ["definition"],
