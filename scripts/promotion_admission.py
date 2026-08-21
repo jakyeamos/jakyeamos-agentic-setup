@@ -595,9 +595,24 @@ def main(argv: list[str] | None = None) -> int:
         candidate = load_json(args.candidate.expanduser().resolve())
         preflight_findings = candidate_preflight_findings(candidate)
         if preflight_findings:
+            validation_errors = []
+            if "private_or_credential_shaped_value" in preflight_findings:
+                validation_errors.append(
+                    "candidate contains a private absolute path or credential-shaped value"
+                )
+            if "candidate_state_required" in preflight_findings:
+                validation_errors.append(
+                    "candidate must remain in candidate status for JAS admission"
+                )
             payload = {
                 "status": "blocked",
+                "admission_status": "blocked",
+                "candidate_structurally_valid": False,
+                "candidate_state": candidate.get("status"),
+                "projection_status": "not_evaluated",
                 "reasons": preflight_findings,
+                "reason": "candidate_validation_failed",
+                "validation_errors": validation_errors,
                 "mutated": False,
             }
             print(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True))
