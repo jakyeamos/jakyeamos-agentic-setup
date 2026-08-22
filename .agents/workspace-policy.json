@@ -8,7 +8,7 @@
       "role": "working"
     }
   ],
-  "repository_id": "repository:/Users/jakyeamos/projects/jakyeamos-agent-skills",
+  "repository_id": "repository:jakyeamos-agent-skills",
   "repository_role": "supporting_project",
   "retention_exceptions": [],
   "schema_version": "workspace-policy/v1"
