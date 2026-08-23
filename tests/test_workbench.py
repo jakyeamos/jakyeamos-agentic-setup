@@ -221,6 +221,98 @@ class WorkbenchCliTests(unittest.TestCase):
                 expected_files,
             )
 
+    def test_uninstall_is_receipt_scoped_and_preserves_modified_or_unrelated_files(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            target = Path(directory) / "recovery-target"
+            applied = self.run_cli(
+                "install",
+                "safe-tool-guards",
+                "--target",
+                "generic",
+                "--root",
+                str(target),
+                "--apply",
+                "--json",
+            )
+            self.assertEqual(applied.returncode, 0, applied.stderr)
+            unrelated = target / "unrelated-user-file.txt"
+            unrelated.write_text("keep me\n", encoding="utf-8")
+
+            preview = self.run_cli(
+                "uninstall",
+                "safe-tool-guards",
+                "--target",
+                "generic",
+                "--root",
+                str(target),
+                "--dry-run",
+                "--json",
+            )
+            self.assertEqual(preview.returncode, 0, preview.stderr)
+            preview_payload = json.loads(preview.stdout)
+            self.assertEqual(preview_payload["status"], "ready")
+            self.assertTrue(
+                all(
+                    action["status"] == "would-remove"
+                    for action in preview_payload["actions"]
+                )
+            )
+            self.assertTrue(unrelated.is_file())
+
+            removed = self.run_cli(
+                "uninstall",
+                "safe-tool-guards",
+                "--target",
+                "generic",
+                "--root",
+                str(target),
+                "--apply",
+                "--json",
+            )
+            self.assertEqual(removed.returncode, 0, removed.stderr)
+            removed_payload = json.loads(removed.stdout)
+            self.assertEqual(removed_payload["status"], "uninstalled")
+            self.assertTrue(unrelated.is_file())
+            self.assertFalse(
+                (target / "workbench/workflows/safe-tool-guards/CONTRACT.md").exists()
+            )
+            self.assertFalse(
+                (target / ".workbench-receipts/safe-tool-guards.json").exists()
+            )
+
+            reapplied = self.run_cli(
+                "install",
+                "safe-tool-guards",
+                "--target",
+                "generic",
+                "--root",
+                str(target),
+                "--apply",
+                "--json",
+            )
+            self.assertEqual(reapplied.returncode, 0, reapplied.stderr)
+            modified = target / "workbench/workflows/safe-tool-guards/CONTRACT.md"
+            modified.write_text("user change\n", encoding="utf-8")
+            blocked = self.run_cli(
+                "uninstall",
+                "safe-tool-guards",
+                "--target",
+                "generic",
+                "--root",
+                str(target),
+                "--apply",
+                "--json",
+            )
+            self.assertEqual(blocked.returncode, 1)
+            blocked_payload = json.loads(blocked.stdout)
+            self.assertEqual(blocked_payload["status"], "blocked-uninstall-safety")
+            self.assertEqual(modified.read_text(encoding="utf-8"), "user change\n")
+            self.assertTrue(
+                (target / ".workbench-receipts/safe-tool-guards.json").is_file()
+            )
+
     def test_adapter_staging_is_manual_and_external_references_do_not_copy(
         self,
     ) -> None:
