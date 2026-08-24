@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "sessions": [
+    {
+      "answers": [],
+      "compass_id": "project",
+      "id": "jas-public-boundary-realignment-20260824",
+      "mode": "realignment",
+      "questions": [
+        {
+          "category": "purpose",
+          "id": "desired-realignment",
+          "prompt": "Should public JAS be modeled as four independently aligned surfaces: catalog/taxonomy, portable contracts, host adapters, and manifest runtime/verification? If not, what grouping should govern?"
+        },
+        {
+          "category": "boundary",
+          "id": "preserve",
+          "prompt": "What public/private, source/projection, provenance, and install-boundary invariants must remain explicit?"
+        },
+        {
+          "category": "drift",
+          "id": "contradiction",
+          "prompt": "Which current areas are truly portable contracts, and which are host-specific adapters that should never become public catalog content?"
+        },
+        {
+          "category": "scope",
+          "id": "defer-or-retire",
+          "prompt": "Should catalog/taxonomy, portable library interfaces, adapters, and manifest runtime/verification each receive a child Compass, or should any remain root-scoped?"
+        },
+        {
+          "category": "finish-line",
+          "id": "finish-line",
+          "prompt": "What must be true before a public JAS child Compass or catalog projection is considered ready for ratification?"
+        },
+        {
+          "category": "verification",
+          "id": "proof",
+          "prompt": "What evidence should prove portable behavior, adapter isolation, manifest validity, and safe install projections?"
+        }
+      ],
+      "scope_kind": "root",
+      "started_at": "2026-08-24T02:28:00Z",
+      "status": "active",
+      "updated_at": "2026-08-24T02:28:00Z"
+    }
+  ],
+  "updated_at": "2026-08-24T02:28:00Z"
+}
