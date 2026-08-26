@@ -167,9 +167,10 @@ Before making repository claims:
    assumption, but it cannot by itself remove an acceptance requirement.
 
 For a brownfield quiz, ask for the desired purpose before presenting current
-code as an explanation of purpose. Use code, plans, tests, and runtime behavior
-to show what exists; use the user's answer to decide what should be preserved,
-redirected, retired, or left unknown.
+code as an explanation of purpose. Then own the inventory: use code, plans,
+tests, and runtime behavior to synthesize a short evidence digest instead of
+asking the user to enumerate behaviors. Use the user's answer to decide what
+should be preserved, redirected, retired, or left unknown.
 
 Use this authority model:
 
@@ -248,7 +249,10 @@ scores into the root product score.
 
 Use a quiz when intent is missing, a subsystem boundary is unclear, or observed
 behavior conflicts with the desired direction. Ask one meaningful question at a
-time and reflect the answer before treating it as a decision.
+time and reflect the answer before treating it as a decision. A quiz is a guided
+compression of project truth, not a requirements questionnaire: the user should
+be able to answer with a sentence, a choice from the evidence shown, `unknown`,
+`none of these`, or `skip`.
 
 - **Greenfield** establishes purpose, audience, core loop, boundaries, finish
   line, and proof without requiring code.
@@ -259,11 +263,43 @@ time and reflect the answer before treating it as a decision.
   must remain true, what should be deferred or retired, and what evidence would
   prove the new direction.
 
+### Keep the interaction digestible
+
+For brownfield, subsystem, and realignment questions that refer to existing
+behavior, the agent—not the user—does the first pass over the evidence:
+
+1. Group the relevant implementation, plans, tests, and runtime observations
+   into at most five plain-language capability or boundary clusters. Use three
+   by default. Keep each cluster to one sentence and attach its source refs and
+   truth layer internally or in a compact parenthetical.
+2. Show the digest before asking the preservation, drift, boundary, or interface
+   question. Ask the user to confirm, correct, or prioritize the clusters. For
+   example: `I found three current capability areas: capture, review, and
+   publishing. Which should remain central, and what is the one correction?`
+3. Never ask an open-ended question such as “Which current behaviors...?”,
+   “What are all the interfaces...?”, or “What should be removed...?” without
+   first supplying a bounded set of evidence-backed candidates. If evidence is
+   missing, say so and ask only what should be true; do not turn the gap into a
+   user-maintained inventory.
+4. For a child compass, restrict the digest to its declared paths, parent
+   outcomes, and material handoffs. Derive candidate parent outcomes and sibling
+   contracts from the registry and repository, then ask the user to confirm or
+   correct them. Do not require the user to reconstruct the compass family.
+5. Stop when the purpose, meaningful boundary, and next material unknown are
+   clear. Do not force finish-line, proof, or every classification question when
+   the evidence and answer already resolve the decision. Ask a follow-up only
+   when it changes the next decision.
+
 For a child compass, replace product-level questions with subsystem purpose,
 parent outcome, responsibilities, interfaces, sibling contracts, and local
-proof. Accept `explicit`, `tentative`, `unknown`, and `skipped` answers. The
-session remains draft-only and requires manual review before updating intended
-truth or a continuity commitment.
+proof. For greenfield, ask for purpose and the primary audience in short form,
+then offer a candidate core loop and boundary for confirmation. Do not ask the
+user to enumerate features, edge cases, or every neighboring interface.
+
+Accept `explicit`, `tentative`, `unknown`, and `skipped` answers. The session
+remains draft-only and requires manual review before updating intended truth or
+a continuity commitment. Keep question categories, scoring, and the full bank
+in the background.
 
 The deterministic helper can start, advance, and inspect a session:
 
@@ -271,6 +307,9 @@ The deterministic helper can start, advance, and inspect a session:
 python3 <skill-dir>/scripts/project_compass.py quiz start <repo> --mode greenfield --json
 python3 <skill-dir>/scripts/project_compass.py quiz start <repo> \
   --mode greenfield --compass-id playback --scope-kind subsystem --json
+python3 <skill-dir>/scripts/project_compass.py quiz start <repo> \
+  --mode brownfield --question-id desired-purpose \
+  --question-id intentional-behavior --question-id preserve-or-change --json
 python3 <skill-dir>/scripts/project_compass.py quiz answer <repo> \
   --session-id <id> --question-id <id> --value "..." --json
 python3 <skill-dir>/scripts/project_compass.py quiz status <repo> \
@@ -282,9 +321,11 @@ contract exists. Realignment still requires the selected compass to exist so
 the agent can compare the answer against an established boundary.
 
 Do not dump the question bank as a requirements form. Select the smallest set
-of questions that resolves the material unknown, preserve tentative answers as
-tentative, and create a reconciliation card when the answer changes existing
-truth.
+of questions that resolves the material unknown—normally two to four, using
+repeated `--question-id` options when starting the deterministic helper. The
+helper's unfiltered question bank remains a compatibility path for callers,
+not a user-facing obligation. Preserve tentative answers as tentative, and
+create a reconciliation card when the answer changes existing truth.
 
 ## Bootstrap the Contract
 
@@ -409,6 +450,10 @@ Present clusters in natural language. For example:
 > release. Which of those feel essential for the first experience, and which would
 > you be comfortable saving for later?
 
+The agent owns the clustering here too. Present no more than five clusters and
+ask for confirmation or prioritization; do not ask the user to supply a complete
+list of current areas.
+
 Ask about meaningful product-direction choices, not internal categories. Handle
 MVP membership, backlog placement, removals, blockers, and score changes silently.
 
@@ -474,8 +519,10 @@ materially changes an existing commitment.
 - For a scope gate, return the product-fit judgment, displaced work, evidence,
   and recommendation without silently changing intended scope.
 - For a compass quiz, return the next question or completion state, the answer
-  provenance and certainty, the preserved/changed/unknown boundary, and a
-  manual-ratification reminder before changing intended truth.
+  provenance and certainty, the bounded evidence digest that shaped the
+  question, the preserved/changed/unknown boundary, the reason the quiz stopped
+  or continued, and a manual-ratification reminder before changing intended
+  truth.
 - For ordinary continuation with no material change, emit no Compass ceremony.
 - The check is done only when every material claim is tied to observed evidence
   or marked `unknown`, the selected mode's observable response is present, and

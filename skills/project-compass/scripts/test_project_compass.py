@@ -308,6 +308,61 @@ class CompassTests(unittest.TestCase):
             )
             self.assertEqual(skipped["answer_statuses"]["desired-purpose"], "skipped")
 
+    def test_brownfield_quiz_uses_bounded_evidence_prompts(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            status = start_quiz(
+                Path(directory),
+                "brownfield",
+                session_id="bounded-brownfield",
+                now="2026-08-14T12:00:00+00:00",
+            )
+            prompts = {
+                question["id"]: question["prompt"]
+                for question in load_quiz(Path(directory))["sessions"][0]["questions"]
+            }
+            self.assertEqual(status["next_question"]["id"], "desired-purpose")
+            self.assertIn("capability clusters", prompts["intentional-behavior"])
+            self.assertIn("one correction", prompts["intentional-behavior"])
+            self.assertIn("do not need to enumerate", prompts["historical-drift"])
+            self.assertNotIn("Which current behaviors", prompts["intentional-behavior"])
+
+    def test_quiz_can_use_a_bounded_question_set(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            repo = Path(directory)
+            status = start_quiz(
+                repo,
+                "brownfield",
+                session_id="short-brownfield",
+                question_ids=["desired-purpose", "preserve-or-change"],
+                now="2026-08-14T12:00:00+00:00",
+            )
+            self.assertEqual(status["total_questions"], 2)
+            self.assertEqual(status["next_question"]["id"], "desired-purpose")
+            answer_quiz(
+                repo,
+                "short-brownfield",
+                "desired-purpose",
+                "A focused product outcome.",
+                now="2026-08-14T12:01:00+00:00",
+            )
+            completed = answer_quiz(
+                repo,
+                "short-brownfield",
+                "preserve-or-change",
+                "Keep the focused outcome.",
+                now="2026-08-14T12:02:00+00:00",
+            )
+            self.assertEqual(completed["status"], "complete")
+
+            with self.assertRaises(ContractError):
+                start_quiz(
+                    repo,
+                    "brownfield",
+                    session_id="invalid-brownfield",
+                    question_ids=["not-a-question"],
+                    now="2026-08-14T12:03:00+00:00",
+                )
+
     def test_subsystem_greenfield_quiz_can_start_before_child_contract(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             repo = Path(directory)
@@ -322,6 +377,26 @@ class CompassTests(unittest.TestCase):
             self.assertEqual(status["scope_kind"], "subsystem")
             self.assertEqual(status["next_question"]["id"], "purpose")
             self.assertTrue(status["draft_only"])
+
+    def test_subsystem_prompts_offer_bounded_relationships(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            repo = Path(directory)
+            start_quiz(
+                repo,
+                "greenfield",
+                compass_id="playback",
+                scope_kind="subsystem",
+                session_id="bounded-playback",
+                now="2026-08-14T12:00:00+00:00",
+            )
+            prompts = {
+                question["id"]: question["prompt"]
+                for question in load_quiz(repo)["sessions"][0]["questions"]
+            }
+            self.assertIn("surface the relevant parent outcomes", prompts["parent-outcome"])
+            self.assertIn("one correction", prompts["responsibilities"])
+            self.assertIn("material handoffs", prompts["interfaces"])
+            self.assertNotIn("What are all", prompts["interfaces"])
 
     def test_subsystem_realignment_quiz_uses_child_scope(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

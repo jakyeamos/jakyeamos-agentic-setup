@@ -634,6 +634,12 @@ def _parser() -> argparse.ArgumentParser:
     start.add_argument("--compass-id", default="project")
     start.add_argument("--scope-kind", choices=sorted(COMPASS_KINDS))
     start.add_argument("--session-id")
+    start.add_argument(
+        "--question-id",
+        dest="question_ids",
+        action="append",
+        help="limit the session to selected question ids; repeat for multiple questions",
+    )
     start.add_argument("--now")
     start.add_argument("--json", action="store_true")
     answer = quiz_subparsers.add_parser("answer")
@@ -677,6 +683,7 @@ def main(argv: list[str] | None = None) -> int:
                     session_id=args.session_id,
                     now=args.now,
                     scope_kind=args.scope_kind,
+                    question_ids=args.question_ids,
                 )
             elif args.quiz_command == "answer":
                 result = answer_quiz(
