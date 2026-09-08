@@ -3,6 +3,6 @@
   "subject": "project-compass",
   "operation": "remove",
   "scenario": "Remove a distributed Project Compass capability or artifact.",
-  "expected_surface_ids": ["hosted-source", "compass-family-truth", "catalog-manifest", "installer-projection", "installed-canonical-copy", "pronto-topology", "tmcp-contract-quality"],
+  "expected_surface_ids": ["hosted-source", "compass-family-truth", "catalog-manifest", "installer-projection", "installed-canonical-copy", "pronto-topology", "tmcp-contract-quality", "development-projections"],
   "assertions": ["Catalog and projection references are removed with the source.", "Removed Compass scopes are retired with history preserved and no dangling paths or links.", "Installed copies cannot retain an orphan.", "Pronto topology no longer reports a stale hosted source.", "Negative triggers and observable behavior are re-evaluated."]
 }

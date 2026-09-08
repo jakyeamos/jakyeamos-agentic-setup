@@ -3,6 +3,6 @@
   "subject": "project-compass",
   "operation": "add",
   "scenario": "Add a new continuity artifact to the distributed skill.",
-  "expected_surface_ids": ["hosted-source", "compass-family-truth", "catalog-manifest", "installer-projection", "installed-canonical-copy", "pronto-topology", "tmcp-contract-quality"],
+  "expected_surface_ids": ["hosted-source", "compass-family-truth", "catalog-manifest", "installer-projection", "installed-canonical-copy", "pronto-topology", "tmcp-contract-quality", "development-projections"],
   "assertions": ["All applicable surfaces are routed.", "The Compass family is registered and validated after the addition.", "The installed copy and Pronto topology are revalidated.", "Behavioral parity is not inferred from static identity."]
 }

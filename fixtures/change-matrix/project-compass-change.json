@@ -3,6 +3,6 @@
   "subject": "project-compass",
   "operation": "change",
   "scenario": "Change continuity behavior, triggers, schema, helper, and tests.",
-  "expected_surface_ids": ["hosted-source", "compass-family-truth", "catalog-manifest", "installer-projection", "installed-canonical-copy", "pronto-topology", "tmcp-contract-quality"],
+  "expected_surface_ids": ["hosted-source", "compass-family-truth", "catalog-manifest", "installer-projection", "installed-canonical-copy", "pronto-topology", "tmcp-contract-quality", "development-projections"],
   "assertions": ["Hosted and installed contracts remain identical.", "The Compass family purpose, boundaries, paths, links, and continuity are reconciled.", "Catalog assets include the changed payload.", "Pronto exposes hosting and matrix evidence.", "Static review cannot claim behavioral parity."]
 }

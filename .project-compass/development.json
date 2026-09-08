@@ -1,6 +1,6 @@
 {
   "schema": "compass-development/v1",
-  "revision": 2,
+  "revision": 3,
   "inventory": {
     "source": "git-tracked",
     "include": [
@@ -89,7 +89,11 @@
         "test/environment-contract.test.mjs",
         "scripts/public_safety_check.py",
         "tests/test_workbench.py",
-        ".agents/context/commands.md"
+        ".agents/context/commands.md",
+        "fixtures/change-matrix/project-compass-add.json",
+        "fixtures/change-matrix/project-compass-change.json",
+        "fixtures/change-matrix/project-compass-remove.json",
+        "fixtures/change-matrix/project-compass-fold.json"
       ],
       "outcomes": [
         "bounded-change"
