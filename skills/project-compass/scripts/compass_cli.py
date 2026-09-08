@@ -166,4 +166,3 @@ def main(argv: list[str] | None = None) -> int:
     if args.command == "prove" and result["exit_code"]:
         return 2
     return 0
-
