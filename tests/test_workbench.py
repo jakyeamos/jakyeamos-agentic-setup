@@ -477,6 +477,23 @@ class WorkbenchCliTests(unittest.TestCase):
         self.assertEqual(len(result["errors"]), 3)
         self.assertTrue(result["unknown_checks"])
 
+    def test_public_safety_scans_tracked_or_unowned_compass_receipts(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            receipt = root / ".project-compass/evidence/proof.json"
+            receipt.parent.mkdir(parents=True)
+            receipt.write_text(json.dumps({"schema": "compass-evidence/v1", "workspace": "/" + "Users/example/repo"}))
+            self.assertTrue(scan_repository(root))
+            subprocess.run(["git", "init", "-q", str(root)], check=True)
+            (root / ".gitignore").write_text(".project-compass/evidence/\n")
+            self.assertEqual(scan_repository(root), [])
+            valid_receipt = receipt.read_text()
+            receipt.write_text(valid_receipt.replace("compass-evidence/v1", "unknown/v1"))
+            self.assertTrue(scan_repository(root))
+            receipt.write_text(valid_receipt)
+            subprocess.run(["git", "-C", str(root), "add", "-f", str(receipt)], check=True)
+            self.assertTrue(scan_repository(root))
+
     def test_public_safety_scanner_rejects_unsafe_fixture(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

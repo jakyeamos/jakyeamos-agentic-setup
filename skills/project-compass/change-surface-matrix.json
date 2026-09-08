@@ -23,7 +23,8 @@
         "python3 skills/project-compass/scripts/test_project_compass.py",
         "python3 -m json.tool skills/project-compass/references/contract.schema.json",
         "python3 -m json.tool skills/project-compass/references/registry.schema.json",
-        "python3 -m json.tool skills/project-compass/references/quiz.schema.json"
+        "python3 -m json.tool skills/project-compass/references/quiz.schema.json",
+        "python3 -m unittest tests.test_workbench.WorkbenchCliTests.test_public_safety_scans_tracked_or_unowned_compass_receipts"
       ],
       "status": "applicable"
     },

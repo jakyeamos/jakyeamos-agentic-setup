@@ -1,6 +1,6 @@
 {
   "schema": "compass-development/v1",
-  "revision": 1,
+  "revision": 2,
   "inventory": {
     "source": "git-tracked",
     "include": [
@@ -86,7 +86,10 @@
         "skills/project-compass/scripts/test_project_compass.py",
         "test/compass-development.test.mjs",
         "scripts/check_environment_contract.mjs",
-        "test/environment-contract.test.mjs"
+        "test/environment-contract.test.mjs",
+        "scripts/public_safety_check.py",
+        "tests/test_workbench.py",
+        ".agents/context/commands.md"
       ],
       "outcomes": [
         "bounded-change"
