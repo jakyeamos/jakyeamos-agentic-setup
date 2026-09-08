@@ -1,0 +1,217 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Compass development bindings v1",
+  "type": "object",
+  "required": [
+    "schema",
+    "revision",
+    "bindings",
+    "decisions"
+  ],
+  "properties": {
+    "schema": {
+      "const": "compass-development/v1"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "inventory": {
+      "type": "object",
+      "required": [
+        "source",
+        "include"
+      ],
+      "properties": {
+        "source": {
+          "const": "git-tracked"
+        },
+        "include": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "maxItems": 1000
+        },
+        "exclude": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "pattern",
+              "reason",
+              "kind"
+            ],
+            "properties": {
+              "pattern": {
+                "type": "string"
+              },
+              "reason": {
+                "type": "string"
+              },
+              "kind": {
+                "enum": [
+                  "excluded",
+                  "generated"
+                ]
+              }
+            }
+          }
+        },
+        "behavior_ref": {
+          "type": "string"
+        }
+      }
+    },
+    "bindings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "compass_id",
+          "authority",
+          "paths",
+          "outcomes",
+          "references",
+          "proof"
+        ],
+        "properties": {
+          "paths": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "maxItems": 1000
+          },
+          "outcomes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "maxItems": 1000
+          },
+          "references": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "maxItems": 1000
+          },
+          "behavior_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "maxItems": 1000
+          },
+          "constraints": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "maxItems": 1000
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "maxItems": 1000
+          },
+          "id": {
+            "type": "string"
+          },
+          "compass_id": {
+            "type": "string"
+          },
+          "authority": {
+            "enum": [
+              "accepted",
+              "proposed",
+              "observed"
+            ]
+          },
+          "decision_id": {
+            "type": "string"
+          },
+          "proof": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "id",
+                "receipt",
+                "command",
+                "oracle_ref"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "receipt": {
+                  "type": "string",
+                  "pattern": "^\\.project-compass/evidence/"
+                },
+                "command": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "maxItems": 1000
+                },
+                "oracle_ref": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "summary",
+          "source",
+          "status"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "accepted",
+              "proposed",
+              "superseded"
+            ]
+          },
+          "supersedes": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false
+}

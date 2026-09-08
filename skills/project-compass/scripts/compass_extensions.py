@@ -397,58 +397,79 @@ def _quiz_questions(mode: str, scope_kind: str) -> list[dict[str, str]]:
     if scope_kind == "subsystem":
         question_sets = {
             "greenfield": [
-                ("purpose", "purpose", "What should this part make possible?"),
-                ("parent-outcome", "alignment", "Which parent outcome does it directly advance?"),
-                ("responsibilities", "boundary", "What is this part responsible for, and what is explicitly outside its job?"),
-                ("interfaces", "interfaces", "What must this part receive, provide, or guarantee to neighboring parts?"),
-                ("proof", "verification", "What observable result would prove this part works in its intended use?"),
+                ("purpose", "purpose", "In one sentence, what should this part make possible for the product? Do not list features."),
+                ("parent-outcome", "alignment", "I'll surface the relevant parent outcomes; which one should this part advance?"),
+                ("responsibilities", "boundary", "I'll propose a narrow job and boundary; what is the one correction?"),
+                ("interfaces", "interfaces", "I'll sketch the material handoffs from the repository; which handoff is essential?"),
+                ("proof", "verification", "What single observable result would make you trust this part in use?"),
             ],
             "brownfield": [
-                ("desired-purpose", "purpose", "What should this part be responsible for, regardless of what the current code does?"),
-                ("intentional-responsibility", "boundary", "Which current responsibilities are intentional and worth preserving?"),
-                ("accidental-behavior", "drift", "Which current behaviors look historical, accidental, or unclear?"),
-                ("preserve-or-redirect", "alignment", "What should be preserved, redirected, retired, or left unknown?"),
-                ("interface-proof", "verification", "What handoff or observable result would prove this part is aligned?"),
+                ("desired-purpose", "purpose", "In one sentence, what should this part make possible, regardless of what the current code does? Do not inventory behaviors."),
+                ("intentional-responsibility", "boundary", "After I show a short snapshot of current capability clusters, which should remain central? Name a cluster, give one correction, or say none/unknown."),
+                ("accidental-behavior", "drift", "I'll surface the clearest drift signals; which one should we examine first? You do not need to list them."),
+                ("preserve-or-redirect", "alignment", "Of the few decisions I surface, which should stay, change, wait, or remain unknown?"),
+                ("interface-proof", "verification", "I'll identify the material handoff; what one observable result would prove it is aligned?"),
             ],
             "realignment": [
-                ("desired-change", "purpose", "What should this part do differently after realignment?"),
-                ("preserve-invariant", "boundary", "What must remain true while this part changes?"),
-                ("boundary-conflict", "drift", "Which observed behavior or boundary conflicts with the desired purpose?"),
-                ("sibling-contract", "interfaces", "What must neighboring parts change or continue to guarantee?"),
-                ("proof", "verification", "What evidence would prove the realignment is working in real use?"),
+                ("desired-change", "purpose", "In one sentence, what should this part do differently after realignment? Do not list features."),
+                ("preserve-invariant", "boundary", "I'll name the existing constraints that may matter; which one is non-negotiable?"),
+                ("boundary-conflict", "drift", "I found one or two conflicts between the desired purpose and current state; which should we resolve first?"),
+                ("sibling-contract", "interfaces", "I'll surface the affected handoffs; which neighboring guarantee must remain or change?"),
+                ("proof", "verification", "What single observable result would prove the realignment is working in use?"),
             ],
         }
     else:
         question_sets = {
             "greenfield": [
-                ("purpose", "purpose", "What should this project make possible for a real user?"),
-                ("audience", "audience", "Who is this for, and whose problem matters first?"),
-                ("core-loop", "experience", "What should the user do and experience from start to finish?"),
-                ("boundary", "boundary", "What must this project explicitly not become?"),
-                ("finish-line", "finish-line", "What would make the first real release feel honest?"),
-                ("proof", "verification", "What real-use evidence would prove the project is working?"),
+                ("purpose", "purpose", "In one sentence, what should this project make possible for a real user? Do not list features."),
+                ("audience", "audience", "Who should benefit first? Name the primary group; edge cases can wait."),
+                ("core-loop", "experience", "In one or two sentences, what should a person accomplish from first step to result? Do not list features."),
+                ("boundary", "boundary", "What should stay out of the first version or remain someone else's job? A short boundary is enough."),
+                ("finish-line", "finish-line", "What smallest real-world result would make the first release feel honest?"),
+                ("proof", "verification", "What would a real person do or see that tells us this is working?"),
             ],
             "brownfield": [
-                ("desired-purpose", "purpose", "What should this project become, independent of what the current code assumes?"),
-                ("intentional-behavior", "experience", "Which current behaviors are intentional and worth preserving?"),
-                ("historical-drift", "drift", "Which parts look legacy, accidental, or based on a misconception?"),
-                ("preserve-or-change", "boundary", "What should be preserved, redirected, retired, or left unknown?"),
-                ("finish-line", "finish-line", "What would make the next honest release feel complete enough?"),
-                ("proof", "verification", "What real-use evidence would prove the realignment is working?"),
+                ("desired-purpose", "purpose", "In one or two sentences, what should this project become for a real user? I'll compare it with the code; no feature inventory needed."),
+                ("intentional-behavior", "experience", "I'll show a 3-5 item snapshot of current capability clusters. Which should remain central? Name items, give one correction, or say none/unknown."),
+                ("historical-drift", "drift", "I'll surface the clearest drift signals. Which one should we examine first? You do not need to enumerate them."),
+                ("preserve-or-change", "boundary", "Of the few decisions I surface, which should stay, change, wait, or remain unknown?"),
+                ("finish-line", "finish-line", "What smallest real-world result would make the next release honest?"),
+                ("proof", "verification", "What real-world signal would reassure you this direction is working?"),
             ],
             "realignment": [
-                ("desired-realignment", "purpose", "What outcome should be different after realignment?"),
-                ("preserve", "boundary", "What existing truth, behavior, or constraint must remain?"),
-                ("contradiction", "drift", "What current behavior or plan contradicts the desired outcome?"),
-                ("defer-or-retire", "scope", "What should be deferred, retired, or explicitly left behind?"),
-                ("finish-line", "finish-line", "What is the smallest honest finish line for this direction?"),
-                ("proof", "verification", "What evidence would prove the realignment in real use?"),
+                ("desired-realignment", "purpose", "In one or two sentences, what outcome should be different after realignment? Do not list features."),
+                ("preserve", "boundary", "I'll name the existing truth or constraints that may matter; which one is non-negotiable?"),
+                ("contradiction", "drift", "I found one or two conflicts between the desired outcome and current state; which should we resolve first?"),
+                ("defer-or-retire", "scope", "I'll surface the largest scope candidates; which one can wait or leave the product?"),
+                ("finish-line", "finish-line", "What is the smallest real-world result that would make this direction honest?"),
+                ("proof", "verification", "What real-world signal would prove the realignment is working?"),
             ],
         }
     return [
         {"id": question_id, "category": category, "prompt": prompt}
         for question_id, category, prompt in question_sets[mode]
     ]
+
+
+def _select_quiz_questions(
+    questions: list[dict[str, str]], question_ids: list[str] | None
+) -> list[dict[str, str]]:
+    if question_ids is None:
+        return questions
+    _require(question_ids, "quiz question_ids must select at least one question")
+    _require(
+        len(question_ids) == len(set(question_ids)),
+        "quiz question_ids must not contain duplicates",
+    )
+    available = {question["id"] for question in questions}
+    for question_id in question_ids:
+        _require(
+            isinstance(question_id, str) and ID_PATTERN.fullmatch(question_id),
+            "quiz question_id must be hyphen-case",
+        )
+        _require(question_id in available, f"quiz question not available: {question_id}")
+    selected = set(question_ids)
+    return [question for question in questions if question["id"] in selected]
 
 
 def _quiz_scope_kind(
@@ -558,6 +579,7 @@ def start_quiz(
     session_id: str | None = None,
     now: str | None = None,
     scope_kind: str | None = None,
+    question_ids: list[str] | None = None,
 ) -> dict[str, Any]:
     started_at = _timestamp(now)
     resolved_scope_kind = _quiz_scope_kind(
@@ -590,7 +612,9 @@ def start_quiz(
         "compass_id": compass_id,
         "scope_kind": resolved_scope_kind,
         "status": "active",
-        "questions": _quiz_questions(mode, resolved_scope_kind),
+        "questions": _select_quiz_questions(
+            _quiz_questions(mode, resolved_scope_kind), question_ids
+        ),
         "answers": [],
         "started_at": started_at,
         "updated_at": started_at,

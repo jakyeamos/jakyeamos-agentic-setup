@@ -1,0 +1,119 @@
+{
+  "schema": "compass-development/v1",
+  "revision": 1,
+  "inventory": {
+    "source": "git-tracked",
+    "include": [
+      "skills/project-compass/*"
+    ],
+    "exclude": [],
+    "behavior_ref": ".project-compass/behaviors.json"
+  },
+  "decisions": [
+    {
+      "id": "foundation-plan",
+      "status": "accepted",
+      "source": "conversation:approved-compass-pronto-foundation-plan",
+      "summary": "Implement the approved development foundation plan with everyday scoped development first, linked canonical specifications, one Python producer, selective intent review, and assessment-only modernization. Preserve existing root constraints and leave older draft intent unresolved."
+    }
+  ],
+  "bindings": [
+    {
+      "id": "project-development",
+      "compass_id": "project",
+      "authority": "accepted",
+      "decision_id": "foundation-plan",
+      "paths": [],
+      "outcomes": [
+        "validated-reuse"
+      ],
+      "references": [
+        "skills/project-compass/references/development.md"
+      ],
+      "constraints": [
+        "Do not automatically modernize the fleet.",
+        "Do not ratify older draft subsystems through import.",
+        "Do not execute remediation from an assessment."
+      ],
+      "behavior_ids": [],
+      "proof": [
+        {
+          "id": "project-acceptance",
+          "receipt": ".project-compass/evidence/project-acceptance.json",
+          "command": [
+            "python3",
+            "skills/project-compass/scripts/test_compass_development.py"
+          ],
+          "oracle_ref": "skills/project-compass/references/development.md"
+        }
+      ]
+    },
+    {
+      "id": "compass-foundation-development",
+      "compass_id": "compass-foundation",
+      "authority": "accepted",
+      "decision_id": "foundation-plan",
+      "paths": [
+        ".agents/context/README.md",
+        ".gitignore",
+        ".pre-cr.json",
+        ".project-compass/behaviors.json",
+        ".project-compass/compasses.json",
+        ".project-compass/compasses/compass-foundation.json",
+        ".project-compass/development.json",
+        ".quality-runner.toml",
+        "catalog/manifest.json",
+        "scripts/verify_compass_distribution.py",
+        "skills/project-compass/SKILL.md",
+        "skills/project-compass/agents/openai.yaml",
+        "skills/project-compass/change-surface-matrix.json",
+        "skills/project-compass/references/continuity.schema.json",
+        "skills/project-compass/references/contract.schema.json",
+        "skills/project-compass/references/development.md",
+        "skills/project-compass/references/development.schema.json",
+        "skills/project-compass/references/fixtures/family.json",
+        "skills/project-compass/references/projections.schema.json",
+        "skills/project-compass/references/quiz.schema.json",
+        "skills/project-compass/references/registry.schema.json",
+        "skills/project-compass/scripts/compass_assessment.py",
+        "skills/project-compass/scripts/compass_change.py",
+        "skills/project-compass/scripts/compass_cli.py",
+        "skills/project-compass/scripts/compass_extensions.py",
+        "skills/project-compass/scripts/compass_projection.py",
+        "skills/project-compass/scripts/compass_sources.py",
+        "skills/project-compass/scripts/project_compass.py",
+        "skills/project-compass/scripts/test_compass_development.py",
+        "skills/project-compass/scripts/test_project_compass.py",
+        "test/compass-development.test.mjs",
+        "scripts/check_environment_contract.mjs",
+        "test/environment-contract.test.mjs"
+      ],
+      "outcomes": [
+        "bounded-change"
+      ],
+      "references": [
+        "skills/project-compass/references/development.md",
+        ".project-compass/behaviors.json#/behaviors/0"
+      ],
+      "constraints": [
+        "Do not automatically modernize the fleet.",
+        "Do not ratify older draft subsystems through import.",
+        "Do not execute remediation from an assessment."
+      ],
+      "behavior_ids": [
+        "compass-development-foundation"
+      ],
+      "proof": [
+        {
+          "id": "compass-foundation-acceptance",
+          "receipt": ".project-compass/evidence/compass-foundation-acceptance.json",
+          "command": [
+            "python3",
+            "skills/project-compass/scripts/test_compass_development.py"
+          ],
+          "oracle_ref": "skills/project-compass/references/development.md"
+        }
+      ]
+    }
+  ]
+}

@@ -1,3 +1,12 @@
 [quality_runner]
 default_profile = "default"
 required_capabilities = ["formatter", "lint", "typecheck", "tests", "build", "dead_code", "runtime_smoke", "pre_pr", "pre_cr"]
+
+[[quality_runner.gates]]
+id = "compass-development"
+command = "python3 skills/project-compass/scripts/project_compass.py gate . --json"
+ecosystem = "python"
+source = "Scoped Compass pilot acceptance"
+owner = "repository maintainers"
+required = true
+severity = "blocker"

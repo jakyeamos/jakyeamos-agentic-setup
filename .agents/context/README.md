@@ -1,6 +1,6 @@
 # Repository context index
 
-`last_reviewed: 2026-07-25`
+`last_reviewed: 2026-09-08`
 
 Read this index before non-trivial work. Load only the packet that matches the
 task; do not dump the catalog, fixtures, generated state, or private runtime

@@ -700,11 +700,37 @@
       "kind": "skill",
       "asset_class": "portable",
       "title": "Project Compass",
-      "summary": "Reconcile changing product truth across root and subsystem compasses with intent-first onboarding, realignment quizzes, and honest MVP and complete-product progress.",
+      "summary": "Reconcile root and subsystem intent, prepare bounded source-bound development context, validate affected proof, and assess justified modernization without execution.",
       "maturity": "experimental",
-      "capabilities": ["product-direction", "progress", "scope-drift", "reorientation", "checkpointing", "conversation-continuity", "scoped-compasses", "cross-compass-alignment", "onboarding-quiz", "realignment-quiz", "change-surface-routing"],
-      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot", "gemini", "antigravity"],
-      "entrypoints": ["skills/project-compass/SKILL.md"],
+      "capabilities": [
+        "product-direction",
+        "progress",
+        "scope-drift",
+        "reorientation",
+        "checkpointing",
+        "conversation-continuity",
+        "scoped-compasses",
+        "cross-compass-alignment",
+        "onboarding-quiz",
+        "realignment-quiz",
+        "change-surface-routing",
+        "family-projection",
+        "change-context",
+        "source-bound-proof",
+        "modernization-assessment"
+      ],
+      "supported_targets": [
+        "generic",
+        "codex",
+        "claude",
+        "cursor",
+        "copilot",
+        "gemini",
+        "antigravity"
+      ],
+      "entrypoints": [
+        "skills/project-compass/SKILL.md"
+      ],
       "files": [
         "skills/project-compass/SKILL.md",
         "skills/project-compass/agents/openai.yaml",
@@ -713,6 +739,16 @@
         "skills/project-compass/references/contract.schema.json",
         "skills/project-compass/references/registry.schema.json",
         "skills/project-compass/references/quiz.schema.json",
+        "skills/project-compass/references/development.md",
+        "skills/project-compass/references/development.schema.json",
+        "skills/project-compass/references/projections.schema.json",
+        "skills/project-compass/references/fixtures/family.json",
+        "skills/project-compass/scripts/compass_cli.py",
+        "skills/project-compass/scripts/compass_sources.py",
+        "skills/project-compass/scripts/compass_projection.py",
+        "skills/project-compass/scripts/compass_change.py",
+        "skills/project-compass/scripts/compass_assessment.py",
+        "skills/project-compass/scripts/test_compass_development.py",
         "skills/project-compass/scripts/compass_extensions.py",
         "skills/project-compass/scripts/project_compass.py",
         "skills/project-compass/scripts/test_project_compass.py"
@@ -729,7 +765,8 @@
         "fixtures/change-matrix/project-compass-add.json",
         "fixtures/change-matrix/project-compass-change.json",
         "fixtures/change-matrix/project-compass-remove.json",
-        "fixtures/change-matrix/project-compass-fold.json"
+        "fixtures/change-matrix/project-compass-fold.json",
+        "skills/project-compass/scripts/test_compass_development.py"
       ],
       "install": {
         "mode": "copy",
