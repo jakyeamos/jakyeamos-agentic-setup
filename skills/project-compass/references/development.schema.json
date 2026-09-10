@@ -170,10 +170,22 @@
                 },
                 "oracle_ref": {
                   "type": "string"
+                },
+                "behavior_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "uniqueItems": true
                 }
               },
               "additionalProperties": false
             }
+          },
+          "handoff_review": {
+            "type": "string",
+            "minLength": 1
           }
         },
         "additionalProperties": false
@@ -211,6 +223,9 @@
           }
         }
       }
+    },
+    "preservation": {
+      "const": "compass-preservation/v1"
     }
   },
   "additionalProperties": false

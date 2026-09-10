@@ -5,7 +5,7 @@
     "id": "project-compass"
   },
   "owner": "Jakye Amos",
-  "last_reviewed": "2026-09-08",
+  "last_reviewed": "2026-09-10",
   "surfaces": [
     {
       "id": "hosted-source",
@@ -137,7 +137,7 @@
     {
       "id": "development-projections",
       "scope": "local",
-      "path": "scripts/compass_projection.py, scripts/compass_change.py, references/development.schema.json, references/projections.schema.json",
+      "path": "scripts/compass_projection.py, scripts/compass_change.py, references/development.schema.json, references/projections.schema.json, scripts/compass_bootstrap.py, scripts/test_compass_preservation.py",
       "owner": "Compass and Pronto maintainers",
       "condition": "Family/change-context schema, accepted intent binding, proof freshness, or assessment disposition changes.",
       "operations": [
@@ -149,7 +149,8 @@
       "validation": [
         "python3 skills/project-compass/scripts/test_compass_development.py",
         "Compare references/fixtures/family.json with the Pronto consumer fixture.",
-        "Dogfood changed skill in fresh contexts against bounded, draft and conflicting cases."
+        "Dogfood changed skill in fresh contexts against bounded, draft and conflicting cases.",
+        "Verify explicit unknown behavior coverage, substantive bootstrap links, cumulative continuation, and semantic drift with green smoke tests."
       ],
       "status": "applicable"
     }

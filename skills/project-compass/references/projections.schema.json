@@ -73,6 +73,27 @@
           "const": "compass-evidence/v1"
         }
       }
+    },
+    {
+      "type": "object",
+      "required": [
+        "schema",
+        "coverage",
+        "subsystems",
+        "detail_omitted",
+        "execution_authority"
+      ],
+      "properties": {
+        "schema": {
+          "const": "compass-family-summary/v1"
+        },
+        "detail_omitted": {
+          "const": true
+        },
+        "execution_authority": {
+          "const": false
+        }
+      }
     }
   ]
 }

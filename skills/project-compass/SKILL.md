@@ -555,3 +555,21 @@ materially changes an existing commitment.
 - The check is done only when every material claim is tied to observed evidence
   or marked `unknown`, the selected mode's observable response is present, and
   any required helper command has reported pass or fail.
+
+## Preserve intent during development
+
+Start with `family --summary --json` for bounded orientation, then `change-context
+--compass-id ID` for the affected slice. Use `family.bootstrap` to find missing purpose-to-behavior-to-proof links before
+calling a subsystem bootstrapped. Unknown behavior coverage is not zero gaps.
+For an enrolled `compass-preservation/v1` scope, resolve affected bootstrap gaps
+before implementation; keep unrelated gaps visible. Read `references/development.md`
+for the entry/completion and continuation commands.
+
+At handoff, retain the original base and prior packet. Use `change-context
+--prepared PREVIOUS --continue` to add the next scope; finish against the cumulative
+actual diff. Review behavior-specific oracles for the preserved constraints,
+including negative cases that ordinary tests miss. Do not describe linked documents
+or green generic tests as semantic drift prevention. Inferred intent remains
+proposed until reconciled through an accepted decision.
+
+An ineligible packet cannot become a prepared baseline. Continue from the last eligible packet, reconcile changed decisions explicitly, and retain the original base. Active continuity commitments appear in change context and bind affected evidence; optional nonempty `compass_ids` limits their scope, while historical unscoped commitments stay global. Unresolved commitments block affected work. Read commitments alongside root intent and reconcile semantic contradictions; structural validation cannot discover contradictions in prose. Packets predating commitment/behavior revision fields require explicit preparation with the current helper.

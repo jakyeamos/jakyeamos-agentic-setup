@@ -89,6 +89,8 @@ def bindings(repo: Path) -> dict:
         raise ValueError("unsupported development bindings schema")
     if type(data.get("revision")) is not int or data["revision"] < 1:
         raise ValueError("development revision must be a positive integer")
+    if data.get("preservation") not in (None, "compass-preservation/v1"):
+        raise ValueError("unsupported preservation contract")
     rows = data.get("bindings")
     if not isinstance(rows, list) or len(rows) > 500:
         raise ValueError("development bindings must be a bounded array")
@@ -111,6 +113,8 @@ def bindings(repo: Path) -> dict:
                 raise ValueError(f"binding {row['id']}.{key} requires bounded nonempty strings")
         for path in row.get("paths", []):
             local_path(repo, path)
+        if "handoff_review" in row and (not isinstance(row["handoff_review"], str) or not row["handoff_review"].strip()):
+            raise ValueError("handoff_review must explain the reviewed boundary")
         proof_ids = set()
         for proof in row.get("proof", []):
             if not isinstance(proof, dict) or not all(isinstance(proof.get(k), str) and proof[k] for k in ("id", "receipt")):
@@ -118,6 +122,9 @@ def bindings(repo: Path) -> dict:
             if proof["id"] in proof_ids:
                 raise ValueError("duplicate proof ID")
             proof_ids.add(proof["id"])
+            if (not isinstance(proof.get("behavior_ids", []), list)
+                    or any(not isinstance(b, str) or b not in row.get("behavior_ids", []) for b in proof.get("behavior_ids", []))):
+                raise ValueError("proof behavior IDs must belong to its binding")
             if not isinstance(proof.get("command"), list) or not proof["command"] or any(not isinstance(v, str) for v in proof["command"]):
                 raise ValueError(f"proof {proof['id']} requires an explicit reviewed command argv")
             if not isinstance(proof.get("oracle_ref"), str) or not proof["oracle_ref"]:

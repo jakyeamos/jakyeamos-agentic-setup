@@ -319,6 +319,11 @@ def validate_continuity(data: dict[str, Any]) -> None:
         _require(commitment.get("status") in CONTINUITY_COMMITMENT_STATUSES,
                  f"{prefix}.status is invalid")
         _validate_source(commitment.get("source"), f"{prefix}.source")
+        if "compass_ids" in commitment:
+            scopes = commitment["compass_ids"]
+            _require(isinstance(scopes, list) and bool(scopes)
+                     and all(isinstance(scope, str) and ID_PATTERN.fullmatch(scope) for scope in scopes)
+                     and len(set(scopes)) == len(scopes), f"{prefix}.compass_ids must be unique subsystem IDs")
 
     reconciliations = data.get("reconciliations")
     _require(isinstance(reconciliations, list),

@@ -22,12 +22,15 @@ def _parser() -> argparse.ArgumentParser:
         child = subparsers.add_parser(command)
         child.add_argument("repo", type=Path)
         child.add_argument("--json", action="store_true")
-        if command == "change-context":
+        if command == "family":
+            child.add_argument("--summary", action="store_true")
+        elif command == "change-context":
             child.add_argument("--path", action="append", default=[])
             child.add_argument("--compass-id", action="append", default=[])
             child.add_argument("--base", default="HEAD")
             child.add_argument("--prepared", type=Path)
             child.add_argument("--completion", action="store_true")
+            child.add_argument("--continue", dest="continuation", action="store_true")
         elif command == "gate":
             child.add_argument("--prepared", type=Path, default=Path(".quality-runner/compass/prepared.json"))
         elif command == "assess":
@@ -87,6 +90,9 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "family":
             from compass_projection import family_projection
             result = family_projection(repo)
+            if args.summary:
+                from compass_projection import family_summary
+                result = family_summary(result)
         elif args.command == "gate":
             from compass_change import change_context
             packet_path = args.prepared if args.prepared.is_absolute() else repo / args.prepared
@@ -101,7 +107,7 @@ def main(argv: list[str] | None = None) -> int:
             from compass_change import change_context
             prepared = json.loads(args.prepared.read_text()) if args.prepared else None
             result = change_context(repo, paths=args.path, compass_ids=args.compass_id,
-                                    base=args.base, prepared=prepared, completion=args.completion)
+                                    base=args.base, prepared=prepared, completion=args.completion, continuation=args.continuation)
         elif args.command == "assess":
             from compass_assessment import assess
             result = assess(repo, json.loads(args.proposal.read_text()))

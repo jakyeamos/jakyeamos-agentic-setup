@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 from fnmatch import fnmatchcase
 from pathlib import Path
 
+from compass_bootstrap import behavior_inventory, bootstrap_projection
 from compass_sources import bindings, digest, file_digest, git, read_json, reference, source_identity
 
 SCHEMA = "compass-family/v1"
@@ -96,7 +97,8 @@ def _coverage(repo: Path, development: dict, nodes: list) -> dict:
     inventory = development.get("inventory")
     result = {"status": "unknown", "unmapped_paths": [], "ambiguous_paths": [], "proposed_paths": [],
               "covered_paths": [], "excluded_paths": [], "generated_paths": [], "missing_paths": [],
-              "missing_references": [], "unmapped_behaviors": []}
+              "missing_references": [], "unmapped_behaviors": [], "behavior_status": "unknown",
+              "behavior_reason": "Behavior inventory is not declared"}
     by_id = {n.get("id"): n for n in nodes}
     rows = development.get("bindings", [])
     for row in rows:
@@ -124,10 +126,10 @@ def _coverage(repo: Path, development: dict, nodes: list) -> dict:
             key = "ambiguous_paths" if len({r["compass_id"] for r in owners}) > 1 else (
                 "covered_paths" if accepted else "proposed_paths" if owners else "unmapped_paths")
             result[key].append(path)
-        behavior_ref = inventory.get("behavior_ref")
-        if behavior_ref:
-            document = read_json(repo, behavior_ref)
-            declared = {b["id"] for b in document["behaviors"]}
+        behavior = behavior_inventory(repo, inventory)
+        result.update(behavior_status=behavior["status"], behavior_reason=behavior["reason"])
+        if behavior["status"] == "measured":
+            declared = {b["id"] for b in behavior["behaviors"]}
             mapped = {b for r in rows if r["authority"] == "accepted"
                       and by_id.get(r["compass_id"], {}).get("valid")
                       and by_id.get(r["compass_id"], {}).get("status") == "active" for b in r.get("behavior_ids", [])}
@@ -152,6 +154,12 @@ def family_projection(repo: Path) -> dict:
     if (repo / ".project-compass/continuity.json").exists():
         try:
             continuity = {"status": "present", **continuity_status(load_continuity(repo))}
+            known_ids = {node.get("id") for node in nodes}
+            for commitment in continuity["active_commitments"]:
+                missing = set(commitment.get("compass_ids", [])) - known_ids
+                if missing:
+                    continuity["status"] = "invalid"
+                    errors.append({"scope": "continuity", "message": f"commitment {commitment['id']} has unknown compass IDs: {sorted(missing)}"})
         except (OSError, ValueError, ContractError) as exc:
             continuity.update(status="invalid", error=str(exc))
             errors.append({"scope": "continuity", "message": str(exc)})
@@ -170,10 +178,23 @@ def family_projection(repo: Path) -> dict:
             sources[ref] = file_digest(repo, ref)
         except (OSError, ValueError) as exc:
             errors.append({"scope": "sources", "message": str(exc), "ref": ref})
+    coverage = _coverage(repo, development, nodes)
     return {"schema": SCHEMA, "producer": "project-compass-python/1", "generated_at": datetime.now(timezone.utc).isoformat(),
             "source": source_identity(repo), "source_digests": sources, "root_id": root_id,
             "root_summary": root.get("summary", root_summary(None, root.get("error"))),
             "nodes": nodes, "relationships": links, "continuity": continuity,
-            "coverage": _coverage(repo, development, nodes), "development_status": development["status"],
+            "coverage": coverage, "bootstrap": bootstrap_projection(repo, development, nodes, links, coverage), "development_status": development["status"],
             "errors": errors, "status": "partial" if errors or any(not n["valid"] for n in nodes) else "current",
             "verification": "Declared maturity is not current proof; use change-context evidence checks."}
+
+
+def family_summary(family: dict) -> dict:
+    """Bounded orientation; never disguise truncated lists as complete coverage."""
+    return {"schema": "compass-family-summary/v1", "source": family["source"], "status": family["status"],
+            "coverage": {key: len(value) if isinstance(value, list) else value for key, value in family["coverage"].items()},
+            "bootstrap_status": family["bootstrap"]["status"],
+            "subsystems": [{"compass_id": a["compass_id"][:128], "status": a["status"], "gap_count": len(a["gaps"]),
+                            "gaps": [gap[:160] for gap in a["gaps"][:8]]} for a in family["bootstrap"]["subsystems"][:20]],
+            "subsystem_count": len(family["nodes"]), "error_count": len(family["errors"]),
+            "detail_omitted": True, "execution_authority": False,
+            "drill_down": "Use change-context --compass-id ID for bounded intent and proof; family for full source details."}

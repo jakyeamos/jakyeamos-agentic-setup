@@ -130,3 +130,62 @@ QR prevention certification: certification requires separate CI evidence and
 isolated-snapshot support for task-local packets. Run the native completion
 gate and the independent exact-current QR release check; neither substitutes
 for the other.
+
+## Bootstrap acceptance and preservation
+
+`family.bootstrap` (`compass-bootstrap/v1`) assesses each subsystem's usable
+links: accepted purpose, parent outcomes, exclusions, constraints, canonical
+references, behavior IDs and behavior-specific proof. Each behavior inventory
+entry supplies `id` and `spec_ref` (a local canonical specification reference).
+Each proof may name `behavior_ids` from its binding. A binding with no declared
+relationships supplies `handoff_review`, explaining the reviewed boundary;
+this is accepted intent and uses that binding's accepted decision provenance.
+The helper does not infer that absence of relationships means no consumers.
+
+Coverage has separate `status` for paths and `behavior_status` for behaviors.
+An absent behavior inventory is `unknown`; malformed or duplicate IDs are
+`invalid`. An empty unmapped list in either state is not measured completeness.
+Pronto shows these producer assessments as intent documentation maturity,
+separate from Quality Runner's documentation or verification scores.
+
+After reviewing a bounded subsystem's links, opt into affected-scope enforcement
+with `"preservation": "compass-preservation/v1"` in development.json. Missing
+bootstrap links then block the affected root and subsystem scope. Older contracts
+remain readable with explicit advisory gaps; they are not silently enrolled or
+promoted. `linked` means traceable intent, not semantic correctness. Review the
+oracle against the canonical behavior, including a case where routine tests pass
+but a preservation requirement fails. The helper cannot detect an unstated intent
+or an oracle that incorrectly blesses a regression.
+
+## Continue an effort across tasks
+
+Keep the original base and previous packet when handing off ordinary work or a
+modernization milestone. Extend scope through the same producer:
+
+```sh
+python3 scripts/project_compass.py change-context REPO --base ORIGINAL_SHA \
+  --prepared PREVIOUS_PACKET --continue --path NEXT_PATH --json
+```
+
+Save the output as the next packet only when eligible. This is cumulative: prior
+paths and directly affected subsystems remain, prior accepted intent revisions
+must still match, and completion compares the whole actual diff against the
+original base. Earlier subsystem proof is checked again at completion. Packet
+lineage carries the prior packet digest; retain the source packet in the existing
+task or remediation handoff. This creates no executor, scheduler, or new queue.
+A fresh base is a new effort and must not be used to erase unfinished obligations.
+Intent changes require the existing explicit decision/reconciliation workflow;
+`--continue` cannot approve them. Base, workspace, and original obligations are
+not automatically rewritten on a branch switch or worktree transfer.
+
+Relevant behavior inventory records and canonical specifications participate in
+proof freshness. Unrelated behavior additions do not invalidate proof. Upgrading
+from the earlier producer requires refreshing receipts to bind this added input.
+
+For initial repository orientation use `family REPO --summary --json`. Its distinct
+`compass-family-summary/v1` schema returns counts and at most 20 subsystem gap
+summaries (eight reasons each), explicitly marking details omitted. It never
+returns shortened path arrays that could be mistaken for full coverage. Use
+`change-context --compass-id ID` next; full `family` is deliberate drill-down.
+
+An ineligible packet cannot become a prepared baseline. Continue from the last eligible packet, reconcile changed decisions explicitly, and retain the original base. Active continuity commitments appear in change context and bind affected evidence; optional nonempty `compass_ids` limits their scope, while historical unscoped commitments stay global. Unresolved commitments block affected work. Read commitments alongside root intent and reconcile semantic contradictions; structural validation cannot discover contradictions in prose. Packets predating commitment/behavior revision fields require explicit preparation with the current helper.
