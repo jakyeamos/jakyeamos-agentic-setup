@@ -28,7 +28,8 @@ requires current proof and exits 2 on failure. An unchanged prepared packet is
 required to detect scope expansion and concurrent intent changes. Compare the
 actual diff including both sides of renames and untracked source files. Receipt
 files under `.project-compass/evidence/` are the sole excluded observation output.
-Packets above 32 KiB fail explicitly; reduce the scope rather than clip a
+Packets use indented JSON when it fits and lossless compact JSON otherwise.
+Packets still above 32 KiB fail explicitly; reduce the scope rather than clip a
 constraint. Family output and each source file are bounded to 1 MiB at the
 Pronto bridge; oversized data is unavailable, never a partial success.
 

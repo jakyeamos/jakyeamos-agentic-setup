@@ -204,5 +204,13 @@
         "fixtures/change-matrix/project-compass-fold.json"
       ]
     }
+  },
+  "packet_serialization_review": {
+    "change": "Lossless compact JSON fallback preserves the 32 KiB packet limit and all intent fields.",
+    "validation": [
+      "python3 skills/project-compass/scripts/test_compass_development.py",
+      "python3 scripts/verify_compass_distribution.py"
+    ],
+    "consumer_impact": "Pronto parses JSON; schema and fields remain unchanged. Manifest file membership unchanged."
   }
 }

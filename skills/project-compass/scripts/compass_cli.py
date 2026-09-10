@@ -162,6 +162,8 @@ def main(argv: list[str] | None = None) -> int:
 
     encoded = json.dumps(result, indent=2, sort_keys=True)
     if args.command in {"change-context", "gate"} and len(encoded.encode()) + 1 > 32768:
+        encoded = json.dumps(result, separators=(",", ":"), sort_keys=True)
+    if args.command in {"change-context", "gate"} and len(encoded.encode()) + 1 > 32768:
         bounded = {k: result[k] for k in ("schema", "source", "base_revision", "phase", "drill_down")}
         bounded.update(affected_compasses=[], eligible=False, execution_authority=False,
                        blockers=[{"kind": "context-too-large", "action": "Select a narrower subsystem; use family for drill-down."}],

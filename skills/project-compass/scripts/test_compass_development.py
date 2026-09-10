@@ -1,11 +1,14 @@
 """Behavioral regression cases for development preparation and evidence isolation."""
 import json
+import io
+from contextlib import redirect_stdout
 import os
 from os import environ
 import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 from pathlib import Path
 
 from compass_assessment import assess
@@ -254,6 +257,38 @@ class DevelopmentTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stdout)
         self.write('src/unrelated.py', 'expanded')
         self.assertEqual(subprocess.run(command, capture_output=True).returncode, 2)
+
+    def test_cli_packet_serialization_preserves_obligations_and_limit(self):
+        from compass_cli import main
+        packet = self.context()
+        packet['phase'] = 'completion'
+        packet['eligible'] = True
+        self.write('.quality-runner/compass/prepared.json', packet)
+        for command in ('gate', 'change-context'):
+            for size in ('small', 'compact', 'oversized'):
+                with self.subTest(command=command, size=size):
+                    result = json.loads(json.dumps(packet))
+                    if size == 'compact':
+                        result['constraints'] = [{'constraint': 'preserve'}] * 700
+                    elif size == 'oversized':
+                        result['constraints'] = ['preserve privacy \u2014 ' * 4000]
+                    pretty = json.dumps(result, indent=2, sort_keys=True) + '\n'
+                    compact = json.dumps(result, separators=(',', ':'), sort_keys=True) + '\n'
+                    if size == 'compact':
+                        self.assertGreater(len(pretty.encode()), 32768)
+                        self.assertLessEqual(len(compact.encode()), 32768)
+                    output = io.StringIO()
+                    with patch('compass_change.change_context', return_value=result), redirect_stdout(output):
+                        code = main([command, str(self.repo), '--json'])
+                    self.assertLessEqual(len(output.getvalue().encode()), 32768)
+                    if size == 'oversized':
+                        self.assertEqual(code, 2)
+                        self.assertFalse(json.loads(output.getvalue())['eligible'])
+                        self.assertEqual(json.loads(output.getvalue())['blockers'][0]['kind'], 'context-too-large')
+                    else:
+                        self.assertEqual(code, 0)
+                        self.assertEqual(json.loads(output.getvalue()), result)
+                        self.assertEqual(output.getvalue(), pretty if size == 'small' else compact)
 
 
 if __name__ == '__main__':
