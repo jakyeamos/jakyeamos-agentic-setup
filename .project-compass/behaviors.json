@@ -13,7 +13,10 @@
       "invariants": [
         "Draft and invalid intent remain unaccepted and visible.",
         "Completion uses the actual diff, current affected intent revisions, and source-bound required proof.",
-        "Assessment never starts implementation."
+        "Assessment never starts implementation.",
+        "Missing behavior inventory stays unknown; linked bootstrap requires canonical specifications and behavior-specific proof.",
+        "Blocked packets cannot reset intent; original base, cumulative scope and active commitments survive continuation.",
+        "Ordinary passing tests cannot replace consent and rating-zero preservation oracles."
       ],
       "scenarios": [
         {
@@ -31,7 +34,8 @@
             "side_effects": "none"
           }
         }
-      ]
+      ],
+      "spec_ref": "skills/project-compass/references/development.md"
     }
   ]
 }

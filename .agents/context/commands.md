@@ -38,3 +38,5 @@ Compass proof receipts are machine-local runtime data only when they use the
 producer schema under `.project-compass/evidence/` and Git confirms they are
 ignored and untracked. Public safety continues scanning tracked, malformed,
 unowned, and non-Git receipts; force-adding a receipt never exempts it.
+
+For intent-preserving development, start with `project_compass.py family . --summary --json`, then prepare a bounded `change-context`. See the Compass skill's cumulative `--continue` workflow and linked bootstrap contract; never reuse a blocked packet as accepted intent.

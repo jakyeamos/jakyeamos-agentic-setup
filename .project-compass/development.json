@@ -1,6 +1,6 @@
 {
   "schema": "compass-development/v1",
-  "revision": 3,
+  "revision": 4,
   "inventory": {
     "source": "git-tracked",
     "include": [
@@ -15,6 +15,12 @@
       "status": "accepted",
       "source": "conversation:approved-compass-pronto-foundation-plan",
       "summary": "Implement the approved development foundation plan with everyday scoped development first, linked canonical specifications, one Python producer, selective intent review, and assessment-only modernization. Preserve existing root constraints and leave older draft intent unresolved."
+    },
+    {
+      "id": "intent-preservation",
+      "status": "accepted",
+      "source": "conversation:01a08207-33a9-7f71-a11c-7ed453677d28",
+      "summary": "Owner requested all three intent-preservation improvements with dogfooding and iteration. Preserve prior foundation constraints; add linked bootstrap assessment, cumulative task context and semantic regression validation."
     }
   ],
   "bindings": [
@@ -22,7 +28,7 @@
       "id": "project-development",
       "compass_id": "project",
       "authority": "accepted",
-      "decision_id": "foundation-plan",
+      "decision_id": "intent-preservation",
       "paths": [],
       "outcomes": [
         "validated-reuse"
@@ -35,24 +41,30 @@
         "Do not ratify older draft subsystems through import.",
         "Do not execute remediation from an assessment."
       ],
-      "behavior_ids": [],
+      "behavior_ids": [
+        "compass-development-foundation"
+      ],
       "proof": [
         {
           "id": "project-acceptance",
           "receipt": ".project-compass/evidence/project-acceptance.json",
           "command": [
             "python3",
-            "skills/project-compass/scripts/test_compass_development.py"
+            "scripts/verify_compass_distribution.py"
           ],
-          "oracle_ref": "skills/project-compass/references/development.md"
+          "oracle_ref": "skills/project-compass/scripts/test_compass_preservation.py",
+          "behavior_ids": [
+            "compass-development-foundation"
+          ]
         }
-      ]
+      ],
+      "handoff_review": "The Python helper owns semantics; Pronto consumes versioned projections. Preserve compatibility with legacy and draft contracts."
     },
     {
       "id": "compass-foundation-development",
       "compass_id": "compass-foundation",
       "authority": "accepted",
-      "decision_id": "foundation-plan",
+      "decision_id": "intent-preservation",
       "paths": [
         ".agents/context/README.md",
         ".gitignore",
@@ -93,7 +105,9 @@
         "fixtures/change-matrix/project-compass-add.json",
         "fixtures/change-matrix/project-compass-change.json",
         "fixtures/change-matrix/project-compass-remove.json",
-        "fixtures/change-matrix/project-compass-fold.json"
+        "fixtures/change-matrix/project-compass-fold.json",
+        "skills/project-compass/scripts/compass_bootstrap.py",
+        "skills/project-compass/scripts/test_compass_preservation.py"
       ],
       "outcomes": [
         "bounded-change"
@@ -116,11 +130,16 @@
           "receipt": ".project-compass/evidence/compass-foundation-acceptance.json",
           "command": [
             "python3",
-            "skills/project-compass/scripts/test_compass_development.py"
+            "scripts/verify_compass_distribution.py"
           ],
-          "oracle_ref": "skills/project-compass/references/development.md"
+          "oracle_ref": "skills/project-compass/scripts/test_compass_preservation.py",
+          "behavior_ids": [
+            "compass-development-foundation"
+          ]
         }
-      ]
+      ],
+      "handoff_review": "The Python helper owns semantics; Pronto consumes versioned projections. Preserve compatibility with legacy and draft contracts."
     }
-  ]
+  ],
+  "preservation": "compass-preservation/v1"
 }
