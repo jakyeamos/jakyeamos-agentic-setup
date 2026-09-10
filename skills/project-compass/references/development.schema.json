@@ -220,6 +220,70 @@
           },
           "supersedes": {
             "type": "string"
+          },
+          "reasoning": {
+            "type": "object",
+            "required": [
+              "schema",
+              "kind",
+              "assumptions"
+            ],
+            "properties": {
+              "schema": {
+                "const": "compass-decision-reasoning/v1"
+              },
+              "kind": {
+                "enum": [
+                  "outcome",
+                  "constraint",
+                  "implementation"
+                ]
+              },
+              "assumptions": {
+                "type": "array",
+                "maxItems": 50,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "statement",
+                    "status",
+                    "evidence_refs",
+                    "reconsider_when"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "statement": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "status": {
+                      "enum": [
+                        "supported",
+                        "challenged",
+                        "unknown"
+                      ]
+                    },
+                    "evidence_refs": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "maxItems": 100,
+                      "uniqueItems": true
+                    },
+                    "reconsider_when": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }

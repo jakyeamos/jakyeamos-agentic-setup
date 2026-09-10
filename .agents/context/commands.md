@@ -40,3 +40,5 @@ ignored and untracked. Public safety continues scanning tracked, malformed,
 unowned, and non-Git receipts; force-adding a receipt never exempts it.
 
 For intent-preserving development, start with `project_compass.py family . --summary --json`, then prepare a bounded `change-context`. See the Compass skill's cumulative `--continue` workflow and linked bootstrap contract; never reuse a blocked packet as accepted intent.
+
+Design reassessment uses the existing Compass assess command with v2 proposals. See skills/project-compass/references/assessment.md; complete fields never establish justification without current claim review.

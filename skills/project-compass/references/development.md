@@ -82,13 +82,12 @@ independent required gate; this receipt never substitutes for its release check.
 
 ## Modernization assessment
 
-`compass-modernization-proposal/v1` contains paths/compass_ids, base_revision,
-problem, expected_benefit, applicable, applicability_reason, evidence_refs,
-rollback, and an existing remediation_id. Optional trigger, planned_work_ref,
-and defer_reason explain timing. The assessment returns worthwhile_now,
-alongside_planned_work, deferred, not_applicable or insufficient_evidence.
-Every disposition has `execution_authority: false` and creates no work.
-A new model is a reassessment trigger, never evidence of a repository problem.
+Use [Evidence-backed design assessment](assessment.md) for the v2 proposal,
+reviewable decision assumptions, explicit deletion/simplification/retention
+alternatives, and observed benefit comparison. Legacy v1 proposals remain readable
+but no longer receive a positive recommendation from field/reference checks alone.
+The output keeps `compass-modernization-assessment/v1` and adds the versioned
+review contract. Every disposition remains advisory with no execution authority.
 
 ## Distribution and pilot acceptance
 

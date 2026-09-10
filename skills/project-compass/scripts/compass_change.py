@@ -11,6 +11,7 @@ from fnmatch import fnmatchcase
 
 from compass_projection import family_projection
 from compass_bootstrap import behavior_inventory
+from compass_review import decision_refs
 from compass_sources import bindings, digest, git, local_path, read_json, reference, source_identity
 
 
@@ -37,6 +38,7 @@ def binding_inputs(repo: Path, row: dict, nodes: dict) -> dict:
     relevant_behaviors = [b for b in behavior["behaviors"] if b["id"] in row.get("behavior_ids", [])]
     refs = sorted(set(refs + [b["spec_ref"] for b in relevant_behaviors if isinstance(b.get("spec_ref"), str)]))
     decision = next((d for d in development.get("decisions", []) if d["id"] == row.get("decision_id")), None)
+    refs = sorted(set(refs + decision_refs(decision)))
     registry_path = repo / ".project-compass/compasses.json"
     links = read_json(repo, ".project-compass/compasses.json").get("links", []) if registry_path.exists() else []
     links = [l for l in links if row["compass_id"] in (l.get("from"), l.get("to"))]
@@ -103,7 +105,8 @@ def change_context(repo: Path, *, paths: list[str], compass_ids: list[str], base
             unknowns.append({"kind": excluded["kind"] + "-path", "path": path, "reason": excluded["reason"]})
         owners = {r["compass_id"] for r in rows if path in r.get("paths", []) + r.get("dependencies", [])
                   or any(ref.split("#")[0] == path for ref in r.get("references", []) + behavior_refs(r)
-                         + [p["oracle_ref"] for p in r.get("proof", [])])
+                         + [p["oracle_ref"] for p in r.get("proof", [])]
+                         + decision_refs(next((d for d in development.get("decisions", []) if d["id"] == r.get("decision_id")), None)))
                   or (path == (development.get("inventory") or {}).get("behavior_ref") and r.get("behavior_ids"))}
         affected.update(owners)
         if not owners and not excluded:

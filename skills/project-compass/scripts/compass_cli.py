@@ -110,6 +110,8 @@ def main(argv: list[str] | None = None) -> int:
                                     base=args.base, prepared=prepared, completion=args.completion, continuation=args.continuation)
         elif args.command == "assess":
             from compass_assessment import assess
+            if args.proposal.stat().st_size > 1024 * 1024:
+                raise ValueError("Assessment proposal exceeds 1 MiB; select a smaller scope")
             result = assess(repo, json.loads(args.proposal.read_text()))
         elif args.command == "prove":
             from compass_change import prove

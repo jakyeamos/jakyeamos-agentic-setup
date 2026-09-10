@@ -140,6 +140,9 @@ def bindings(repo: Path) -> dict:
                 or not isinstance(decision.get("summary"), str) or not decision["summary"]):
             raise ValueError("decisions require unique IDs, status, summary, and source provenance")
         decision_ids.add(decision["id"])
+        if "reasoning" in decision:
+            from compass_review import validate_reasoning
+            validate_reasoning(decision["reasoning"])
     for decision in decisions:
         if decision.get("supersedes") and decision["supersedes"] not in decision_ids:
             raise ValueError("decision supersedes an unknown decision")

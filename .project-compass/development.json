@@ -1,6 +1,6 @@
 {
   "schema": "compass-development/v1",
-  "revision": 4,
+  "revision": 5,
   "inventory": {
     "source": "git-tracked",
     "include": [
@@ -21,6 +21,27 @@
       "status": "accepted",
       "source": "conversation:01a08207-33a9-7f71-a11c-7ed453677d28",
       "summary": "Owner requested all three intent-preservation improvements with dogfooding and iteration. Preserve prior foundation constraints; add linked bootstrap assessment, cumulative task context and semantic regression validation."
+    },
+    {
+      "id": "assessment-review",
+      "status": "accepted",
+      "source": "conversation:approved-three-assessment-improvements",
+      "summary": "Extend assessment with explicit assumptions, compared alternatives, source-bound claim review and separate benefit observation. Preserve advisory-only authority and accepted constraints.",
+      "reasoning": {
+        "schema": "compass-decision-reasoning/v1",
+        "kind": "implementation",
+        "assumptions": [
+          {
+            "id": "review-boundary",
+            "statement": "Deterministic reference checks cannot establish whether prose evidence supports the claimed benefit.",
+            "status": "supported",
+            "evidence_refs": [
+              "skills/project-compass/references/assessment.md"
+            ],
+            "reconsider_when": "A separately validated semantic verification mechanism can establish claim support."
+          }
+        ]
+      }
     }
   ],
   "bindings": [
@@ -28,7 +49,7 @@
       "id": "project-development",
       "compass_id": "project",
       "authority": "accepted",
-      "decision_id": "intent-preservation",
+      "decision_id": "assessment-review",
       "paths": [],
       "outcomes": [
         "validated-reuse"
@@ -64,7 +85,7 @@
       "id": "compass-foundation-development",
       "compass_id": "compass-foundation",
       "authority": "accepted",
-      "decision_id": "intent-preservation",
+      "decision_id": "assessment-review",
       "paths": [
         ".agents/context/README.md",
         ".gitignore",
@@ -107,7 +128,10 @@
         "fixtures/change-matrix/project-compass-remove.json",
         "fixtures/change-matrix/project-compass-fold.json",
         "skills/project-compass/scripts/compass_bootstrap.py",
-        "skills/project-compass/scripts/test_compass_preservation.py"
+        "skills/project-compass/scripts/test_compass_preservation.py",
+        "skills/project-compass/scripts/compass_review.py",
+        "skills/project-compass/scripts/test_compass_assessment.py",
+        "skills/project-compass/references/assessment.md"
       ],
       "outcomes": [
         "bounded-change"

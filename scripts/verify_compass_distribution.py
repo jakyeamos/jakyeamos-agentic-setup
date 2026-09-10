@@ -21,7 +21,7 @@ def main() -> None:
         for name in asset['files']:
             if (ROOT / name).read_bytes() != (destination / name).read_bytes():
                 raise ValueError('installed file differs: ' + name)
-        for name in ('test_project_compass.py', 'test_compass_development.py', 'test_compass_preservation.py'):
+        for name in ('test_project_compass.py', 'test_compass_development.py', 'test_compass_preservation.py', 'test_compass_assessment.py'):
             subprocess.run([sys.executable, str(destination / 'skills/project-compass/scripts' / name)],
                            check=True, timeout=60)
         print(f"Installed {len(asset['files'])} manifest files with exact parity; legacy and development behavior passed.")

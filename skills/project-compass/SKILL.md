@@ -73,6 +73,11 @@ its entry packet at `.quality-runner/compass/prepared.json` and run `gate` at
 completion. Missing packets and expanded scope require explicit reconciliation.
 The gate is read-only; execute only separately reviewed proof commands.
 
+For first-principles design review, use [Evidence-backed assessment](references/assessment.md).
+Compare deletion, simplification and retention against accepted outcomes. A complete
+proposal is not a justified recommendation; require source-bound claim review and
+keep realized benefit separate from preservation proof.
+
 ## Continuous Truth Continuity
 
 Run a lightweight continuity preflight at the turn boundary before choosing a
