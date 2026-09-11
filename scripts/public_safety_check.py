@@ -4,6 +4,8 @@
 from __future__ import annotations
 
 import argparse
+import json
+import subprocess
 import re
 from pathlib import Path
 from typing import Iterable
@@ -51,11 +53,32 @@ def _is_ignored(path: Path, root: Path) -> bool:
     return any(part in IGNORED_DIRECTORIES for part in relative_parts)
 
 
+def _is_local_compass_receipt(path: Path, root: Path) -> bool:
+    """Only Git-ignored, untracked producer receipts are local runtime data."""
+    relative = path.relative_to(root).as_posix()
+    if not relative.startswith(".project-compass/evidence/") or path.is_symlink():
+        return False
+    try:
+        if path.stat().st_size > 1_048_576:
+            return False
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        if not isinstance(payload, dict) or payload.get("schema") != "compass-evidence/v1":
+            return False
+        # check-ignore never accepts tracked files, including force-added receipts.
+        result = subprocess.run(
+            ["git", "-C", str(root), "check-ignore", "-q", "--", relative],
+            capture_output=True, timeout=5, check=False,
+        )
+        return result.returncode == 0
+    except (OSError, ValueError, subprocess.TimeoutExpired):
+        return False
+
+
 def public_files(root: Path) -> Iterable[Path]:
     """Yield public files while excluding generated and local runtime trees."""
 
     for path in sorted(root.rglob("*")):
-        if not path.is_file() or _is_ignored(path, root):
+        if not path.is_file() or _is_ignored(path, root) or _is_local_compass_receipt(path, root):
             continue
         relative = path.relative_to(root).as_posix()
         if relative in INTENTIONAL_RULE_FILES:

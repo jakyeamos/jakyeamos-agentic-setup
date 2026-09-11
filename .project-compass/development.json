@@ -1,0 +1,582 @@
+{
+  "schema": "compass-development/v1",
+  "revision": 7,
+  "inventory": {
+    "source": "git-tracked",
+    "include": [
+      "**"
+    ],
+    "exclude": [
+      {
+        "pattern": ".planning/**",
+        "kind": "excluded",
+        "reason": "Retained historical planning; current catalog/adoption specifications remain authoritative."
+      }
+    ],
+    "behavior_ref": ".project-compass/behaviors.json"
+  },
+  "decisions": [
+    {
+      "id": "foundation-plan",
+      "status": "accepted",
+      "source": "conversation:approved-compass-pronto-foundation-plan",
+      "summary": "Implement the approved development foundation plan with everyday scoped development first, linked canonical specifications, one Python producer, selective intent review, and assessment-only modernization. Preserve existing root constraints and leave older draft intent unresolved."
+    },
+    {
+      "id": "intent-preservation",
+      "status": "accepted",
+      "source": "conversation:01a08207-33a9-7f71-a11c-7ed453677d28",
+      "summary": "Owner requested all three intent-preservation improvements with dogfooding and iteration. Preserve prior foundation constraints; add linked bootstrap assessment, cumulative task context and semantic regression validation."
+    },
+    {
+      "id": "assessment-review",
+      "status": "accepted",
+      "source": "conversation:approved-three-assessment-improvements",
+      "summary": "Extend assessment with explicit assumptions, compared alternatives, source-bound claim review and separate benefit observation. Preserve advisory-only authority and accepted constraints.",
+      "reasoning": {
+        "schema": "compass-decision-reasoning/v1",
+        "kind": "implementation",
+        "assumptions": [
+          {
+            "id": "review-boundary",
+            "statement": "Deterministic reference checks cannot establish whether prose evidence supports the claimed benefit.",
+            "status": "supported",
+            "evidence_refs": [
+              "skills/project-compass/references/assessment.md"
+            ],
+            "reconsider_when": "A separately validated semantic verification mechanism can establish claim support."
+          }
+        ]
+      }
+    },
+    {
+      "id": "existing-catalog-source-associations",
+      "status": "accepted",
+      "source": "README.md",
+      "summary": "Link the existing public catalog, setup and admission responsibilities to their canonical workbench specifications; preserve accepted root intent and existing Compass foundation. Asset packaging ownership does not ratify each skill behavior or imply host parity."
+    }
+  ],
+  "bindings": [
+    {
+      "id": "project-development",
+      "compass_id": "project",
+      "authority": "accepted",
+      "decision_id": "assessment-review",
+      "paths": [],
+      "outcomes": [
+        "validated-reuse"
+      ],
+      "references": [
+        "skills/project-compass/references/development.md"
+      ],
+      "constraints": [
+        "Do not automatically modernize the fleet.",
+        "Do not ratify older draft subsystems through import.",
+        "Do not execute remediation from an assessment."
+      ],
+      "behavior_ids": [
+        "compass-development-foundation"
+      ],
+      "proof": [
+        {
+          "id": "project-acceptance",
+          "receipt": ".project-compass/evidence/project-acceptance.json",
+          "command": [
+            "python3",
+            "scripts/verify_compass_distribution.py"
+          ],
+          "oracle_ref": "skills/project-compass/scripts/test_compass_preservation.py",
+          "behavior_ids": [
+            "compass-development-foundation"
+          ]
+        }
+      ],
+      "handoff_review": "The Python helper owns semantics; Pronto consumes versioned projections. Preserve compatibility with legacy and draft contracts."
+    },
+    {
+      "id": "compass-foundation-development",
+      "compass_id": "compass-foundation",
+      "authority": "accepted",
+      "decision_id": "assessment-review",
+      "paths": [
+        ".agents/context/README.md",
+        ".gitignore",
+        ".pre-cr.json",
+        ".project-compass/behaviors.json",
+        ".project-compass/compasses.json",
+        ".project-compass/compasses/compass-foundation.json",
+        ".project-compass/development.json",
+        ".quality-runner.toml",
+        "catalog/manifest.json",
+        "scripts/verify_compass_distribution.py",
+        "skills/project-compass/SKILL.md",
+        "skills/project-compass/agents/openai.yaml",
+        "skills/project-compass/change-surface-matrix.json",
+        "skills/project-compass/references/continuity.schema.json",
+        "skills/project-compass/references/contract.schema.json",
+        "skills/project-compass/references/development.md",
+        "skills/project-compass/references/development.schema.json",
+        "skills/project-compass/references/fixtures/family.json",
+        "skills/project-compass/references/projections.schema.json",
+        "skills/project-compass/references/quiz.schema.json",
+        "skills/project-compass/references/registry.schema.json",
+        "skills/project-compass/scripts/compass_assessment.py",
+        "skills/project-compass/scripts/compass_change.py",
+        "skills/project-compass/scripts/compass_cli.py",
+        "skills/project-compass/scripts/compass_extensions.py",
+        "skills/project-compass/scripts/compass_projection.py",
+        "skills/project-compass/scripts/compass_sources.py",
+        "skills/project-compass/scripts/project_compass.py",
+        "skills/project-compass/scripts/test_compass_development.py",
+        "skills/project-compass/scripts/test_project_compass.py",
+        "test/compass-development.test.mjs",
+        "scripts/check_environment_contract.mjs",
+        "test/environment-contract.test.mjs",
+        "scripts/public_safety_check.py",
+        "tests/test_workbench.py",
+        ".agents/context/commands.md",
+        "fixtures/change-matrix/project-compass-add.json",
+        "fixtures/change-matrix/project-compass-change.json",
+        "fixtures/change-matrix/project-compass-remove.json",
+        "fixtures/change-matrix/project-compass-fold.json",
+        "skills/project-compass/scripts/compass_bootstrap.py",
+        "skills/project-compass/scripts/test_compass_preservation.py",
+        "skills/project-compass/scripts/compass_review.py",
+        "skills/project-compass/scripts/test_compass_assessment.py",
+        "skills/project-compass/references/assessment.md",
+        "skills/project-compass/scripts/compass_output.py",
+        "skills/project-compass/scripts/test_compass_output.py",
+        ".agents/change-surface-matrix.json"
+      ],
+      "outcomes": [
+        "bounded-change"
+      ],
+      "references": [
+        "skills/project-compass/references/development.md",
+        ".project-compass/behaviors.json#/behaviors/0"
+      ],
+      "constraints": [
+        "Do not automatically modernize the fleet.",
+        "Do not ratify older draft subsystems through import.",
+        "Do not execute remediation from an assessment."
+      ],
+      "behavior_ids": [
+        "compass-development-foundation"
+      ],
+      "proof": [
+        {
+          "id": "compass-foundation-acceptance",
+          "receipt": ".project-compass/evidence/compass-foundation-acceptance.json",
+          "command": [
+            "python3",
+            "scripts/verify_compass_distribution.py"
+          ],
+          "oracle_ref": "skills/project-compass/scripts/test_compass_preservation.py",
+          "behavior_ids": [
+            "compass-development-foundation"
+          ]
+        }
+      ],
+      "handoff_review": "The Python helper owns semantics; Pronto consumes versioned projections. Preserve compatibility with legacy and draft contracts.",
+      "dependencies": [
+        "package.json",
+        "pnpm-lock.yaml",
+        "catalog/manifest.json",
+        "catalog/taxonomy.json"
+      ]
+    },
+    {
+      "id": "catalog-packaging",
+      "compass_id": "project",
+      "authority": "accepted",
+      "decision_id": "existing-catalog-source-associations",
+      "paths": [
+        "adapters/antigravity/WORKBENCH.md",
+        "adapters/claude/WORKBENCH.md",
+        "adapters/codex/WORKBENCH.md",
+        "adapters/copilot/WORKBENCH.md",
+        "adapters/cursor/WORKBENCH.md",
+        "adapters/gemini/WORKBENCH.md",
+        "adapters/generic/WORKBENCH.md",
+        "bin/agent-config.mjs",
+        "catalog/index.md",
+        "catalog/taxonomy.json",
+        "docs/agent-config-conflicts.md",
+        "docs/agent-config-manifest.md",
+        "docs/agent-config-routing.md",
+        "docs/workflow-multipliers/documentation-as-principles.md",
+        "docs/workflow-multipliers/evidence-based-skill-improvement.md",
+        "fixtures/behavior/behavior-spec-template.json",
+        "fixtures/consequence-closure/validation-failure-disposition.json",
+        "fixtures/evaluation/contract-fixture.json",
+        "fixtures/forward-tests.json",
+        "fixtures/review/verified-fix-contract.json",
+        "library/README.md",
+        "manifest.yaml",
+        "schemas/agent-config-manifest.schema.json",
+        "scripts/catalog_entries.py",
+        "scripts/catalog_index.py",
+        "scripts/catalog_validation.py",
+        "scripts/validate_catalog.py",
+        "scripts/workbench.py",
+        "skills/agentized-task-packet/SKILL.md",
+        "skills/consequence-closure/SKILL.md",
+        "skills/divergent-strategy/SKILL.md",
+        "skills/durable-agent-workflows/SKILL.md",
+        "skills/evidence-backed-change-surface-mapping/SKILL.md",
+        "skills/execution-reassessment/SKILL.md",
+        "skills/low-always-loaded-instruction-migration/SKILL.md",
+        "skills/operating-language/SKILL.md",
+        "skills/project-partner/SKILL.md",
+        "skills/project-partner/agents/openai.yaml",
+        "skills/recurring-loop-authorship/SKILL.md",
+        "skills/repo-behavior-spec-loop/SKILL.md",
+        "skills/research-domain-writing/SKILL.md",
+        "skills/research-domain-writing/agents/openai.yaml",
+        "skills/research-domain-writing/config/domains.yaml",
+        "skills/research-domain-writing/config/output-formats.yaml",
+        "skills/research-domain-writing/config/research-sources.yaml",
+        "skills/research-domain-writing/config/router-inference.yaml",
+        "skills/research-domain-writing/config/style-profile.yaml",
+        "skills/research-domain-writing/examples/batch-tasks.yaml",
+        "skills/research-domain-writing/prompts/batch-runner.md",
+        "skills/research-domain-writing/prompts/domain-copywriter.md",
+        "skills/research-domain-writing/prompts/domain-qa.md",
+        "skills/research-domain-writing/prompts/domain-router.md",
+        "skills/research-domain-writing/prompts/humanizer-blader.md",
+        "skills/research-domain-writing/prompts/knowledge-packet-builder.md",
+        "skills/research-domain-writing/prompts/pipeline-orchestrator.md",
+        "skills/research-domain-writing/prompts/research-planner.md",
+        "skills/research-domain-writing/prompts/researcher.md",
+        "skills/research-domain-writing/references/limitations.md",
+        "skills/review-gated-verified-fix/SKILL.md",
+        "skills/safe-canonical-branch-folding/SKILL.md",
+        "skills/skill-harvest-and-promotion/SKILL.md",
+        "skills/terrace/SKILL.md",
+        "skills/terrace/agents/openai.yaml",
+        "skills/terrace/references/commands.md",
+        "skills/unknowns-first-exploration/SKILL.md",
+        "src/agent-config.mjs",
+        "workflows/agentized-task-packet/WORKFLOW.md",
+        "workflows/consequence-closure/WORKFLOW.md",
+        "workflows/context-budget-governor/CHECKPOINT_TEMPLATE.md",
+        "workflows/context-budget-governor/WORKFLOW.md",
+        "workflows/divergent-strategy/WORKFLOW.md",
+        "workflows/durable-agent-workflows/WORKFLOW.md",
+        "workflows/environment-legibility-audit/WORKFLOW.md",
+        "workflows/evaluation-evidence/WORKFLOW.md",
+        "workflows/evidence-backed-change-surface-mapping/WORKFLOW.md",
+        "workflows/execution-reassessment/WORKFLOW.md",
+        "workflows/governed-work-loop/WORKFLOW.md",
+        "workflows/low-always-loaded-instruction-migration/WORKFLOW.md",
+        "workflows/operating-language/WORKFLOW.md",
+        "workflows/recurring-loop-authorship/WORKFLOW.md",
+        "workflows/repo-aware-context/WORKFLOW.md",
+        "workflows/repo-behavior-spec-loop/WORKFLOW.md",
+        "workflows/review-gated-verified-fix/WORKFLOW.md",
+        "workflows/safe-canonical-branch-folding/WORKFLOW.md",
+        "workflows/safe-tool-guards/CONTRACT.md",
+        "workflows/safe-tool-guards/WORKFLOW.md",
+        "workflows/skill-harvest-and-promotion/WORKFLOW.md",
+        "workflows/unknowns-first-exploration/WORKFLOW.md"
+      ],
+      "outcomes": [
+        "validated-reuse",
+        "dry-run-before-effects"
+      ],
+      "behavior_ids": [
+        "catalog-packaging"
+      ],
+      "references": [
+        "docs/catalog-model.md",
+        "docs/workbench.md",
+        "catalog/manifest.json"
+      ],
+      "constraints": [
+        "Manifest owns asset identity, provenance, supported targets and installation policy; taxonomy owns editorial types and collections; the human index is generated.",
+        "Existing asset IDs and install paths remain stable; new library entries follow manifest type without duplicating topic inventories.",
+        "Installation requires an explicit target, defaults to dry-run and copies only allowlisted files; adapters are review staging and external references are manual.",
+        "Uninstall must preserve modified, symlinked and unowned files and remove only receipt-owned unchanged files.",
+        "Catalog validation proves packaging and local fixtures, not individual skill quality, provider triggers, installed host behavior or authorizes registration."
+      ],
+      "dependencies": [
+        "package.json",
+        "pnpm-lock.yaml",
+        "catalog/manifest.json",
+        "tests/test_workbench.py",
+        "scripts/public_safety_check.py",
+        "scripts/validate_prevention_pack.py",
+        "scripts/validate_skills.py"
+      ],
+      "proof": [
+        {
+          "id": "catalog-contract",
+          "receipt": ".project-compass/evidence/catalog-contract.json",
+          "command": [
+            "python3",
+            "-m",
+            "unittest",
+            "discover",
+            "-s",
+            "tests",
+            "-p",
+            "test_workbench.py"
+          ],
+          "oracle_ref": "tests/test_workbench.py",
+          "behavior_ids": [
+            "catalog-packaging"
+          ]
+        }
+      ],
+      "handoff_review": "Authored or sanitized assets flow through manifest/taxonomy validation to browse and deliberate adoption. Each asset entry retains its canonical files/evidence; this binding owns packaging associations only. Skill-specific intent and fresh-context behavioral evidence remain with each skill contract and may be incomplete."
+    },
+    {
+      "id": "manifest-setup",
+      "compass_id": "project",
+      "authority": "accepted",
+      "decision_id": "existing-catalog-source-associations",
+      "paths": [
+        "bin/agent-config.mjs",
+        "schemas/agent-config-manifest.schema.json",
+        "schemas/jas-private-overlay.schema.json",
+        "src/agent-config.mjs",
+        "src/manifest.mjs",
+        "src/overlay.mjs",
+        "src/routing.mjs",
+        "src/runtime.mjs",
+        "src/snapshots.mjs",
+        "test/agent-config.test.mjs",
+        "test/overlay.test.mjs"
+      ],
+      "outcomes": [
+        "validated-reuse",
+        "dry-run-before-effects"
+      ],
+      "behavior_ids": [
+        "manifest-setup"
+      ],
+      "references": [
+        "docs/workbench.md",
+        "docs/agent-config-manifest.md",
+        "docs/agent-config-conflicts.md"
+      ],
+      "constraints": [
+        "Keep public base and private overlay separate; never copy private manifests, conflict state, credentials or runtime stores into the distribution.",
+        "Source-only safe sync requires complete preflight; conflicts, unknown live members and unsupported providers remain explicit.",
+        "A selected provider and repository root bound dry-run routing; bootstrap reports manual/GUI prerequisites without installing them.",
+        "Host installation, permissions and provider parity require separate live proof and authorization."
+      ],
+      "dependencies": [
+        "package.json",
+        "pnpm-lock.yaml",
+        "catalog/manifest.json",
+        "catalog/taxonomy.json"
+      ],
+      "proof": [
+        {
+          "id": "setup-contract",
+          "receipt": ".project-compass/evidence/setup-contract.json",
+          "command": [
+            "node",
+            "--test",
+            "test/agent-config.test.mjs",
+            "test/overlay.test.mjs"
+          ],
+          "oracle_ref": "test/agent-config.test.mjs",
+          "behavior_ids": [
+            "manifest-setup"
+          ]
+        }
+      ],
+      "handoff_review": "Node manifest engine owns selected-root provider planning, snapshots, conflicts and private-overlay resolution. Python workbench packaging is a neighboring installer, not an interchangeable authority."
+    },
+    {
+      "id": "promotion-admission",
+      "compass_id": "project",
+      "authority": "accepted",
+      "decision_id": "existing-catalog-source-associations",
+      "paths": [
+        "schemas/jas-promotion-projection.schema.json",
+        "scripts/promotion_admission.py",
+        "scripts/promotion_admission_contracts.py",
+        "tests/fixtures/promotion_admission.py",
+        "tests/test_promotion_admission.py",
+        "tests/test_promotion_admission_apply.py"
+      ],
+      "outcomes": [
+        "validated-reuse",
+        "dry-run-before-effects"
+      ],
+      "behavior_ids": [
+        "promotion-admission"
+      ],
+      "references": [
+        "docs/workbench.md",
+        "schemas/jas-promotion-projection.schema.json"
+      ],
+      "constraints": [
+        "AWL owns private discovery, testing and candidate formation; this repository owns sanitized projection admission.",
+        "Report-only validation and planning must remain non-mutating; defer or reject must not apply.",
+        "Apply requires explicit accepted candidate approval, mode and flag; preflight, idempotence and rollback preserve unrelated content.",
+        "New v3 public projections require complete editorial metadata; legacy v1 compatibility and private v2 overlays remain distinct.",
+        "Admission fixtures cannot establish private evidence quality, published visibility or provider installation."
+      ],
+      "dependencies": [
+        "package.json",
+        "pnpm-lock.yaml",
+        "catalog/manifest.json",
+        "catalog/taxonomy.json",
+        "scripts/catalog_validation.py",
+        "scripts/catalog_entries.py"
+      ],
+      "proof": [
+        {
+          "id": "admission-contract",
+          "receipt": ".project-compass/evidence/admission-contract.json",
+          "command": [
+            "python3",
+            "-m",
+            "unittest",
+            "discover",
+            "-s",
+            "tests",
+            "-p",
+            "test_promotion_admission*.py"
+          ],
+          "oracle_ref": "tests/test_promotion_admission_apply.py",
+          "behavior_ids": [
+            "promotion-admission"
+          ]
+        }
+      ],
+      "handoff_review": "Sanitized candidate projections cross from AWL into JAS validation/admission. Private package and evidence remain separately owned; public catalog generation must follow an admitted manifest change."
+    },
+    {
+      "id": "distribution-support",
+      "compass_id": "project",
+      "authority": "accepted",
+      "decision_id": "existing-catalog-source-associations",
+      "paths": [
+        ".agents/agent-usability.json",
+        ".agents/context/architecture.md",
+        ".agents/context/conventions.md",
+        ".agents/context/deployment.md",
+        ".agents/context/done.md",
+        ".agents/context/examples.md",
+        ".agents/context/failure-modes.md",
+        ".agents/context/security.md",
+        ".agents/workspace-policy.json",
+        ".github/workflows/validate.yml",
+        ".project-compass/checkpoints.jsonl",
+        ".project-compass/continuity.json",
+        ".project-compass/contract.json",
+        ".project-compass/quiz.json",
+        "AGENTS.md",
+        "ATTRIBUTION.md",
+        "LICENSE",
+        "README.md",
+        "SECURITY.md",
+        "docs/adoption-guide.md",
+        "docs/case-studies/context-compaction.md",
+        "docs/case-studies/context-routing.md",
+        "docs/case-studies/environment-legibility-audit.md",
+        "docs/case-studies/execution-reassessment.md",
+        "docs/case-studies/governed-execution.md",
+        "docs/case-studies/portable-skill-distribution.md",
+        "docs/case-studies/recurring-loop-authorship.md",
+        "docs/case-studies/safe-canonical-branch-folding.md",
+        "docs/case-studies/safety-guards.md",
+        "docs/case-studies/unknowns-first-exploration.md",
+        "docs/catalog-model.md",
+        "docs/evidence/agent-usability-2026-08-11.json",
+        "docs/external-references.md",
+        "docs/mining.md",
+        "docs/mining/2026-07-public-skill-mining.md",
+        "docs/mining/2026-07-workflow-multiplier-audit.md",
+        "docs/workbench.md",
+        "docs/workflow-multipliers.md",
+        "map/AGENTS.md",
+        "map/CONTEXT.md",
+        "map/_meta/schema.md",
+        "map/_templates/object.md",
+        "map/objects/CONTEXT.md",
+        "map/objects/_index.md",
+        "package.json",
+        "pnpm-lock.yaml",
+        "scripts/__init__.py",
+        "scripts/check_agent_usability.mjs",
+        "scripts/check_javascript.mjs",
+        "scripts/pre_cr_coverage.py",
+        "scripts/validate_prevention_pack.py",
+        "scripts/validate_repository.py",
+        "scripts/validate_skills.py",
+        "templates/AGENTS.md",
+        "templates/context/README.md",
+        "test/agent-usability.test.mjs",
+        "tests/test_prevention_pack.py",
+        "tests/test_promoted_skills.py"
+      ],
+      "outcomes": [
+        "validated-reuse",
+        "dry-run-before-effects"
+      ],
+      "behavior_ids": [
+        "distribution-support"
+      ],
+      "references": [
+        ".agents/context/architecture.md",
+        ".agents/context/commands.md",
+        "SECURITY.md"
+      ],
+      "constraints": [
+        "Keep public safety scanning strict; no private paths, credentials, session contents or generated private harvests enter tracked distribution.",
+        "Validation scripts and fixtures establish only the declared structural/environment contracts; historical case studies retain their original evidence dates.",
+        "Root and Compass foundation constraints remain authoritative; metadata maintenance does not change skill instructions or accepted product intent."
+      ],
+      "dependencies": [
+        "catalog/manifest.json",
+        "catalog/taxonomy.json",
+        "scripts/check_environment_contract.mjs",
+        "test/environment-contract.test.mjs",
+        "scripts/public_safety_check.py",
+        "scripts/catalog_validation.py",
+        "scripts/catalog_index.py",
+        "scripts/catalog_entries.py",
+        ".agents/context/README.md",
+        ".agents/context/commands.md",
+        ".agents/change-surface-matrix.json",
+        ".gitignore",
+        ".pre-cr.json",
+        ".quality-runner.toml"
+      ],
+      "proof": [
+        {
+          "id": "support-contract",
+          "receipt": ".project-compass/evidence/support-contract.json",
+          "command": [
+            "python3",
+            "scripts/validate_repository.py"
+          ],
+          "oracle_ref": "scripts/validate_repository.py",
+          "behavior_ids": [
+            "distribution-support"
+          ]
+        },
+        {
+          "id": "support-environment",
+          "receipt": ".project-compass/evidence/support-environment.json",
+          "command": [
+            "node",
+            "scripts/check_environment_contract.mjs"
+          ],
+          "oracle_ref": "test/environment-contract.test.mjs",
+          "behavior_ids": [
+            "distribution-support"
+          ]
+        }
+      ],
+      "handoff_review": "Reviewed repository support consists of routed documentation, templates, context-map scaffolding, validation/tests, configuration and historical public case studies. This source association preserves their existing authority levels, not fresh behavioral proof for every documented claim."
+    }
+  ],
+  "preservation": "compass-preservation/v1"
+}

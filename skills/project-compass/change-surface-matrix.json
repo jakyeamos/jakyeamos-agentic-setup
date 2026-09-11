@@ -1,8 +1,11 @@
 {
   "schema_version": "change-surface-matrix/v1",
-  "subject": {"kind": "skill", "id": "project-compass"},
+  "subject": {
+    "kind": "skill",
+    "id": "project-compass"
+  },
   "owner": "Jakye Amos",
-  "last_reviewed": "2026-08-14",
+  "last_reviewed": "2026-09-11",
   "surfaces": [
     {
       "id": "hosted-source",
@@ -10,12 +13,20 @@
       "path": "skills/project-compass/",
       "owner": "Jakye Amos",
       "condition": "The authored skill contract, scoped-compass or quiz helper, schema, tests, or provider metadata changes.",
-      "operations": ["add", "change", "remove", "fold"],
+      "operations": [
+        "add",
+        "change",
+        "remove",
+        "fold"
+      ],
       "validation": [
         "python3 skills/project-compass/scripts/test_project_compass.py",
         "python3 -m json.tool skills/project-compass/references/contract.schema.json",
         "python3 -m json.tool skills/project-compass/references/registry.schema.json",
-        "python3 -m json.tool skills/project-compass/references/quiz.schema.json"
+        "python3 -m json.tool skills/project-compass/references/quiz.schema.json",
+        "python3 -m unittest tests.test_workbench.WorkbenchCliTests.test_public_safety_scans_tracked_or_unowned_compass_receipts",
+        "python3 skills/project-compass/scripts/test_compass_development.py",
+        "Verify digest-only assets above 1 MiB preserve freshness while oversized digests, JSON sources and output packets still fail explicitly."
       ],
       "status": "applicable"
     },
@@ -25,7 +36,12 @@
       "path": ".project-compass/",
       "owner": "Jakye Amos",
       "condition": "A root or subsystem compass, registry entry or link, declared path, continuity record, quiz result, or checkpoint is added, changed, removed, or brought across a fold.",
-      "operations": ["add", "change", "remove", "fold"],
+      "operations": [
+        "add",
+        "change",
+        "remove",
+        "fold"
+      ],
       "validation": [
         "python3 skills/project-compass/scripts/project_compass.py validate <repo>",
         "python3 skills/project-compass/scripts/project_compass.py score <repo> --json",
@@ -40,18 +56,32 @@
       "path": "catalog/manifest.json",
       "owner": "Jakye Amos",
       "condition": "A distributed Project Compass file or capability changes.",
-      "operations": ["add", "change", "remove", "fold"],
-      "validation": ["pnpm check"],
+      "operations": [
+        "add",
+        "change",
+        "remove",
+        "fold"
+      ],
+      "validation": [
+        "pnpm check"
+      ],
       "status": "applicable"
     },
     {
       "id": "installer-projection",
       "scope": "local",
-      "path": "scripts/install.sh",
+      "path": "scripts/workbench.py",
       "owner": "Jakye Amos",
       "condition": "The Project Compass distribution payload or destination changes.",
-      "operations": ["add", "change", "remove", "fold"],
-      "validation": ["pnpm test"],
+      "operations": [
+        "add",
+        "change",
+        "remove",
+        "fold"
+      ],
+      "validation": [
+        "pnpm test"
+      ],
       "status": "applicable"
     },
     {
@@ -60,8 +90,15 @@
       "path": "canonical-skill-root://project-compass/",
       "owner": "Jakye Amos",
       "condition": "The hosted source is promoted to the provider-neutral canonical skill root.",
-      "operations": ["add", "change", "remove", "fold"],
-      "validation": ["Compare hosted and installed Project Compass directory snapshots and hashes."],
+      "operations": [
+        "add",
+        "change",
+        "remove",
+        "fold"
+      ],
+      "validation": [
+        "Compare hosted and installed Project Compass directory snapshots and hashes."
+      ],
       "status": "applicable"
     },
     {
@@ -70,8 +107,16 @@
       "path": "repository://pronto",
       "owner": "Jakye Amos",
       "condition": "Hosting, source identity, hashes, provider state, or parity evidence changes.",
-      "operations": ["add", "change", "remove", "fold"],
-      "validation": ["pronto skills project-compass --json", "pronto change-matrix skill project-compass --json"],
+      "operations": [
+        "add",
+        "change",
+        "remove",
+        "fold"
+      ],
+      "validation": [
+        "pronto skills project-compass --json",
+        "pronto change-matrix skill project-compass --json"
+      ],
       "status": "applicable"
     },
     {
@@ -80,8 +125,36 @@
       "path": "repository://tmcp",
       "owner": "Jakye Amos",
       "condition": "Triggers, required reads, verification, observable output, done criteria, approvals, precedence, host assumptions, or mandatory structure changes.",
-      "operations": ["add", "change", "remove", "fold"],
-      "validation": ["TMCP static skill evaluation and behavioral trigger/output evaluation"],
+      "operations": [
+        "add",
+        "change",
+        "remove",
+        "fold"
+      ],
+      "validation": [
+        "TMCP static skill evaluation and behavioral trigger/output evaluation"
+      ],
+      "status": "applicable"
+    },
+    {
+      "id": "development-projections",
+      "scope": "local",
+      "path": "scripts/compass_projection.py, scripts/compass_change.py, references/development.schema.json, references/projections.schema.json, scripts/compass_bootstrap.py, scripts/test_compass_preservation.py",
+      "owner": "Compass and Pronto maintainers",
+      "condition": "Family/change-context schema, accepted intent binding, proof freshness, or assessment disposition changes.",
+      "operations": [
+        "add",
+        "change",
+        "remove",
+        "fold"
+      ],
+      "validation": [
+        "python3 skills/project-compass/scripts/test_compass_development.py",
+        "Compare references/fixtures/family.json with the Pronto consumer fixture.",
+        "Dogfood changed skill in fresh contexts against bounded, draft and conflicting cases.",
+        "Verify explicit unknown behavior coverage, substantive bootstrap links, cumulative continuation, and semantic drift with green smoke tests.",
+        "Exercise v2 assessment: current reviewed simplification, protective retention, rejection, stale evidence, and observed benefit separately from preservation proof."
+      ],
       "status": "applicable"
     }
   ],
@@ -109,9 +182,37 @@
     }
   },
   "operation_evidence": {
-    "add": {"status": "passed", "evidence": ["fixtures/change-matrix/project-compass-add.json"]},
-    "change": {"status": "passed", "evidence": ["fixtures/change-matrix/project-compass-change.json"]},
-    "remove": {"status": "passed", "evidence": ["fixtures/change-matrix/project-compass-remove.json"]},
-    "fold": {"status": "passed", "evidence": ["fixtures/change-matrix/project-compass-fold.json"]}
+    "add": {
+      "status": "passed",
+      "evidence": [
+        "fixtures/change-matrix/project-compass-add.json"
+      ]
+    },
+    "change": {
+      "status": "passed",
+      "evidence": [
+        "fixtures/change-matrix/project-compass-change.json"
+      ]
+    },
+    "remove": {
+      "status": "passed",
+      "evidence": [
+        "fixtures/change-matrix/project-compass-remove.json"
+      ]
+    },
+    "fold": {
+      "status": "passed",
+      "evidence": [
+        "fixtures/change-matrix/project-compass-fold.json"
+      ]
+    }
+  },
+  "packet_serialization_review": {
+    "change": "Explicit lossless complete entry artifact and distinct oversized gate summary; ordinary 32 KiB context cap remains.",
+    "validation": [
+      "python3 skills/project-compass/scripts/test_compass_output.py",
+      "python3 scripts/verify_compass_distribution.py"
+    ],
+    "consumer_impact": "Versioned artifact and gate-summary schemas; Pronto wrappers must preserve schema and exit status. Older wrappers remain unsupported until directly verified."
   }
 }

@@ -21,7 +21,8 @@ const QUALITY_COMMANDS = [
   "pnpm test",
   "pnpm build",
   "pnpm check",
-  "python3 scripts/pre_cr_coverage.py"
+  "python3 scripts/pre_cr_coverage.py",
+  "python3 skills/project-compass/scripts/project_compass.py gate . --json"
 ];
 const REQUIRED_SCRIPTS = {
   test: "node --test",

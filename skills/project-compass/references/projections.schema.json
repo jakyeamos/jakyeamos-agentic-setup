@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {
+      "type": "object",
+      "required": [
+        "schema",
+        "source",
+        "root_summary",
+        "nodes",
+        "relationships",
+        "continuity",
+        "coverage",
+        "errors"
+      ],
+      "properties": {
+        "schema": {
+          "const": "compass-family/v1"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "schema",
+        "source",
+        "base_revision",
+        "affected_compasses",
+        "blockers",
+        "eligible",
+        "execution_authority"
+      ],
+      "properties": {
+        "schema": {
+          "const": "compass-change-context/v1"
+        },
+        "execution_authority": {
+          "const": false
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "schema",
+        "disposition",
+        "reasons",
+        "implementation_work",
+        "execution_authority"
+      ],
+      "properties": {
+        "schema": {
+          "const": "compass-modernization-assessment/v1"
+        },
+        "execution_authority": {
+          "const": false
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "schema",
+        "producer",
+        "inputs",
+        "workspace",
+        "command",
+        "exit_code",
+        "observed_at"
+      ],
+      "properties": {
+        "schema": {
+          "const": "compass-evidence/v1"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "schema",
+        "coverage",
+        "subsystems",
+        "detail_omitted",
+        "execution_authority"
+      ],
+      "properties": {
+        "schema": {
+          "const": "compass-family-summary/v1"
+        },
+        "detail_omitted": {
+          "const": true
+        },
+        "execution_authority": {
+          "const": false
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "schema",
+        "execution_authority",
+        "source",
+        "base_revision",
+        "artifact_path",
+        "artifact_digest",
+        "artifact_bytes",
+        "affected_compasses",
+        "instruction"
+      ],
+      "properties": {
+        "schema": {
+          "const": "compass-packet-artifact/v1"
+        },
+        "execution_authority": {
+          "const": false
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "schema",
+        "execution_authority",
+        "source",
+        "base_revision",
+        "affected_compasses",
+        "blockers",
+        "eligible",
+        "proof_status_counts",
+        "prepared_path",
+        "prepared_digest",
+        "full_result_digest",
+        "full_result_bytes",
+        "detail_omitted",
+        "drill_down"
+      ],
+      "properties": {
+        "schema": {
+          "const": "compass-gate-summary/v1"
+        },
+        "execution_authority": {
+          "const": false
+        }
+      }
+    }
+  ]
+}

@@ -8,6 +8,13 @@
       "path": "contract.json",
       "parent_id": null,
       "status": "active"
+    },
+    {
+      "id": "compass-foundation",
+      "kind": "subsystem",
+      "path": "compasses/compass-foundation.json",
+      "parent_id": "project",
+      "status": "active"
     }
   ],
   "links": [],

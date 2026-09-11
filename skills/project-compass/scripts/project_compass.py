@@ -319,6 +319,11 @@ def validate_continuity(data: dict[str, Any]) -> None:
         _require(commitment.get("status") in CONTINUITY_COMMITMENT_STATUSES,
                  f"{prefix}.status is invalid")
         _validate_source(commitment.get("source"), f"{prefix}.source")
+        if "compass_ids" in commitment:
+            scopes = commitment["compass_ids"]
+            _require(isinstance(scopes, list) and bool(scopes)
+                     and all(isinstance(scope, str) and ID_PATTERN.fullmatch(scope) for scope in scopes)
+                     and len(set(scopes)) == len(scopes), f"{prefix}.compass_ids must be unique subsystem IDs")
 
     reconciliations = data.get("reconciliations")
     _require(isinstance(reconciliations, list),
@@ -612,100 +617,6 @@ def checkpoint(repo: Path, note: str | None) -> dict[str, Any]:
     return record
 
 
-def _parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description=__doc__)
-    subparsers = parser.add_subparsers(dest="command", required=True)
-    for command in ("validate", "score"):
-        child = subparsers.add_parser(command)
-        child.add_argument("repo", type=Path)
-        child.add_argument("--json", action="store_true")
-    child = subparsers.add_parser("checkpoint")
-    child.add_argument("repo", type=Path)
-    child.add_argument("--note")
-    child.add_argument("--json", action="store_true")
-    child = subparsers.add_parser("continuity")
-    child.add_argument("repo", type=Path)
-    child.add_argument("--json", action="store_true")
-    quiz = subparsers.add_parser("quiz")
-    quiz_subparsers = quiz.add_subparsers(dest="quiz_command", required=True)
-    start = quiz_subparsers.add_parser("start")
-    start.add_argument("repo", type=Path)
-    start.add_argument("--mode", choices=sorted(QUIZ_MODES), required=True)
-    start.add_argument("--compass-id", default="project")
-    start.add_argument("--scope-kind", choices=sorted(COMPASS_KINDS))
-    start.add_argument("--session-id")
-    start.add_argument("--now")
-    start.add_argument("--json", action="store_true")
-    answer = quiz_subparsers.add_parser("answer")
-    answer.add_argument("repo", type=Path)
-    answer.add_argument("--session-id", required=True)
-    answer.add_argument("--question-id", required=True)
-    answer.add_argument("--value", default="")
-    answer.add_argument("--status", choices=sorted(QUIZ_ANSWER_STATUSES), default="explicit")
-    answer.add_argument("--source-ref", default="conversation:user")
-    answer.add_argument("--now")
-    answer.add_argument("--json", action="store_true")
-    status = quiz_subparsers.add_parser("status")
-    status.add_argument("repo", type=Path)
-    status.add_argument("--session-id", required=True)
-    status.add_argument("--json", action="store_true")
-    return parser
-
-
-def main(argv: list[str] | None = None) -> int:
-    args = _parser().parse_args(argv)
-    try:
-        repo = args.repo.resolve()
-        if args.command == "validate":
-            _validate_repo(repo)
-            result: dict[str, Any] = {"valid": True}
-        elif args.command == "score":
-            data = _validate_repo(repo)
-            result = (
-                score_compass_family(repo)
-                if _registry_path(repo).exists()
-                else score_contract(data)
-            )
-        elif args.command == "continuity":
-            result = continuity_status(load_continuity(repo))
-        elif args.command == "quiz":
-            if args.quiz_command == "start":
-                result = start_quiz(
-                    repo,
-                    args.mode,
-                    compass_id=args.compass_id,
-                    session_id=args.session_id,
-                    now=args.now,
-                    scope_kind=args.scope_kind,
-                )
-            elif args.quiz_command == "answer":
-                result = answer_quiz(
-                    repo,
-                    args.session_id,
-                    args.question_id,
-                    args.value,
-                    status=args.status,
-                    source_ref=args.source_ref,
-                    now=args.now,
-                )
-            else:
-                result = quiz_status(repo, args.session_id)
-        else:
-            result = checkpoint(repo, args.note)
-    except ContractError as exc:
-        if getattr(args, "json", False):
-            print(json.dumps({"valid": False, "error": str(exc)}))
-        else:
-            print(f"error: {exc}", file=sys.stderr)
-        return 1
-
-    if getattr(args, "json", False):
-        print(json.dumps(result, indent=2, sort_keys=True))
-    elif args.command == "validate":
-        print("valid")
-    else:
-        print(json.dumps(result, indent=2, sort_keys=True))
-    return 0
 
 
 _compass_extensions.configure(
@@ -737,5 +648,12 @@ _target_fingerprint = _compass_extensions._target_fingerprint
 _delivery_score = _compass_extensions._delivery_score
 
 
+def main(argv: list[str] | None = None) -> int:
+    from compass_cli import main as cli_main
+    return cli_main(argv)
+
+
 if __name__ == "__main__":
+    # Ensure the CLI and extensions share this entrypoint module instance.
+    sys.modules["project_compass"] = sys.modules[__name__]
     raise SystemExit(main())

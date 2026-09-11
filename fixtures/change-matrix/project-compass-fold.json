@@ -3,7 +3,7 @@
   "subject": "project-compass",
   "operation": "fold",
   "scenario": "Fold a source branch or subsystem boundary into the canonical integration line.",
-  "expected_surface_ids": ["hosted-source", "compass-family-truth", "catalog-manifest", "installer-projection", "installed-canonical-copy", "pronto-topology", "tmcp-contract-quality"],
+  "expected_surface_ids": ["hosted-source", "compass-family-truth", "catalog-manifest", "installer-projection", "installed-canonical-copy", "pronto-topology", "tmcp-contract-quality", "development-projections"],
   "assertions": [
     "Source and target Compass families are compared before the fold is accepted.",
     "Source-only, conflicting, or moved scopes remain active, retired, or explicitly unresolved rather than disappearing.",

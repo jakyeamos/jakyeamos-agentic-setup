@@ -24,3 +24,6 @@ audit/
 # Generated / cache / audit output
 .turbo/
 .firecrawl/
+
+# Workspace-bound generated proof; never portable release evidence.
+.project-compass/evidence/

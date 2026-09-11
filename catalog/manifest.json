@@ -59,10 +59,21 @@
       "title": "Claude adapter",
       "summary": "Manual-review mapping from the vendor-neutral workbench contracts to Claude project instructions and hooks.",
       "maturity": "beta",
-      "capabilities": ["context-compaction", "workflow-routing", "manual-hook-staging", "safety"],
-      "supported_targets": ["claude"],
-      "entrypoints": ["adapters/claude/WORKBENCH.md"],
-      "files": ["adapters/claude/WORKBENCH.md"],
+      "capabilities": [
+        "context-compaction",
+        "workflow-routing",
+        "manual-hook-staging",
+        "safety"
+      ],
+      "supported_targets": [
+        "claude"
+      ],
+      "entrypoints": [
+        "adapters/claude/WORKBENCH.md"
+      ],
+      "files": [
+        "adapters/claude/WORKBENCH.md"
+      ],
       "dependencies": [],
       "provenance": {
         "status": "sanitized-derived",
@@ -70,7 +81,9 @@
         "license_status": "MIT",
         "redistribution": "allowed"
       },
-      "evidence": ["docs/case-studies/portable-skill-distribution.md"],
+      "evidence": [
+        "docs/case-studies/portable-skill-distribution.md"
+      ],
       "install": {
         "mode": "stage",
         "destination": "workbench/adapters/claude",
@@ -84,10 +97,21 @@
       "title": "Codex adapter",
       "summary": "Manual-review mapping from the vendor-neutral workbench contracts to Codex skills, compaction, and tool guards.",
       "maturity": "beta",
-      "capabilities": ["context-compaction", "workflow-routing", "manual-hook-staging", "safety"],
-      "supported_targets": ["codex"],
-      "entrypoints": ["adapters/codex/WORKBENCH.md"],
-      "files": ["adapters/codex/WORKBENCH.md"],
+      "capabilities": [
+        "context-compaction",
+        "workflow-routing",
+        "manual-hook-staging",
+        "safety"
+      ],
+      "supported_targets": [
+        "codex"
+      ],
+      "entrypoints": [
+        "adapters/codex/WORKBENCH.md"
+      ],
+      "files": [
+        "adapters/codex/WORKBENCH.md"
+      ],
       "dependencies": [],
       "provenance": {
         "status": "sanitized-derived",
@@ -95,7 +119,9 @@
         "license_status": "MIT",
         "redistribution": "allowed"
       },
-      "evidence": ["docs/case-studies/context-compaction.md"],
+      "evidence": [
+        "docs/case-studies/context-compaction.md"
+      ],
       "install": {
         "mode": "stage",
         "destination": "workbench/adapters/codex",
@@ -109,10 +135,20 @@
       "title": "Copilot adapter",
       "summary": "Manual-review mapping from the vendor-neutral workbench contracts to Copilot repository instructions and guard surfaces.",
       "maturity": "experimental",
-      "capabilities": ["workflow-routing", "manual-hook-staging", "safety"],
-      "supported_targets": ["copilot"],
-      "entrypoints": ["adapters/copilot/WORKBENCH.md"],
-      "files": ["adapters/copilot/WORKBENCH.md"],
+      "capabilities": [
+        "workflow-routing",
+        "manual-hook-staging",
+        "safety"
+      ],
+      "supported_targets": [
+        "copilot"
+      ],
+      "entrypoints": [
+        "adapters/copilot/WORKBENCH.md"
+      ],
+      "files": [
+        "adapters/copilot/WORKBENCH.md"
+      ],
       "dependencies": [],
       "provenance": {
         "status": "sanitized-derived",
@@ -120,7 +156,9 @@
         "license_status": "MIT",
         "redistribution": "allowed"
       },
-      "evidence": ["docs/case-studies/safety-guards.md"],
+      "evidence": [
+        "docs/case-studies/safety-guards.md"
+      ],
       "install": {
         "mode": "stage",
         "destination": "workbench/adapters/copilot",
@@ -134,10 +172,20 @@
       "title": "Cursor adapter",
       "summary": "Manual-review mapping from the vendor-neutral workbench contracts to Cursor project instructions and tool guards.",
       "maturity": "experimental",
-      "capabilities": ["workflow-routing", "manual-hook-staging", "safety"],
-      "supported_targets": ["cursor"],
-      "entrypoints": ["adapters/cursor/WORKBENCH.md"],
-      "files": ["adapters/cursor/WORKBENCH.md"],
+      "capabilities": [
+        "workflow-routing",
+        "manual-hook-staging",
+        "safety"
+      ],
+      "supported_targets": [
+        "cursor"
+      ],
+      "entrypoints": [
+        "adapters/cursor/WORKBENCH.md"
+      ],
+      "files": [
+        "adapters/cursor/WORKBENCH.md"
+      ],
       "dependencies": [],
       "provenance": {
         "status": "sanitized-derived",
@@ -145,7 +193,9 @@
         "license_status": "MIT",
         "redistribution": "allowed"
       },
-      "evidence": ["docs/case-studies/portable-skill-distribution.md"],
+      "evidence": [
+        "docs/case-studies/portable-skill-distribution.md"
+      ],
       "install": {
         "mode": "stage",
         "destination": "workbench/adapters/cursor",
@@ -159,10 +209,20 @@
       "title": "Gemini adapter",
       "summary": "Manual-review mapping from the vendor-neutral contracts to Gemini project-instruction surfaces.",
       "maturity": "experimental",
-      "capabilities": ["workflow-routing", "manual-hook-staging", "safety"],
-      "supported_targets": ["gemini"],
-      "entrypoints": ["adapters/gemini/WORKBENCH.md"],
-      "files": ["adapters/gemini/WORKBENCH.md"],
+      "capabilities": [
+        "workflow-routing",
+        "manual-hook-staging",
+        "safety"
+      ],
+      "supported_targets": [
+        "gemini"
+      ],
+      "entrypoints": [
+        "adapters/gemini/WORKBENCH.md"
+      ],
+      "files": [
+        "adapters/gemini/WORKBENCH.md"
+      ],
       "dependencies": [],
       "provenance": {
         "status": "sanitized-derived",
@@ -170,7 +230,9 @@
         "license_status": "MIT-compatible",
         "redistribution": "allowed"
       },
-      "evidence": ["docs/agent-config-routing.md"],
+      "evidence": [
+        "docs/agent-config-routing.md"
+      ],
       "install": {
         "mode": "stage",
         "destination": "workbench/adapters/gemini",
@@ -184,10 +246,20 @@
       "title": "Antigravity adapter",
       "summary": "Manual-review mapping from the vendor-neutral contracts to Antigravity project-instruction surfaces.",
       "maturity": "experimental",
-      "capabilities": ["workflow-routing", "manual-hook-staging", "safety"],
-      "supported_targets": ["antigravity"],
-      "entrypoints": ["adapters/antigravity/WORKBENCH.md"],
-      "files": ["adapters/antigravity/WORKBENCH.md"],
+      "capabilities": [
+        "workflow-routing",
+        "manual-hook-staging",
+        "safety"
+      ],
+      "supported_targets": [
+        "antigravity"
+      ],
+      "entrypoints": [
+        "adapters/antigravity/WORKBENCH.md"
+      ],
+      "files": [
+        "adapters/antigravity/WORKBENCH.md"
+      ],
       "dependencies": [],
       "provenance": {
         "status": "sanitized-derived",
@@ -195,7 +267,9 @@
         "license_status": "MIT-compatible",
         "redistribution": "allowed"
       },
-      "evidence": ["docs/agent-config-routing.md"],
+      "evidence": [
+        "docs/agent-config-routing.md"
+      ],
       "install": {
         "mode": "stage",
         "destination": "workbench/adapters/antigravity",
@@ -209,10 +283,21 @@
       "title": "Generic agent adapter",
       "summary": "Host-neutral manual-review checklist for mapping the workbench contracts into an agent that supports project instructions.",
       "maturity": "stable",
-      "capabilities": ["context-compaction", "workflow-routing", "safety", "handoff"],
-      "supported_targets": ["generic"],
-      "entrypoints": ["adapters/generic/WORKBENCH.md"],
-      "files": ["adapters/generic/WORKBENCH.md"],
+      "capabilities": [
+        "context-compaction",
+        "workflow-routing",
+        "safety",
+        "handoff"
+      ],
+      "supported_targets": [
+        "generic"
+      ],
+      "entrypoints": [
+        "adapters/generic/WORKBENCH.md"
+      ],
+      "files": [
+        "adapters/generic/WORKBENCH.md"
+      ],
       "dependencies": [],
       "provenance": {
         "status": "authored",
@@ -220,7 +305,9 @@
         "license_status": "MIT",
         "redistribution": "allowed"
       },
-      "evidence": ["docs/mining.md"],
+      "evidence": [
+        "docs/mining.md"
+      ],
       "install": {
         "mode": "stage",
         "destination": "workbench/adapters/generic",
@@ -234,9 +321,24 @@
       "title": "Manifest-aware agent-config CLI",
       "summary": "Dependency-light audit, drift, doctor, sync, install, bootstrap, and smoke commands for explicit low-loaded instruction manifests.",
       "maturity": "beta",
-      "capabilities": ["manifest", "routing", "provenance", "safe-sync", "runtime-smoke"],
-      "supported_targets": ["generic", "codex", "claude", "gemini", "cursor", "antigravity"],
-      "entrypoints": ["bin/agent-config.mjs"],
+      "capabilities": [
+        "manifest",
+        "routing",
+        "provenance",
+        "safe-sync",
+        "runtime-smoke"
+      ],
+      "supported_targets": [
+        "generic",
+        "codex",
+        "claude",
+        "gemini",
+        "cursor",
+        "antigravity"
+      ],
+      "entrypoints": [
+        "bin/agent-config.mjs"
+      ],
       "files": [
         "bin/agent-config.mjs",
         "src/agent-config.mjs",
@@ -247,7 +349,12 @@
         "docs/agent-config-conflicts.md"
       ],
       "dependencies": [
-        {"name": "Node.js", "kind": "runtime", "required": true, "command": "node"}
+        {
+          "name": "Node.js",
+          "kind": "runtime",
+          "required": true,
+          "command": "node"
+        }
       ],
       "provenance": {
         "status": "sanitized-derived",
@@ -255,7 +362,10 @@
         "license_status": "MIT-compatible",
         "redistribution": "allowed"
       },
-      "evidence": ["docs/agent-config-manifest.md", "docs/mining/2026-07-public-skill-mining.md"],
+      "evidence": [
+        "docs/agent-config-manifest.md",
+        "docs/mining/2026-07-public-skill-mining.md"
+      ],
       "install": {
         "mode": "copy",
         "destination": "agent-config",
@@ -277,9 +387,24 @@
       "title": "Context budget governor",
       "summary": "A vendor-neutral checkpoint policy that turns a token-budget threshold into a reviewable compaction handoff.",
       "maturity": "beta",
-      "capabilities": ["long-context", "compaction", "checkpointing", "handoff"],
-      "supported_targets": ["generic", "codex", "claude", "gemini", "cursor", "antigravity", "copilot"],
-      "entrypoints": ["workflows/context-budget-governor/WORKFLOW.md"],
+      "capabilities": [
+        "long-context",
+        "compaction",
+        "checkpointing",
+        "handoff"
+      ],
+      "supported_targets": [
+        "generic",
+        "codex",
+        "claude",
+        "gemini",
+        "cursor",
+        "antigravity",
+        "copilot"
+      ],
+      "entrypoints": [
+        "workflows/context-budget-governor/WORKFLOW.md"
+      ],
       "files": [
         "workflows/context-budget-governor/CHECKPOINT_TEMPLATE.md",
         "workflows/context-budget-governor/WORKFLOW.md"
@@ -291,7 +416,9 @@
         "license_status": "MIT",
         "redistribution": "allowed"
       },
-      "evidence": ["docs/case-studies/context-compaction.md"],
+      "evidence": [
+        "docs/case-studies/context-compaction.md"
+      ],
       "install": {
         "mode": "copy",
         "destination": "workbench/workflows/context-budget-governor"
@@ -304,9 +431,24 @@
       "title": "Evaluation and evidence loop",
       "summary": "A contract-oriented evidence workflow for separating observed results, hypotheses, limitations, and reproducible fixtures.",
       "maturity": "beta",
-      "capabilities": ["evaluation", "evidence", "fixtures", "provenance"],
-      "supported_targets": ["generic", "codex", "claude", "gemini", "cursor", "antigravity", "copilot"],
-      "entrypoints": ["workflows/evaluation-evidence/WORKFLOW.md"],
+      "capabilities": [
+        "evaluation",
+        "evidence",
+        "fixtures",
+        "provenance"
+      ],
+      "supported_targets": [
+        "generic",
+        "codex",
+        "claude",
+        "gemini",
+        "cursor",
+        "antigravity",
+        "copilot"
+      ],
+      "entrypoints": [
+        "workflows/evaluation-evidence/WORKFLOW.md"
+      ],
       "files": [
         "fixtures/evaluation/contract-fixture.json",
         "workflows/evaluation-evidence/WORKFLOW.md"
@@ -318,7 +460,9 @@
         "license_status": "MIT",
         "redistribution": "allowed"
       },
-      "evidence": ["docs/case-studies/governed-execution.md"],
+      "evidence": [
+        "docs/case-studies/governed-execution.md"
+      ],
       "install": {
         "mode": "copy",
         "destination": "workbench/workflows/evaluation-evidence",
@@ -335,10 +479,25 @@
       "title": "Governed work loop",
       "summary": "A compact route -> context -> execute -> verify -> handoff operating loop for agentic work.",
       "maturity": "stable",
-      "capabilities": ["routing", "execution", "verification", "handoff"],
-      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
-      "entrypoints": ["workflows/governed-work-loop/WORKFLOW.md"],
-      "files": ["workflows/governed-work-loop/WORKFLOW.md"],
+      "capabilities": [
+        "routing",
+        "execution",
+        "verification",
+        "handoff"
+      ],
+      "supported_targets": [
+        "generic",
+        "codex",
+        "claude",
+        "cursor",
+        "copilot"
+      ],
+      "entrypoints": [
+        "workflows/governed-work-loop/WORKFLOW.md"
+      ],
+      "files": [
+        "workflows/governed-work-loop/WORKFLOW.md"
+      ],
       "dependencies": [],
       "provenance": {
         "status": "authored",
@@ -346,7 +505,9 @@
         "license_status": "MIT",
         "redistribution": "allowed"
       },
-      "evidence": ["docs/case-studies/governed-execution.md"],
+      "evidence": [
+        "docs/case-studies/governed-execution.md"
+      ],
       "install": {
         "mode": "copy",
         "destination": "workbench/workflows/governed-work-loop"
@@ -359,17 +520,37 @@
       "title": "Research Domain Writing",
       "summary": "Research -> packet -> draft -> QA -> style workflow for domain-specific writing.",
       "maturity": "stable",
-      "capabilities": ["research", "grounding", "domain-writing", "qa"],
+      "capabilities": [
+        "research",
+        "grounding",
+        "domain-writing",
+        "qa"
+      ],
       "editorial": {
         "type": "skill",
-        "topics": ["research", "grounded-writing", "quality-assurance"],
-        "use_cases": ["write-domain-specific-content", "build-a-cited-knowledge-packet"],
+        "topics": [
+          "research",
+          "grounded-writing",
+          "quality-assurance"
+        ],
+        "use_cases": [
+          "write-domain-specific-content",
+          "build-a-cited-knowledge-packet"
+        ],
         "why": "Turn a domain-writing request into a researched, cited, reviewed deliverable instead of an unsupported draft.",
         "use_when": "Use when factual grounding, source provenance, and a repeatable writing pipeline matter.",
         "avoid_when": "Avoid for casual copy edits or tasks that do not need research and source-backed claims."
       },
-      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
-      "entrypoints": ["skills/research-domain-writing/SKILL.md"],
+      "supported_targets": [
+        "generic",
+        "codex",
+        "claude",
+        "cursor",
+        "copilot"
+      ],
+      "entrypoints": [
+        "skills/research-domain-writing/SKILL.md"
+      ],
       "files": [
         "skills/research-domain-writing/SKILL.md",
         "skills/research-domain-writing/agents/openai.yaml",
@@ -404,7 +585,9 @@
         "license_status": "MIT",
         "redistribution": "allowed"
       },
-      "evidence": ["docs/case-studies/portable-skill-distribution.md"],
+      "evidence": [
+        "docs/case-studies/portable-skill-distribution.md"
+      ],
       "install": {
         "mode": "copy",
         "destination": "skills/research-domain-writing"
@@ -417,18 +600,42 @@
       "title": "Repo-aware context routing",
       "summary": "A repository-first context selection discipline that keeps instructions, source maps, and live truth separate.",
       "maturity": "beta",
-      "capabilities": ["repo-awareness", "routing", "context-selection", "scope-control"],
+      "capabilities": [
+        "repo-awareness",
+        "routing",
+        "context-selection",
+        "scope-control"
+      ],
       "editorial": {
         "type": "playbook",
-        "topics": ["repository-context", "routing", "scope-control"],
-        "use_cases": ["orient-an-agent-in-a-repository", "select-minimum-relevant-context"],
+        "topics": [
+          "repository-context",
+          "routing",
+          "scope-control"
+        ],
+        "use_cases": [
+          "orient-an-agent-in-a-repository",
+          "select-minimum-relevant-context"
+        ],
         "why": "Give an agent the right repository identity and context without collapsing instructions, source maps, and live state together.",
         "use_when": "Use before repository work where nested guidance, freshness, and ownership boundaries affect the answer.",
         "avoid_when": "Avoid for self-contained tasks that do not depend on repository state or local instructions."
       },
-      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot", "gemini", "antigravity"],
-      "entrypoints": ["workflows/repo-aware-context/WORKFLOW.md"],
-      "files": ["workflows/repo-aware-context/WORKFLOW.md"],
+      "supported_targets": [
+        "generic",
+        "codex",
+        "claude",
+        "cursor",
+        "copilot",
+        "gemini",
+        "antigravity"
+      ],
+      "entrypoints": [
+        "workflows/repo-aware-context/WORKFLOW.md"
+      ],
+      "files": [
+        "workflows/repo-aware-context/WORKFLOW.md"
+      ],
       "dependencies": [],
       "provenance": {
         "status": "sanitized-derived",
@@ -436,7 +643,9 @@
         "license_status": "MIT",
         "redistribution": "allowed"
       },
-      "evidence": ["docs/case-studies/context-routing.md"],
+      "evidence": [
+        "docs/case-studies/context-routing.md"
+      ],
       "validation": [
         "python3 scripts/validate_prevention_pack.py",
         "python3 scripts/validate_catalog.py",
@@ -509,10 +718,27 @@
       "title": "Evidence-based skill improvement",
       "summary": "A reusable method for testing and refining agent skills from observed behavior, controls, and regression evidence rather than prose inspection alone.",
       "maturity": "experimental",
-      "capabilities": ["skill-improvement", "evaluation", "evidence", "regression"],
-      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot", "gemini", "antigravity"],
-      "entrypoints": ["docs/workflow-multipliers/evidence-based-skill-improvement.md"],
-      "files": ["docs/workflow-multipliers/evidence-based-skill-improvement.md"],
+      "capabilities": [
+        "skill-improvement",
+        "evaluation",
+        "evidence",
+        "regression"
+      ],
+      "supported_targets": [
+        "generic",
+        "codex",
+        "claude",
+        "cursor",
+        "copilot",
+        "gemini",
+        "antigravity"
+      ],
+      "entrypoints": [
+        "docs/workflow-multipliers/evidence-based-skill-improvement.md"
+      ],
+      "files": [
+        "docs/workflow-multipliers/evidence-based-skill-improvement.md"
+      ],
       "dependencies": [],
       "provenance": {
         "status": "authored",
@@ -538,10 +764,27 @@
       "title": "Documentation as principles",
       "summary": "A portable convention for one authoritative home per fact, pointer-only summaries, explicit reasons, and visible freshness or uncertainty.",
       "maturity": "experimental",
-      "capabilities": ["documentation", "provenance", "source-of-truth", "progressive-disclosure"],
-      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot", "gemini", "antigravity"],
-      "entrypoints": ["docs/workflow-multipliers/documentation-as-principles.md"],
-      "files": ["docs/workflow-multipliers/documentation-as-principles.md"],
+      "capabilities": [
+        "documentation",
+        "provenance",
+        "source-of-truth",
+        "progressive-disclosure"
+      ],
+      "supported_targets": [
+        "generic",
+        "codex",
+        "claude",
+        "cursor",
+        "copilot",
+        "gemini",
+        "antigravity"
+      ],
+      "entrypoints": [
+        "docs/workflow-multipliers/documentation-as-principles.md"
+      ],
+      "files": [
+        "docs/workflow-multipliers/documentation-as-principles.md"
+      ],
       "dependencies": [],
       "provenance": {
         "status": "authored",
@@ -566,8 +809,22 @@
       "title": "Execution reassessment",
       "summary": "Stop recurring execution churn, diagnose the invalidated boundary, make the smallest durable change, and verify the lifecycle transition before resuming.",
       "maturity": "experimental",
-      "capabilities": ["execution-reassessment", "lifecycle", "diagnostics", "safety", "verification"],
-      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot", "gemini", "antigravity"],
+      "capabilities": [
+        "execution-reassessment",
+        "lifecycle",
+        "diagnostics",
+        "safety",
+        "verification"
+      ],
+      "supported_targets": [
+        "generic",
+        "codex",
+        "claude",
+        "cursor",
+        "copilot",
+        "gemini",
+        "antigravity"
+      ],
       "entrypoints": [
         "skills/execution-reassessment/SKILL.md",
         "workflows/execution-reassessment/WORKFLOW.md"
@@ -600,8 +857,22 @@
       "title": "Safe canonical branch folding",
       "summary": "Consolidate named branches into a canonical development line while preserving uncertain work, proving equivalence, and separating integration, publication, and pruning authority.",
       "maturity": "experimental",
-      "capabilities": ["branch-folding", "git-safety", "provenance", "approval", "verification"],
-      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot", "gemini", "antigravity"],
+      "capabilities": [
+        "branch-folding",
+        "git-safety",
+        "provenance",
+        "approval",
+        "verification"
+      ],
+      "supported_targets": [
+        "generic",
+        "codex",
+        "claude",
+        "cursor",
+        "copilot",
+        "gemini",
+        "antigravity"
+      ],
       "entrypoints": [
         "skills/safe-canonical-branch-folding/SKILL.md",
         "workflows/safe-canonical-branch-folding/WORKFLOW.md"
@@ -634,8 +905,22 @@
       "title": "Unknowns-first exploration",
       "summary": "Turn ambiguous work into a staged four-quadrant map with evidence, user reaction, visible landmines, open decisions, and a copyable implementation prompt.",
       "maturity": "experimental",
-      "capabilities": ["exploration", "decision-mapping", "user-reaction", "landmine-detection", "handoff"],
-      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot", "gemini", "antigravity"],
+      "capabilities": [
+        "exploration",
+        "decision-mapping",
+        "user-reaction",
+        "landmine-detection",
+        "handoff"
+      ],
+      "supported_targets": [
+        "generic",
+        "codex",
+        "claude",
+        "cursor",
+        "copilot",
+        "gemini",
+        "antigravity"
+      ],
       "entrypoints": [
         "skills/unknowns-first-exploration/SKILL.md",
         "workflows/unknowns-first-exploration/WORKFLOW.md"
@@ -668,8 +953,22 @@
       "title": "Recurring-loop authorship",
       "summary": "Turn a repeated personal routine into a customizable workflow specification with explicit state, human checkpoints, bounded retries, and a safe readiness gate.",
       "maturity": "experimental",
-      "capabilities": ["workflow-authorship", "recurrence", "checkpoints", "persistence", "human-control"],
-      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot", "gemini", "antigravity"],
+      "capabilities": [
+        "workflow-authorship",
+        "recurrence",
+        "checkpoints",
+        "persistence",
+        "human-control"
+      ],
+      "supported_targets": [
+        "generic",
+        "codex",
+        "claude",
+        "cursor",
+        "copilot",
+        "gemini",
+        "antigravity"
+      ],
       "entrypoints": [
         "skills/recurring-loop-authorship/SKILL.md",
         "workflows/recurring-loop-authorship/WORKFLOW.md"
@@ -700,11 +999,37 @@
       "kind": "skill",
       "asset_class": "portable",
       "title": "Project Compass",
-      "summary": "Reconcile changing product truth across root and subsystem compasses with intent-first onboarding, realignment quizzes, and honest MVP and complete-product progress.",
+      "summary": "Reconcile root and subsystem intent, prepare bounded source-bound development context, validate affected proof, and assess justified modernization without execution.",
       "maturity": "experimental",
-      "capabilities": ["product-direction", "progress", "scope-drift", "reorientation", "checkpointing", "conversation-continuity", "scoped-compasses", "cross-compass-alignment", "onboarding-quiz", "realignment-quiz", "change-surface-routing"],
-      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot", "gemini", "antigravity"],
-      "entrypoints": ["skills/project-compass/SKILL.md"],
+      "capabilities": [
+        "product-direction",
+        "progress",
+        "scope-drift",
+        "reorientation",
+        "checkpointing",
+        "conversation-continuity",
+        "scoped-compasses",
+        "cross-compass-alignment",
+        "onboarding-quiz",
+        "realignment-quiz",
+        "change-surface-routing",
+        "family-projection",
+        "change-context",
+        "source-bound-proof",
+        "modernization-assessment"
+      ],
+      "supported_targets": [
+        "generic",
+        "codex",
+        "claude",
+        "cursor",
+        "copilot",
+        "gemini",
+        "antigravity"
+      ],
+      "entrypoints": [
+        "skills/project-compass/SKILL.md"
+      ],
       "files": [
         "skills/project-compass/SKILL.md",
         "skills/project-compass/agents/openai.yaml",
@@ -713,9 +1038,26 @@
         "skills/project-compass/references/contract.schema.json",
         "skills/project-compass/references/registry.schema.json",
         "skills/project-compass/references/quiz.schema.json",
+        "skills/project-compass/references/development.md",
+        "skills/project-compass/references/development.schema.json",
+        "skills/project-compass/references/projections.schema.json",
+        "skills/project-compass/references/fixtures/family.json",
+        "skills/project-compass/scripts/compass_cli.py",
+        "skills/project-compass/scripts/compass_sources.py",
+        "skills/project-compass/scripts/compass_projection.py",
+        "skills/project-compass/scripts/compass_change.py",
+        "skills/project-compass/scripts/compass_assessment.py",
+        "skills/project-compass/scripts/compass_review.py",
+        "skills/project-compass/scripts/test_compass_assessment.py",
+        "skills/project-compass/references/assessment.md",
+        "skills/project-compass/scripts/test_compass_development.py",
         "skills/project-compass/scripts/compass_extensions.py",
         "skills/project-compass/scripts/project_compass.py",
-        "skills/project-compass/scripts/test_project_compass.py"
+        "skills/project-compass/scripts/test_project_compass.py",
+        "skills/project-compass/scripts/compass_bootstrap.py",
+        "skills/project-compass/scripts/test_compass_preservation.py",
+        "skills/project-compass/scripts/compass_output.py",
+        "skills/project-compass/scripts/test_compass_output.py"
       ],
       "dependencies": [],
       "provenance": {
@@ -729,7 +1071,8 @@
         "fixtures/change-matrix/project-compass-add.json",
         "fixtures/change-matrix/project-compass-change.json",
         "fixtures/change-matrix/project-compass-remove.json",
-        "fixtures/change-matrix/project-compass-fold.json"
+        "fixtures/change-matrix/project-compass-fold.json",
+        "skills/project-compass/scripts/test_compass_development.py"
       ],
       "install": {
         "mode": "copy",
@@ -743,9 +1086,26 @@
       "title": "Project Partner",
       "summary": "Provide candid, codebase-aware conversation that pressure-tests ideas and existing PRDs without turning exploration into a requirements interview.",
       "maturity": "experimental",
-      "capabilities": ["product-conversation", "idea-exploration", "prd-discussion", "codebase-awareness", "tradeoffs", "decision-hygiene"],
-      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot", "gemini", "antigravity"],
-      "entrypoints": ["skills/project-partner/SKILL.md"],
+      "capabilities": [
+        "product-conversation",
+        "idea-exploration",
+        "prd-discussion",
+        "codebase-awareness",
+        "tradeoffs",
+        "decision-hygiene"
+      ],
+      "supported_targets": [
+        "generic",
+        "codex",
+        "claude",
+        "cursor",
+        "copilot",
+        "gemini",
+        "antigravity"
+      ],
+      "entrypoints": [
+        "skills/project-partner/SKILL.md"
+      ],
       "files": [
         "skills/project-partner/SKILL.md",
         "skills/project-partner/agents/openai.yaml"
@@ -772,8 +1132,18 @@
       "title": "Agent evaluation contract",
       "summary": "External contract reference for structured evaluation payloads; its runtime is not copied here.",
       "maturity": "reference",
-      "capabilities": ["evaluation", "contract", "evidence"],
-      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "capabilities": [
+        "evaluation",
+        "contract",
+        "evidence"
+      ],
+      "supported_targets": [
+        "generic",
+        "codex",
+        "claude",
+        "cursor",
+        "copilot"
+      ],
       "entrypoints": [],
       "files": [],
       "dependencies": [],
@@ -783,8 +1153,12 @@
         "license_status": "reference-only",
         "redistribution": "reference-only"
       },
-      "external_links": ["https://github.com/jakyeamos/agent-eval-contract"],
-      "evidence": ["docs/case-studies/governed-execution.md"],
+      "external_links": [
+        "https://github.com/jakyeamos/agent-eval-contract"
+      ],
+      "evidence": [
+        "docs/case-studies/governed-execution.md"
+      ],
       "install": {
         "mode": "manual",
         "manual_review": "Read the external contract and adapt only the fields required by the host workflow."
@@ -797,8 +1171,19 @@
       "title": "Agent evaluation runtime",
       "summary": "External report-only runtime for agent evaluation, comparison, and benchmark evidence.",
       "maturity": "reference",
-      "capabilities": ["evaluation", "comparison", "benchmarks", "evidence"],
-      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "capabilities": [
+        "evaluation",
+        "comparison",
+        "benchmarks",
+        "evidence"
+      ],
+      "supported_targets": [
+        "generic",
+        "codex",
+        "claude",
+        "cursor",
+        "copilot"
+      ],
       "entrypoints": [],
       "files": [],
       "dependencies": [],
@@ -808,8 +1193,12 @@
         "license_status": "reference-only",
         "redistribution": "reference-only"
       },
-      "external_links": ["https://github.com/jakyeamos/agent-eval-runtime"],
-      "evidence": ["docs/external-references.md"],
+      "external_links": [
+        "https://github.com/jakyeamos/agent-eval-runtime"
+      ],
+      "evidence": [
+        "docs/external-references.md"
+      ],
       "install": {
         "mode": "manual",
         "manual_review": "Use the external runtime for execution and comparison; this repository contains only portable evaluation boundaries."
@@ -822,8 +1211,20 @@
       "title": "AIOS runtime reference",
       "summary": "External local operating-system reference for context, routing, memory, and project health patterns.",
       "maturity": "reference",
-      "capabilities": ["runtime", "context", "routing", "memory"],
-      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot", "gemini"],
+      "capabilities": [
+        "runtime",
+        "context",
+        "routing",
+        "memory"
+      ],
+      "supported_targets": [
+        "generic",
+        "codex",
+        "claude",
+        "cursor",
+        "copilot",
+        "gemini"
+      ],
       "entrypoints": [],
       "files": [],
       "dependencies": [],
@@ -833,8 +1234,12 @@
         "license_status": "reference-only",
         "redistribution": "reference-only"
       },
-      "external_links": ["https://github.com/jakyeamos/AIOS"],
-      "evidence": ["docs/case-studies/context-routing.md"],
+      "external_links": [
+        "https://github.com/jakyeamos/AIOS"
+      ],
+      "evidence": [
+        "docs/case-studies/context-routing.md"
+      ],
       "install": {
         "mode": "manual",
         "manual_review": "Use this as a design reference only; do not copy runtime files, logs, databases, or generated harvests."
@@ -847,8 +1252,18 @@
       "title": "Context compiler contract",
       "summary": "External contract reference for context packet boundaries and compiler-facing integration.",
       "maturity": "reference",
-      "capabilities": ["context", "contract", "integration"],
-      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "capabilities": [
+        "context",
+        "contract",
+        "integration"
+      ],
+      "supported_targets": [
+        "generic",
+        "codex",
+        "claude",
+        "cursor",
+        "copilot"
+      ],
       "entrypoints": [],
       "files": [],
       "dependencies": [],
@@ -858,8 +1273,12 @@
         "license_status": "reference-only",
         "redistribution": "reference-only"
       },
-      "external_links": ["https://github.com/jakyeamos/context-compiler-contract"],
-      "evidence": ["docs/case-studies/context-routing.md"],
+      "external_links": [
+        "https://github.com/jakyeamos/context-compiler-contract"
+      ],
+      "evidence": [
+        "docs/case-studies/context-routing.md"
+      ],
       "install": {
         "mode": "manual",
         "manual_review": "Read the contract before building an adapter; this repository does not vendor its implementation."
@@ -872,8 +1291,14 @@
       "title": "Gemini surface reference",
       "summary": "Catalog-only reference for Gemini-related instruction and tool surfaces whose v1 install semantics are not stable here.",
       "maturity": "reference",
-      "capabilities": ["reference", "portability", "surface-audit"],
-      "supported_targets": ["gemini"],
+      "capabilities": [
+        "reference",
+        "portability",
+        "surface-audit"
+      ],
+      "supported_targets": [
+        "gemini"
+      ],
       "entrypoints": [],
       "files": [],
       "dependencies": [],
@@ -884,7 +1309,9 @@
         "redistribution": "reference-only"
       },
       "external_links": [],
-      "evidence": ["docs/mining.md"],
+      "evidence": [
+        "docs/mining.md"
+      ],
       "install": {
         "mode": "manual",
         "manual_review": "Catalog only in v1; verify the host's current supported project surface before adapting."
@@ -897,8 +1324,18 @@
       "title": "Quality Runner reference",
       "summary": "External quality and evidence reference; runtime, caches, and artifacts remain outside this package.",
       "maturity": "reference",
-      "capabilities": ["quality", "evidence", "release-readiness"],
-      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "capabilities": [
+        "quality",
+        "evidence",
+        "release-readiness"
+      ],
+      "supported_targets": [
+        "generic",
+        "codex",
+        "claude",
+        "cursor",
+        "copilot"
+      ],
       "entrypoints": [],
       "files": [],
       "dependencies": [],
@@ -908,7 +1345,9 @@
         "license_status": "reference-only",
         "redistribution": "reference-only"
       },
-      "external_links": ["https://github.com/jakyeamos/quality-runner"],
+      "external_links": [
+        "https://github.com/jakyeamos/quality-runner"
+      ],
       "evidence": [
         "docs/case-studies/governed-execution.md",
         "docs/external-references.md"
@@ -925,8 +1364,19 @@
       "title": "Pre-CR Suite reference",
       "summary": "External project-local readiness reference where one .pre-cr.json contract feeds editor clients and a headless changed-line gate.",
       "maturity": "reference",
-      "capabilities": ["quality", "coverage", "project-contract", "client-parity"],
-      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "capabilities": [
+        "quality",
+        "coverage",
+        "project-contract",
+        "client-parity"
+      ],
+      "supported_targets": [
+        "generic",
+        "codex",
+        "claude",
+        "cursor",
+        "copilot"
+      ],
       "entrypoints": [],
       "files": [],
       "dependencies": [],
@@ -936,7 +1386,9 @@
         "license_status": "reference-only",
         "redistribution": "reference-only"
       },
-      "external_links": ["https://github.com/jakyeamos/pre-cr-suite"],
+      "external_links": [
+        "https://github.com/jakyeamos/pre-cr-suite"
+      ],
       "evidence": [
         "docs/external-references.md",
         "docs/mining/2026-07-workflow-multiplier-audit.md"
@@ -953,8 +1405,19 @@
       "title": "Pronto reference",
       "summary": "External local-first portfolio command center for repository discovery, quality evidence, provider-neutral snapshots, and read-only remediation previews.",
       "maturity": "reference",
-      "capabilities": ["portfolio", "repository-discovery", "quality-evidence", "read-only-previews"],
-      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "capabilities": [
+        "portfolio",
+        "repository-discovery",
+        "quality-evidence",
+        "read-only-previews"
+      ],
+      "supported_targets": [
+        "generic",
+        "codex",
+        "claude",
+        "cursor",
+        "copilot"
+      ],
       "entrypoints": [],
       "files": [],
       "dependencies": [],
@@ -964,8 +1427,12 @@
         "license_status": "reference-only",
         "redistribution": "reference-only"
       },
-      "external_links": ["https://github.com/jakyeamos/pronto"],
-      "evidence": ["docs/external-references.md"],
+      "external_links": [
+        "https://github.com/jakyeamos/pronto"
+      ],
+      "evidence": [
+        "docs/external-references.md"
+      ],
       "install": {
         "mode": "manual",
         "manual_review": "Use Pronto for its own local-first application surface; this repository does not copy its desktop runtime, database, or private feed consumers."
@@ -978,8 +1445,19 @@
       "title": "TMCP reference",
       "summary": "External workflow and skill-graph reference; TMCP runtime and generated harvest output are not copied.",
       "maturity": "reference",
-      "capabilities": ["workflow", "skill-graph", "routing", "evidence"],
-      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "capabilities": [
+        "workflow",
+        "skill-graph",
+        "routing",
+        "evidence"
+      ],
+      "supported_targets": [
+        "generic",
+        "codex",
+        "claude",
+        "cursor",
+        "copilot"
+      ],
       "entrypoints": [],
       "files": [],
       "dependencies": [],
@@ -989,8 +1467,12 @@
         "license_status": "reference-only",
         "redistribution": "reference-only"
       },
-      "external_links": ["https://github.com/jakyeamos/tmcp"],
-      "evidence": ["docs/case-studies/portable-skill-distribution.md"],
+      "external_links": [
+        "https://github.com/jakyeamos/tmcp"
+      ],
+      "evidence": [
+        "docs/case-studies/portable-skill-distribution.md"
+      ],
       "install": {
         "mode": "manual",
         "manual_review": "Use the external project for TMCP execution; this repository contains only portable boundary patterns."
@@ -1003,17 +1485,40 @@
       "title": "Safe shell and tool guards",
       "summary": "A vendor-neutral contract for classifying, previewing, approving, and recording tool actions before execution.",
       "maturity": "beta",
-      "capabilities": ["safety", "shell", "tool-guards", "dry-run", "audit"],
+      "capabilities": [
+        "safety",
+        "shell",
+        "tool-guards",
+        "dry-run",
+        "audit"
+      ],
       "editorial": {
         "type": "playbook",
-        "topics": ["tool-safety", "approval-boundaries", "auditability"],
-        "use_cases": ["guard-shell-actions", "design-a-reviewable-tool-boundary"],
+        "topics": [
+          "tool-safety",
+          "approval-boundaries",
+          "auditability"
+        ],
+        "use_cases": [
+          "guard-shell-actions",
+          "design-a-reviewable-tool-boundary"
+        ],
         "why": "Classify and preview tool actions so destructive, credentialed, or externally visible work crosses an explicit approval boundary.",
         "use_when": "Use when an agent can mutate files, systems, accounts, or external services.",
         "avoid_when": "Avoid adding it to read-only reasoning that has no meaningful execution or mutation risk."
       },
-      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot", "gemini", "antigravity"],
-      "entrypoints": ["workflows/safe-tool-guards/WORKFLOW.md"],
+      "supported_targets": [
+        "generic",
+        "codex",
+        "claude",
+        "cursor",
+        "copilot",
+        "gemini",
+        "antigravity"
+      ],
+      "entrypoints": [
+        "workflows/safe-tool-guards/WORKFLOW.md"
+      ],
       "files": [
         "workflows/safe-tool-guards/CONTRACT.md",
         "workflows/safe-tool-guards/WORKFLOW.md"
@@ -1025,7 +1530,9 @@
         "license_status": "MIT",
         "redistribution": "allowed"
       },
-      "evidence": ["docs/case-studies/safety-guards.md"],
+      "evidence": [
+        "docs/case-studies/safety-guards.md"
+      ],
       "validation": [
         "python3 scripts/validate_prevention_pack.py",
         "python3 scripts/validate_catalog.py",
@@ -1044,9 +1551,22 @@
       "title": "Terrace",
       "summary": "Router skill for planning, execution, validation, review, and release-readiness work through Terrace.",
       "maturity": "stable",
-      "capabilities": ["workflow-routing", "planning", "execution", "release-readiness"],
-      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
-      "entrypoints": ["skills/terrace/SKILL.md"],
+      "capabilities": [
+        "workflow-routing",
+        "planning",
+        "execution",
+        "release-readiness"
+      ],
+      "supported_targets": [
+        "generic",
+        "codex",
+        "claude",
+        "cursor",
+        "copilot"
+      ],
+      "entrypoints": [
+        "skills/terrace/SKILL.md"
+      ],
       "files": [
         "skills/terrace/SKILL.md",
         "skills/terrace/agents/openai.yaml",
@@ -1066,7 +1586,9 @@
         "license_status": "MIT",
         "redistribution": "allowed"
       },
-      "evidence": ["docs/case-studies/portable-skill-distribution.md"],
+      "evidence": [
+        "docs/case-studies/portable-skill-distribution.md"
+      ],
       "install": {
         "mode": "copy",
         "destination": "skills/terrace"
@@ -1079,8 +1601,22 @@
       "title": "Low-always-loaded instruction migration",
       "summary": "Inventory, reconcile, and safely migrate durable instructions out of crowded startup surfaces without overwriting unresolved behavior.",
       "maturity": "beta",
-      "capabilities": ["instruction-routing", "migration", "conflict-detection", "safety", "verification"],
-      "supported_targets": ["generic", "codex", "claude", "gemini", "cursor", "antigravity", "copilot"],
+      "capabilities": [
+        "instruction-routing",
+        "migration",
+        "conflict-detection",
+        "safety",
+        "verification"
+      ],
+      "supported_targets": [
+        "generic",
+        "codex",
+        "claude",
+        "gemini",
+        "cursor",
+        "antigravity",
+        "copilot"
+      ],
       "entrypoints": [
         "skills/low-always-loaded-instruction-migration/SKILL.md",
         "workflows/low-always-loaded-instruction-migration/WORKFLOW.md"
@@ -1096,7 +1632,9 @@
         "license_status": "MIT-compatible",
         "redistribution": "allowed"
       },
-      "evidence": ["docs/mining/2026-07-public-skill-mining.md"],
+      "evidence": [
+        "docs/mining/2026-07-public-skill-mining.md"
+      ],
       "install": {
         "mode": "copy",
         "destination": "skills/low-always-loaded-instruction-migration"
@@ -1109,8 +1647,20 @@
       "title": "Skill harvest and promotion",
       "summary": "Mine authored workflows into polished public skills using behavior extraction, deduplication, safety review, and forward tests.",
       "maturity": "beta",
-      "capabilities": ["skill-authoring", "provenance", "redaction", "deduplication", "public-safety"],
-      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "capabilities": [
+        "skill-authoring",
+        "provenance",
+        "redaction",
+        "deduplication",
+        "public-safety"
+      ],
+      "supported_targets": [
+        "generic",
+        "codex",
+        "claude",
+        "cursor",
+        "copilot"
+      ],
       "entrypoints": [
         "skills/skill-harvest-and-promotion/SKILL.md",
         "workflows/skill-harvest-and-promotion/WORKFLOW.md"
@@ -1126,7 +1676,9 @@
         "license_status": "MIT-compatible",
         "redistribution": "allowed"
       },
-      "evidence": ["docs/mining/2026-07-public-skill-mining.md"],
+      "evidence": [
+        "docs/mining/2026-07-public-skill-mining.md"
+      ],
       "install": {
         "mode": "copy",
         "destination": "skills/skill-harvest-and-promotion"
@@ -1139,8 +1691,20 @@
       "title": "Repository behavior specification loop",
       "summary": "Turn expected repository behavior into a cited ledger, runnable verification loop, bounded fix cycle, and regression report.",
       "maturity": "beta",
-      "capabilities": ["behavior-specification", "acceptance-testing", "evidence", "regression", "safety"],
-      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "capabilities": [
+        "behavior-specification",
+        "acceptance-testing",
+        "evidence",
+        "regression",
+        "safety"
+      ],
+      "supported_targets": [
+        "generic",
+        "codex",
+        "claude",
+        "cursor",
+        "copilot"
+      ],
       "entrypoints": [
         "skills/repo-behavior-spec-loop/SKILL.md",
         "workflows/repo-behavior-spec-loop/WORKFLOW.md"
@@ -1157,7 +1721,9 @@
         "license_status": "MIT-compatible",
         "redistribution": "allowed"
       },
-      "evidence": ["docs/mining/2026-07-public-skill-mining.md"],
+      "evidence": [
+        "docs/mining/2026-07-public-skill-mining.md"
+      ],
       "install": {
         "mode": "copy",
         "destination": "skills/repo-behavior-spec-loop",
@@ -1173,8 +1739,20 @@
       "title": "Review-gated verified fix",
       "summary": "Execute bounded remediation in an isolated work area and hand off evidence for human acceptance without auto-merging.",
       "maturity": "beta",
-      "capabilities": ["issue-admission", "isolated-execution", "verification", "review-packet", "no-auto-merge"],
-      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "capabilities": [
+        "issue-admission",
+        "isolated-execution",
+        "verification",
+        "review-packet",
+        "no-auto-merge"
+      ],
+      "supported_targets": [
+        "generic",
+        "codex",
+        "claude",
+        "cursor",
+        "copilot"
+      ],
       "entrypoints": [
         "skills/review-gated-verified-fix/SKILL.md",
         "workflows/review-gated-verified-fix/WORKFLOW.md"
@@ -1191,7 +1769,9 @@
         "license_status": "MIT-compatible",
         "redistribution": "allowed"
       },
-      "evidence": ["docs/mining/2026-07-public-skill-mining.md"],
+      "evidence": [
+        "docs/mining/2026-07-public-skill-mining.md"
+      ],
       "install": {
         "mode": "copy",
         "destination": "skills/review-gated-verified-fix",
@@ -1207,8 +1787,20 @@
       "title": "Evidence-backed change surface mapping",
       "summary": "Map likely downstream change surfaces with explicit identity, freshness, provenance, uncertainty, and inference caps.",
       "maturity": "beta",
-      "capabilities": ["change-impact", "provenance", "freshness", "uncertainty", "bounded-inference"],
-      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "capabilities": [
+        "change-impact",
+        "provenance",
+        "freshness",
+        "uncertainty",
+        "bounded-inference"
+      ],
+      "supported_targets": [
+        "generic",
+        "codex",
+        "claude",
+        "cursor",
+        "copilot"
+      ],
       "entrypoints": [
         "skills/evidence-backed-change-surface-mapping/SKILL.md",
         "workflows/evidence-backed-change-surface-mapping/WORKFLOW.md"
@@ -1224,7 +1816,9 @@
         "license_status": "MIT-compatible",
         "redistribution": "allowed"
       },
-      "evidence": ["docs/mining/2026-07-public-skill-mining.md"],
+      "evidence": [
+        "docs/mining/2026-07-public-skill-mining.md"
+      ],
       "install": {
         "mode": "copy",
         "destination": "skills/evidence-backed-change-surface-mapping"
@@ -1237,16 +1831,35 @@
       "title": "Consequence closure",
       "summary": "Close material downstream consequences, evaluate conditional maturity, expose machine-readable evidence, and raise reusable candidates with exact blockers.",
       "maturity": "experimental",
-      "capabilities": ["change-impact", "conditional-maturity", "recurrence-reduction", "machine-readable-evidence", "candidate-promotion"],
+      "capabilities": [
+        "change-impact",
+        "conditional-maturity",
+        "recurrence-reduction",
+        "machine-readable-evidence",
+        "candidate-promotion"
+      ],
       "editorial": {
         "type": "skill",
-        "topics": ["change-impact", "verification", "recurrence-reduction"],
-        "use_cases": ["close-downstream-consequences", "surface-reusable-follow-up-work"],
+        "topics": [
+          "change-impact",
+          "verification",
+          "recurrence-reduction"
+        ],
+        "use_cases": [
+          "close-downstream-consequences",
+          "surface-reusable-follow-up-work"
+        ],
         "why": "Trace a change beyond its diff to affected consumers, evidence surfaces, maturity claims, and reusable follow-up opportunities.",
         "use_when": "Use after implementation evidence reveals downstream consumers, conditional claims, or repeatable improvements.",
         "avoid_when": "Avoid when the work is a truly isolated edit with no downstream behavior, contract, or evidence surface."
       },
-      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "supported_targets": [
+        "generic",
+        "codex",
+        "claude",
+        "cursor",
+        "copilot"
+      ],
       "entrypoints": [
         "skills/consequence-closure/SKILL.md",
         "workflows/consequence-closure/WORKFLOW.md"
@@ -1263,7 +1876,9 @@
         "license_status": "MIT-compatible",
         "redistribution": "allowed"
       },
-      "evidence": ["docs/mining/2026-07-public-skill-mining.md"],
+      "evidence": [
+        "docs/mining/2026-07-public-skill-mining.md"
+      ],
       "install": {
         "mode": "copy",
         "destination": "skills/consequence-closure",
@@ -1279,8 +1894,20 @@
       "title": "Agentized task packet",
       "summary": "Compile ambiguous requests into bounded task packets with targeted context, explicit roles, verification, acceptance, and handoff.",
       "maturity": "beta",
-      "capabilities": ["task-decomposition", "context-selection", "routing", "verification", "handoff"],
-      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "capabilities": [
+        "task-decomposition",
+        "context-selection",
+        "routing",
+        "verification",
+        "handoff"
+      ],
+      "supported_targets": [
+        "generic",
+        "codex",
+        "claude",
+        "cursor",
+        "copilot"
+      ],
       "entrypoints": [
         "skills/agentized-task-packet/SKILL.md",
         "workflows/agentized-task-packet/WORKFLOW.md"
@@ -1296,7 +1923,9 @@
         "license_status": "MIT-compatible",
         "redistribution": "allowed"
       },
-      "evidence": ["docs/mining/2026-07-public-skill-mining.md"],
+      "evidence": [
+        "docs/mining/2026-07-public-skill-mining.md"
+      ],
       "install": {
         "mode": "copy",
         "destination": "skills/agentized-task-packet"
@@ -1309,8 +1938,21 @@
       "title": "Durable agent workflows",
       "summary": "Persist goals, artifacts, steering, queueing, approvals, and resume state so agent work survives interruption without losing its contract.",
       "maturity": "beta",
-      "capabilities": ["durability", "goals", "artifacts", "queueing", "resumability", "safety"],
-      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "capabilities": [
+        "durability",
+        "goals",
+        "artifacts",
+        "queueing",
+        "resumability",
+        "safety"
+      ],
+      "supported_targets": [
+        "generic",
+        "codex",
+        "claude",
+        "cursor",
+        "copilot"
+      ],
       "entrypoints": [
         "skills/durable-agent-workflows/SKILL.md",
         "workflows/durable-agent-workflows/WORKFLOW.md"
@@ -1326,7 +1968,9 @@
         "license_status": "MIT-compatible",
         "redistribution": "allowed"
       },
-      "evidence": ["docs/mining/2026-07-public-skill-mining.md"],
+      "evidence": [
+        "docs/mining/2026-07-public-skill-mining.md"
+      ],
       "install": {
         "mode": "copy",
         "destination": "skills/durable-agent-workflows"
@@ -1339,8 +1983,20 @@
       "title": "Divergent strategy",
       "summary": "Explore a bounded portfolio of materially different strategies, judge them with explicit evidence, and promote only reviewed decisions.",
       "maturity": "beta",
-      "capabilities": ["divergence", "strategy", "portfolio", "evaluation", "promotion"],
-      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "capabilities": [
+        "divergence",
+        "strategy",
+        "portfolio",
+        "evaluation",
+        "promotion"
+      ],
+      "supported_targets": [
+        "generic",
+        "codex",
+        "claude",
+        "cursor",
+        "copilot"
+      ],
       "entrypoints": [
         "skills/divergent-strategy/SKILL.md",
         "workflows/divergent-strategy/WORKFLOW.md"
@@ -1356,7 +2012,9 @@
         "license_status": "MIT-compatible",
         "redistribution": "allowed"
       },
-      "evidence": ["docs/mining/2026-07-public-skill-mining.md"],
+      "evidence": [
+        "docs/mining/2026-07-public-skill-mining.md"
+      ],
       "install": {
         "mode": "copy",
         "destination": "skills/divergent-strategy"
@@ -1369,8 +2027,20 @@
       "title": "Operating language",
       "summary": "Turn repeated reasoning into compact, behavior-changing vocabulary with triggers, non-triggers, decisions, and completion evidence.",
       "maturity": "beta",
-      "capabilities": ["vocabulary", "routing", "decision-quality", "operating-model", "migration"],
-      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
+      "capabilities": [
+        "vocabulary",
+        "routing",
+        "decision-quality",
+        "operating-model",
+        "migration"
+      ],
+      "supported_targets": [
+        "generic",
+        "codex",
+        "claude",
+        "cursor",
+        "copilot"
+      ],
       "entrypoints": [
         "skills/operating-language/SKILL.md",
         "workflows/operating-language/WORKFLOW.md"
@@ -1386,7 +2056,9 @@
         "license_status": "MIT-compatible",
         "redistribution": "allowed"
       },
-      "evidence": ["docs/mining/2026-07-public-skill-mining.md"],
+      "evidence": [
+        "docs/mining/2026-07-public-skill-mining.md"
+      ],
       "install": {
         "mode": "copy",
         "destination": "skills/operating-language"
@@ -1399,10 +2071,24 @@
       "title": "Promoted skill forward-test cases",
       "summary": "Trigger and non-trigger cases used to keep the additive skill set explicit and clean-room-testable.",
       "maturity": "beta",
-      "capabilities": ["forward-testing", "skill-discovery", "clean-room"],
-      "supported_targets": ["generic", "codex", "claude", "cursor", "copilot"],
-      "entrypoints": ["fixtures/forward-tests.json"],
-      "files": ["fixtures/forward-tests.json"],
+      "capabilities": [
+        "forward-testing",
+        "skill-discovery",
+        "clean-room"
+      ],
+      "supported_targets": [
+        "generic",
+        "codex",
+        "claude",
+        "cursor",
+        "copilot"
+      ],
+      "entrypoints": [
+        "fixtures/forward-tests.json"
+      ],
+      "files": [
+        "fixtures/forward-tests.json"
+      ],
       "dependencies": [],
       "provenance": {
         "status": "authored",
@@ -1410,7 +2096,9 @@
         "license_status": "MIT",
         "redistribution": "allowed"
       },
-      "evidence": ["docs/mining/2026-07-public-skill-mining.md"],
+      "evidence": [
+        "docs/mining/2026-07-public-skill-mining.md"
+      ],
       "install": {
         "mode": "copy",
         "destination": "fixtures"
