@@ -31,8 +31,12 @@ files under `.project-compass/evidence/` are the sole excluded observation outpu
 Packets use indented JSON when it fits and lossless compact JSON otherwise.
 Packets still above 32 KiB fail explicitly; reduce the scope or use the explicit
 complete-artifact route below after broad reconciliation. Never clip a constraint.
-Family output and each source file are bounded to 1 MiB at the
-Pronto bridge; oversized data is unavailable, never a partial success.
+Family output and parsed JSON source documents remain bounded to 1 MiB.
+Digest-only source references (including binary product assets) may be up to
+16 MiB and are hashed in 64 KiB chunks, with the limit enforced both before
+and during reading. Larger sources remain explicitly unavailable. This does
+not enlarge the Pronto bridge, JSON parsing, packet or artifact output limits;
+a digest establishes input identity, never media behavior or product acceptance.
 
 ## Development bindings
 

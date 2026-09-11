@@ -5,7 +5,7 @@
     "id": "project-compass"
   },
   "owner": "Jakye Amos",
-  "last_reviewed": "2026-09-10",
+  "last_reviewed": "2026-09-11",
   "surfaces": [
     {
       "id": "hosted-source",
@@ -24,7 +24,9 @@
         "python3 -m json.tool skills/project-compass/references/contract.schema.json",
         "python3 -m json.tool skills/project-compass/references/registry.schema.json",
         "python3 -m json.tool skills/project-compass/references/quiz.schema.json",
-        "python3 -m unittest tests.test_workbench.WorkbenchCliTests.test_public_safety_scans_tracked_or_unowned_compass_receipts"
+        "python3 -m unittest tests.test_workbench.WorkbenchCliTests.test_public_safety_scans_tracked_or_unowned_compass_receipts",
+        "python3 skills/project-compass/scripts/test_compass_development.py",
+        "Verify digest-only assets above 1 MiB preserve freshness while oversized digests, JSON sources and output packets still fail explicitly."
       ],
       "status": "applicable"
     },

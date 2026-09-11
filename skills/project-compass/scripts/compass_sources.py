@@ -8,6 +8,8 @@ from pathlib import Path, PurePosixPath
 from typing import Any
 
 MAX_BYTES = 1_048_576
+MAX_DIGEST_BYTES = 16 * MAX_BYTES
+DIGEST_CHUNK_BYTES = 65_536
 
 
 def digest(value: Any) -> str:
@@ -35,9 +37,16 @@ def file_digest(repo: Path, name: str) -> str | None:
     path = local_path(repo, name)
     if not path.is_file():
         return None
-    if path.stat().st_size > MAX_BYTES:
-        raise ValueError(f"source exceeds {MAX_BYTES} bytes: {name}")
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    if path.stat().st_size > MAX_DIGEST_BYTES:
+        raise ValueError(f"digest source exceeds {MAX_DIGEST_BYTES} bytes: {name}")
+    result, consumed = hashlib.sha256(), 0
+    with path.open("rb") as source:
+        while chunk := source.read(DIGEST_CHUNK_BYTES):
+            consumed += len(chunk)
+            if consumed > MAX_DIGEST_BYTES:
+                raise ValueError(f"digest source exceeds {MAX_DIGEST_BYTES} bytes: {name}")
+            result.update(chunk)
+    return result.hexdigest()
 
 
 def git(repo: Path, *args: str) -> str:

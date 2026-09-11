@@ -44,3 +44,5 @@ For intent-preserving development, start with `project_compass.py family . --sum
 Design reassessment uses the existing Compass assess command with v2 proposals. See skills/project-compass/references/assessment.md; complete fields never establish justification without current claim review.
 
 Broad Compass reconciliation can explicitly write a complete eligible packet with `change-context --packet-output .quality-runner/compass/reconciled.json`; inspect it before adoption. See the skill development reference for the distinct artifact and gate-summary schemas.
+
+Compass hashes source references up to 16 MiB in bounded chunks; parsed JSON remains capped at 1 MiB. See the development reference for unchanged packet and artifact limits. Binary identity does not establish media playback or visual acceptance.

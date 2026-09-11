@@ -84,6 +84,57 @@ class DevelopmentTests(unittest.TestCase):
         for name in ['project', 'playback']:
             prove(self.repo, name, name, [sys.executable, '-c', 'print("verified")'])
 
+    def test_large_binary_dependency_is_hashed_and_invalidates_only_its_proof(self):
+        import hashlib
+        from compass_sources import MAX_BYTES, file_digest
+        asset = self.repo / 'src/media.bin'
+        payload = b'\x00\xff' * (MAX_BYTES // 2 + 1)
+        asset.write_bytes(payload)
+        self.development['bindings'][1]['dependencies'] = ['src/media.bin']
+        self.save_development()
+        self.assertEqual(file_digest(self.repo, 'src/media.bin'), hashlib.sha256(payload).hexdigest())
+        self.proof()
+        self.assertTrue(all(p['status'] == 'current' for p in self.context()['required_proof']))
+        asset.write_bytes(payload[:-1] + b'\x01')
+        statuses = {p['binding']: p['status'] for p in self.context()['required_proof']}
+        self.assertEqual(statuses, {'project': 'current', 'playback': 'stale'})
+
+    def test_digest_limit_is_inclusive_and_oversized_source_stays_invalid(self):
+        from compass_sources import file_digest, reference
+        asset = self.repo / 'src/media.bin'
+        with patch('compass_sources.MAX_DIGEST_BYTES', 8):
+            asset.write_bytes(b'12345678')
+            self.assertIsNotNone(file_digest(self.repo, 'src/media.bin'))
+            asset.write_bytes(b'123456789')
+            with self.assertRaisesRegex(ValueError, 'digest source exceeds 8 bytes'):
+                file_digest(self.repo, 'src/media.bin')
+            self.assertEqual(reference(self.repo, 'src/media.bin')['status'], 'invalid')
+
+    def test_digest_stream_checks_growth_and_uses_bounded_reads(self):
+        from unittest.mock import MagicMock
+        from compass_sources import DIGEST_CHUNK_BYTES, file_digest
+        source = MagicMock()
+        source.read.side_effect = [b'12345678', b'9', b'']
+        with (patch('pathlib.Path.stat') as stat,
+              patch('pathlib.Path.is_file', return_value=True),
+              patch('pathlib.Path.open') as opened,
+              patch('compass_sources.MAX_DIGEST_BYTES', 8)):
+            stat.return_value.st_size = 8
+            opened.return_value.__enter__.return_value = source
+            with self.assertRaisesRegex(ValueError, 'digest source exceeds 8 bytes'):
+                file_digest(self.repo, 'src/media.bin')
+        self.assertTrue(all(call.args == (DIGEST_CHUNK_BYTES,) for call in source.read.call_args_list))
+
+    def test_large_digest_does_not_relax_json_or_reference_boundaries(self):
+        from compass_sources import MAX_BYTES, file_digest, read_json, reference
+        self.write('large.json', '{"value": 1}' + ' ' * MAX_BYTES)
+        self.assertIsNotNone(file_digest(self.repo, 'large.json'))
+        with self.assertRaisesRegex(ValueError, 'source exceeds'):
+            read_json(self.repo, 'large.json')
+        self.assertEqual(reference(self.repo, 'large.json#/value')['status'], 'invalid')
+        self.assertEqual(reference(self.repo, '../outside.bin')['status'], 'invalid')
+        self.assertIsNone(file_digest(self.repo, 'missing.bin'))
+
     def test_legacy_root_readable_without_accepting_intent(self):
         (self.repo / '.project-compass/compasses.json').unlink()
         (self.repo / '.project-compass/development.json').unlink()
