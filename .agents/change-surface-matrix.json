@@ -1,13 +1,104 @@
 {
   "schema_version": "change-surface-matrix/v1",
-  "subject": {"kind": "repository", "id": "jakyeamos-agent-skills"},
+  "subject": {
+    "kind": "repository",
+    "id": "jakyeamos-agent-skills"
+  },
   "owner": "repository-owner",
   "last_reviewed": "2026-08-22",
   "surfaces": [
-    {"id": "matrix-maintenance", "scope": "local", "path": ".agents/change-surface-matrix.json and .agents/workspace-policy.json", "owner": "repository-owner", "condition": "A material feature, functionality, behavior, CLI/API, workflow, data, integration, security/privacy, or quality/release change is added or changed.", "operations": ["add", "change", "remove", "fold"], "validation": ["Update this matrix in the same change with affected surfaces, contracts, documentation, tests, evidence, owners, and projections."], "status": "applicable"},
-    {"id": "catalog-and-library", "scope": "local", "path": "skills/, catalog/, scripts/, and tests/", "owner": "repository-owner", "condition": "catalog, skill contract, installer, or validation behavior changes", "operations": ["add", "change", "remove", "fold"], "validation": ["pnpm lint", "pnpm test", "pnpm check"], "status": "applicable"},
-    {"id": "project-compass-family", "scope": "local", "path": ".project-compass/", "owner": "repository-owner", "condition": "The repository is Compass-managed and an addition, change, removal, or fold changes a root or subsystem boundary, declared path, parent outcome, or cross-compass link.", "operations": ["add", "change", "remove", "fold"], "validation": ["python3 skills/project-compass/scripts/project_compass.py validate <repo>", "python3 skills/project-compass/scripts/project_compass.py score <repo> --json", "Run the operation-specific Compass closure checks before accepting the matrix operation."], "status": "applicable"},
-    {"id": "provider-projections", "scope": "external", "path": "installed provider projections", "owner": "projection-owner", "condition": "a distributed skill, workflow, route, or install mapping changes", "operations": ["add", "change", "remove", "fold"], "validation": ["pnpm audit", "pnpm doctor", "pnpm smoke"], "status": "applicable"}
+    {
+      "id": "matrix-maintenance",
+      "scope": "local",
+      "path": ".agents/change-surface-matrix.json and .agents/workspace-policy.json",
+      "owner": "repository-owner",
+      "condition": "A material feature, functionality, behavior, CLI/API, workflow, data, integration, security/privacy, or quality/release change is added or changed.",
+      "operations": [
+        "add",
+        "change",
+        "remove",
+        "fold"
+      ],
+      "validation": [
+        "Update this matrix in the same change with affected surfaces, contracts, documentation, tests, evidence, owners, and projections."
+      ],
+      "status": "applicable"
+    },
+    {
+      "id": "catalog-and-library",
+      "scope": "local",
+      "path": "skills/, catalog/, scripts/, and tests/",
+      "owner": "repository-owner",
+      "condition": "catalog, skill contract, installer, or validation behavior changes",
+      "operations": [
+        "add",
+        "change",
+        "remove",
+        "fold"
+      ],
+      "validation": [
+        "pnpm lint",
+        "pnpm test",
+        "pnpm check"
+      ],
+      "status": "applicable"
+    },
+    {
+      "id": "project-compass-family",
+      "scope": "local",
+      "path": ".project-compass/",
+      "owner": "repository-owner",
+      "condition": "The repository is Compass-managed and an addition, change, removal, or fold changes a root or subsystem boundary, declared path, parent outcome, or cross-compass link.",
+      "operations": [
+        "add",
+        "change",
+        "remove",
+        "fold"
+      ],
+      "validation": [
+        "python3 skills/project-compass/scripts/project_compass.py validate <repo>",
+        "python3 skills/project-compass/scripts/project_compass.py score <repo> --json",
+        "Run the operation-specific Compass closure checks before accepting the matrix operation."
+      ],
+      "status": "applicable"
+    },
+    {
+      "id": "provider-projections",
+      "scope": "external",
+      "path": "installed provider projections",
+      "owner": "projection-owner",
+      "condition": "a distributed skill, workflow, route, or install mapping changes",
+      "operations": [
+        "add",
+        "change",
+        "remove",
+        "fold"
+      ],
+      "validation": [
+        "pnpm audit",
+        "pnpm doctor",
+        "pnpm smoke"
+      ],
+      "status": "applicable"
+    },
+    {
+      "id": "compass-packet-artifact",
+      "scope": "local",
+      "path": "skills/project-compass/",
+      "owner": "repository-owner",
+      "condition": "Complete packet artifacts or bounded gate summaries change.",
+      "operations": [
+        "add",
+        "change",
+        "remove",
+        "fold"
+      ],
+      "validation": [
+        "python3 skills/project-compass/scripts/test_compass_output.py",
+        "python3 scripts/verify_compass_distribution.py"
+      ],
+      "status": "applicable"
+    }
   ],
   "reviewed_no_impact": [
     {

@@ -30,6 +30,7 @@ def _parser() -> argparse.ArgumentParser:
             child.add_argument("--base", default="HEAD")
             child.add_argument("--prepared", type=Path)
             child.add_argument("--completion", action="store_true")
+            child.add_argument("--packet-output", type=Path)
             child.add_argument("--continue", dest="continuation", action="store_true")
         elif command == "gate":
             child.add_argument("--prepared", type=Path, default=Path(".quality-runner/compass/prepared.json"))
@@ -98,7 +99,8 @@ def main(argv: list[str] | None = None) -> int:
             packet_path = args.prepared if args.prepared.is_absolute() else repo / args.prepared
             if not packet_path.is_file():
                 raise ValueError("Prepared Compass packet missing; prepare affected paths at task entry into .quality-runner/compass/prepared.json")
-            prepared = json.loads(packet_path.read_text())
+            prepared_bytes = packet_path.read_bytes()
+            prepared = json.loads(prepared_bytes)
             if not isinstance(prepared, dict) or not isinstance(prepared.get("base_revision"), str):
                 raise ValueError("Prepared Compass packet requires a base revision")
             result = change_context(repo, paths=[], compass_ids=prepared.get("direct_compasses", []),
@@ -108,6 +110,9 @@ def main(argv: list[str] | None = None) -> int:
             prepared = json.loads(args.prepared.read_text()) if args.prepared else None
             result = change_context(repo, paths=args.path, compass_ids=args.compass_id,
                                     base=args.base, prepared=prepared, completion=args.completion, continuation=args.continuation)
+            if args.packet_output:
+                from compass_output import write_packet
+                result = write_packet(repo, args.packet_output, result)
         elif args.command == "assess":
             from compass_assessment import assess
             if args.proposal.stat().st_size > 1024 * 1024:
@@ -162,6 +167,10 @@ def main(argv: list[str] | None = None) -> int:
 
     encoded = json.dumps(result, indent=2, sort_keys=True)
     if args.command in {"change-context", "gate"} and len(encoded.encode()) + 1 > 32768:
+        encoded = json.dumps(result, separators=(",", ":"), sort_keys=True)
+    if args.command == "gate" and len(encoded.encode()) + 1 > 32768:
+        from compass_output import gate_summary
+        result = gate_summary(result, packet_path, prepared_bytes)
         encoded = json.dumps(result, separators=(",", ":"), sort_keys=True)
     if args.command in {"change-context", "gate"} and len(encoded.encode()) + 1 > 32768:
         bounded = {k: result[k] for k in ("schema", "source", "base_revision", "phase", "drill_down")}

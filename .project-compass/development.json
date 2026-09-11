@@ -1,6 +1,6 @@
 {
   "schema": "compass-development/v1",
-  "revision": 5,
+  "revision": 6,
   "inventory": {
     "source": "git-tracked",
     "include": [
@@ -131,7 +131,10 @@
         "skills/project-compass/scripts/test_compass_preservation.py",
         "skills/project-compass/scripts/compass_review.py",
         "skills/project-compass/scripts/test_compass_assessment.py",
-        "skills/project-compass/references/assessment.md"
+        "skills/project-compass/references/assessment.md",
+        "skills/project-compass/scripts/compass_output.py",
+        "skills/project-compass/scripts/test_compass_output.py",
+        ".agents/change-surface-matrix.json"
       ],
       "outcomes": [
         "bounded-change"

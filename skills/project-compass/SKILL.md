@@ -578,3 +578,5 @@ or green generic tests as semantic drift prevention. Inferred intent remains
 proposed until reconciled through an accepted decision.
 
 An ineligible packet cannot become a prepared baseline. Continue from the last eligible packet, reconcile changed decisions explicitly, and retain the original base. Active continuity commitments appear in change context and bind affected evidence; optional nonempty `compass_ids` limits their scope, while historical unscoped commitments stay global. Unresolved commitments block affected work. Read commitments alongside root intent and reconcile semantic contradictions; structural validation cannot discover contradictions in prose. Packets predating commitment/behavior revision fields require explicit preparation with the current helper.
+
+For reviewed scopes exceeding the ordinary packet cap, use the explicit complete-artifact route in [Development foundation](references/development.md). Artifact descriptors and gate summaries are distinct schemas and never accepted intent or prepared baselines.

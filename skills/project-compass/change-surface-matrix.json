@@ -206,11 +206,11 @@
     }
   },
   "packet_serialization_review": {
-    "change": "Lossless compact JSON fallback preserves the 32 KiB packet limit and all intent fields.",
+    "change": "Explicit lossless complete entry artifact and distinct oversized gate summary; ordinary 32 KiB context cap remains.",
     "validation": [
-      "python3 skills/project-compass/scripts/test_compass_development.py",
+      "python3 skills/project-compass/scripts/test_compass_output.py",
       "python3 scripts/verify_compass_distribution.py"
     ],
-    "consumer_impact": "Pronto parses JSON; schema and fields remain unchanged. Manifest file membership unchanged."
+    "consumer_impact": "Versioned artifact and gate-summary schemas; Pronto wrappers must preserve schema and exit status. Older wrappers remain unsupported until directly verified."
   }
 }

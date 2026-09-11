@@ -29,8 +29,9 @@ required to detect scope expansion and concurrent intent changes. Compare the
 actual diff including both sides of renames and untracked source files. Receipt
 files under `.project-compass/evidence/` are the sole excluded observation output.
 Packets use indented JSON when it fits and lossless compact JSON otherwise.
-Packets still above 32 KiB fail explicitly; reduce the scope rather than clip a
-constraint. Family output and each source file are bounded to 1 MiB at the
+Packets still above 32 KiB fail explicitly; reduce the scope or use the explicit
+complete-artifact route below after broad reconciliation. Never clip a constraint.
+Family output and each source file are bounded to 1 MiB at the
 Pronto bridge; oversized data is unavailable, never a partial success.
 
 ## Development bindings
@@ -189,3 +190,31 @@ returns shortened path arrays that could be mistaken for full coverage. Use
 `change-context --compass-id ID` next; full `family` is deliberate drill-down.
 
 An ineligible packet cannot become a prepared baseline. Continue from the last eligible packet, reconcile changed decisions explicitly, and retain the original base. Active continuity commitments appear in change context and bind affected evidence; optional nonempty `compass_ids` limits their scope, while historical unscoped commitments stay global. Unresolved commitments block affected work. Read commitments alongside root intent and reconcile semantic contradictions; structural validation cannot discover contradictions in prose. Packets predating commitment/behavior revision fields require explicit preparation with the current helper.
+
+## Complete artifacts for broad reconciliation
+
+Ordinary `change-context` output remains bounded to 32 KiB. After reviewing a
+legitimate broader scope, use `change-context REPO --path PATH --base ORIGINAL
+--packet-output .quality-runner/compass/reconciled.json --json` (repeat `--path`
+as needed). This explicitly writes a complete eligible entry packet, limited
+to 1 MiB. It refuses existing destinations, traversal, symlinks and ineligible
+or completion packets. Inspect the complete file and its digest before adopting
+it with `gate REPO --prepared .quality-runner/compass/reconciled.json --json`.
+For the default repository gate, explicitly adopt the reviewed file as
+`.quality-runner/compass/prepared.json`, preserving the prior file first. The
+artifact descriptor is `compass-packet-artifact/v1`, not a prepared context.
+No automatic rebaseline or removal of preservation requirements occurs.
+
+An oversized gate result becomes `compass-gate-summary/v1` only after the
+producer checks the complete actual diff and every affected obligation. The
+summary retains eligibility, all blockers, affected IDs, proof-status counts,
+source/base identity, exact prepared-file digest and a canonical full-result
+digest (sorted compact JSON plus newline). `detail_omitted` is explicit. If
+even the summary exceeds 32 KiB, the command fails with `context-too-large`.
+Small gate results retain the existing complete-context schema.
+
+Pronto CLI consumers must forward `--packet-output` without interpreting a
+descriptor as intent. They must preserve the distinct gate-summary schema and
+nonzero exit status, and use the Python producer for full validation. Older
+wrappers that reject these arguments or schemas are unsupported for this route;
+use the direct helper until that wrapper is verified. No UI parity is implied.

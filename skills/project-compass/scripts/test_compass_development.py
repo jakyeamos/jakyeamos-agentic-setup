@@ -281,7 +281,10 @@ class DevelopmentTests(unittest.TestCase):
                     with patch('compass_change.change_context', return_value=result), redirect_stdout(output):
                         code = main([command, str(self.repo), '--json'])
                     self.assertLessEqual(len(output.getvalue().encode()), 32768)
-                    if size == 'oversized':
+                    if size == 'oversized' and command == 'gate':
+                        self.assertEqual(code, 0)
+                        self.assertEqual(json.loads(output.getvalue())['schema'], 'compass-gate-summary/v1')
+                    elif size == 'oversized':
                         self.assertEqual(code, 2)
                         self.assertFalse(json.loads(output.getvalue())['eligible'])
                         self.assertEqual(json.loads(output.getvalue())['blockers'][0]['kind'], 'context-too-large')

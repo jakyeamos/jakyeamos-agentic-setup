@@ -42,3 +42,5 @@ unowned, and non-Git receipts; force-adding a receipt never exempts it.
 For intent-preserving development, start with `project_compass.py family . --summary --json`, then prepare a bounded `change-context`. See the Compass skill's cumulative `--continue` workflow and linked bootstrap contract; never reuse a blocked packet as accepted intent.
 
 Design reassessment uses the existing Compass assess command with v2 proposals. See skills/project-compass/references/assessment.md; complete fields never establish justification without current claim review.
+
+Broad Compass reconciliation can explicitly write a complete eligible packet with `change-context --packet-output .quality-runner/compass/reconciled.json`; inspect it before adoption. See the skill development reference for the distinct artifact and gate-summary schemas.

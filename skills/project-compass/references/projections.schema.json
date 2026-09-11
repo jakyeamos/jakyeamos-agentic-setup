@@ -94,6 +94,55 @@
           "const": false
         }
       }
+    },
+    {
+      "type": "object",
+      "required": [
+        "schema",
+        "execution_authority",
+        "source",
+        "base_revision",
+        "artifact_path",
+        "artifact_digest",
+        "artifact_bytes",
+        "affected_compasses",
+        "instruction"
+      ],
+      "properties": {
+        "schema": {
+          "const": "compass-packet-artifact/v1"
+        },
+        "execution_authority": {
+          "const": false
+        }
+      }
+    },
+    {
+      "type": "object",
+      "required": [
+        "schema",
+        "execution_authority",
+        "source",
+        "base_revision",
+        "affected_compasses",
+        "blockers",
+        "eligible",
+        "proof_status_counts",
+        "prepared_path",
+        "prepared_digest",
+        "full_result_digest",
+        "full_result_bytes",
+        "detail_omitted",
+        "drill_down"
+      ],
+      "properties": {
+        "schema": {
+          "const": "compass-gate-summary/v1"
+        },
+        "execution_authority": {
+          "const": false
+        }
+      }
     }
   ]
 }
