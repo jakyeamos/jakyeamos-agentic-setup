@@ -36,6 +36,30 @@
         }
       ],
       "spec_ref": "skills/project-compass/references/development.md"
+    },
+    {
+      "id": "catalog-packaging",
+      "title": "catalog packaging",
+      "authority": "accepted",
+      "spec_ref": "docs/catalog-model.md"
+    },
+    {
+      "id": "manifest-setup",
+      "title": "manifest setup",
+      "authority": "accepted",
+      "spec_ref": "docs/workbench.md"
+    },
+    {
+      "id": "promotion-admission",
+      "title": "promotion admission",
+      "authority": "accepted",
+      "spec_ref": "docs/workbench.md"
+    },
+    {
+      "id": "distribution-support",
+      "title": "distribution support",
+      "authority": "accepted",
+      "spec_ref": ".agents/context/architecture.md"
     }
   ]
 }
